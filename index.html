@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peluches Yakky - Amor en nuestas manos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome (íconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Peluches Yakky</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Productos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contacto</a></li>
+                </ul>
+                <button class="btn btn-outline-light ms-3">
+                    <i class="fas fa-shopping-cart"></i> Carrito
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section bg-primary mb-5">
+        <div class="container">
+            <h1 class="display-4">¡Peluches para todos!</h1>
+            <p class="lead">Encuentra el peluche perfecto para regalar o consentirte.</p>
+            <!-- <a href="#" class="btn btn-light btn-lg">Ver Colección</a> -->
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="container mb-5">
+        <h2 class="text-center mb-4">Productos Destacados</h2>
+        <div class="row g-4">
+            <!-- Producto 1 -->
+            <div class="col-md-4">
+                <div class="card product-card h-100">
+                    <img src="img/muñeco_nieve_faro.png" class="card-img-top" alt="Peluche Osito">
+                    <div class="card-body">
+                        <h5 class="card-title">Muñeco de nieve</h5>
+                        <p class="card-text">Repisa de muñeco de nieve con arbol navideño pequeño y farol con luces</p>
+                        <p class="text-danger fw-bold">$40000</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Producto 2 -->
+            <div class="col-md-4">
+                <div class="card product-card h-100">
+                    <img src="img/muñeco_nieve_faro_grande.png" class="card-img-top" alt="Peluche Conejo">
+                    <div class="card-body">
+                        <h5 class="card-title">Muñeco de nieve grande</h5>
+                        <p class="card-text">Repisa de muñeco de nieve con arbol navideño mediano y farol con luces</p>
+                        <p class="text-danger fw-bold">$50000</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Producto 3 -->
+            <div class="col-md-4">
+                <div class="card product-card h-100">
+                    <img src="img/oso_faro.png" class="card-img-top" alt="Peluche Dragón">
+                    <div class="card-body">
+                        <h5 class="card-title">Oso navideño</h5>
+                        <p class="card-text">Repisa de oso con banca y farol de colores</p>
+                        <p class="text-danger fw-bold">$45000</p>
+                            <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda fila: 2 cards centradas -->
+            <div class="col-md-4 offset-md-2"> <!-- offset-md-2 centra la card -->
+                <div class="card product-card h-100">
+                    <img src="img/papa_noel.png" class="card-img-top" alt="Peluche Elefante">
+                    <div class="card-body">
+                        <h5 class="card-title">Papa noel</h5>
+                        <p class="card-text">Repisa de papal noel con arbol navideño grande y faraol de colores</p>
+                        <p class="text-danger fw-bold">$60000</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card product-card h-100">
+                    <img src="img/reno_decoracion.png" class="card-img-top" alt="Peluche Unicornio">
+                    <div class="card-body">
+                        <h5 class="card-title">Reno navideño</h5>
+                        <p class="card-text">Hermosa repisa de reno con luces de colores</p>
+                        <p class="text-danger fw-bold">$55000</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ofertas Especiales -->
+    <section class="bg-info py-5 mb-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Ofertas Especiales</h2>
+            <div class="row">
+
+                <div class="col-md-6">
+                    <div class="card product-card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="img/papa_noel_faro_arbol.png" class="img-fluid rounded-start" alt="Oferta">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title fs-2">Papa Noel grande</h5>
+                                    <p class="card-text">Repisa para decorar mesa con Papa Noel, faro con
+                                        luces y gran arbol navideño </p>
+                                    <p class=" card-text fw-bold fs-3">Antes <s
+                                            class="text-danger text-decoration-line-through fs-3">$50000</s></p>
+                                    <p class="card-text fw-bold fs-4">Ahora <s
+                                            class="text-danger fw-bold fs-4">$34900</s></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card product-card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="img/pesebre_domo.png" class="img-fluid rounded-start" alt="Oferta">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title fs-2">Pesebre con domo</h5>
+                                    <p class="card-text">Pequeño pesebre navideño para cubrir </p>
+                                    <p class=" card-text fw-bold fs-3">Antes <s
+                                            class="text-danger text-decoration-line-through fs-3">$70000</s></p>
+                                    <p class="card-text fw-bold fs-4">Ahora <s
+                                            class="text-danger fw-bold fs-4">$54900</s></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3 offset-md-2">
+                    <h5>Contacto</h5>
+                    <p><i class="fas fa-envelope"></i> peluchesyakky@gmail.com</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Redes Sociales</h5>
+                    <a href="https://www.facebook.com/profile.php?id=100093166902343" class="text-white me-3 ps-3"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/peluches_yakky/" class="text-white me-3"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/573135484798?text=¡Hola!%20Quisiera%20más%20información%20sobre%20sus%20peluches."
+                        class="text-white me-3 ps-1" style="width: 60px; height: 60px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                </div>
+                <!-- <div class="col-md-4 mb-3">
+                    <h5>Newsletter</h5>
+                    <form>
+                        <input type="email" class="form-control mb-2" placeholder="Tu correo">
+                        <button class="btn btn-outline-light">Suscribirse</button>
+                    </form>
+                </div> -->
+            </div>
+            <hr>
+            <p>&copy; 2025 Peluches Yakky. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
