@@ -8,4 +8,4 @@ También cuenta con pedidos personalizados con atención por WhatsApp y redes so
 
 Página principal:
 
-![alt text](image.png)
+![alt text](img/index.png)
