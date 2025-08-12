@@ -25,7 +25,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ofertas">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#ofertas">Ofertas</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                 </ul>
                 <button class="btn btn-outline-light ms-3">
@@ -35,18 +35,14 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section bg-primary mb-5">
-        <div class="container">
-            <h1 class="display-4">¡Peluches para todos!</h1>
-            <p class="lead">Encuentra el peluche perfecto para regalar</p>
-            <!-- <a href="#" class="btn btn-light btn-lg">Ver Colección</a> -->
-        </div>
-    </section>
+    <br>
+    <br>
+    <br>
 
-    <!-- Productos Destacados -->
+
+    <!-- Productos -->
     <section class="container mb-5">
-        <h2 class="text-center mb-4">Productos Destacados</h2>
+        <h2 class="text-center mb-4">Productos</h2>
         <div class="row g-4">
             <!-- Producto 1 -->
             <div class="col-md-4">
@@ -87,8 +83,8 @@
                 </div>
             </div>
 
-            <!-- Segunda fila: 2 cards centradas -->
-            <div class="col-md-4 offset-md-2"> <!-- offset-md-2 centra la card -->
+
+            <div class="col-md-4">
                 <div class="card product-card h-100"
                     onclick="window.location.href='detalles_productos/papa_noel.html';">
                     <img src="img/papa_noel.png" class="card-img-top" alt="Peluche Elefante">
@@ -112,59 +108,38 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Ofertas Especiales -->
-    <section class="bg-info py-5 mb-5" id="ofertas">
-        <div class="container">
-            <h2 class="text-center mb-4">Ofertas Especiales</h2>
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="card product-card mb-3">
-                        <div class="row g-0" onclick="window.location.href='detalles_productos/papa_noel_grande.html';">
-                            <div class="col-md-4">
-                                <img src="img/papa_noel_faro_arbol.png" class="img-fluid rounded-start" alt="Oferta">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title fs-2">Papa Noel grande</h5>
-                                    <p class="card-text">Repisa para decorar mesa con Papa Noel, faro con
-                                        luces y gran arbol navideño </p>
-                                    <p class=" card-text fw-bold fs-3">Antes <s
-                                            class="text-danger text-decoration-line-through fs-3">$90000</s></p>
-                                    <p class="card-text fw-bold fs-4">Ahora <s
-                                            class="text-danger fw-bold fs-4">$44900</s></p>
-                                </div>
-                            </div>
-                        </div>
+            <div class="col-md-4">
+                <div class="card product-card h-100"
+                    onclick="window.location.href='detalles_productos/papa_noel_grande.html';">
+                    <img src="img/papa_noel_faro_arbol.png" class="card-img-top" alt="Peluche Unicornio">
+                    <div class="card-body">
+                        <h5 class="card-title">Papa Noel grande</h5>
+                        <p class="card-text">Repisa para decorar mesa con Papa Noel, faro con
+                            luces y gran arbol navideño</p>
+                        <p class="text-danger fw-bold">$449000</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
                     </div>
                 </div>
-
-                <div class="col-md-6">
-                    <div class="card product-card mb-3">
-                        <div class="row g-0" onclick="window.location.href='detalles_productos/pesebre.html';">
-                            <div class="col-md-4">
-                                <img src="img/pesebre_domo.png" class="img-fluid rounded-start" alt="Oferta">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title fs-2">Pesebre con domo</h5>
-                                    <p class="card-text">Pesebre navideño para cubrir </p>
-                                    <p class=" card-text fw-bold fs-3">Antes <s
-                                            class="text-danger text-decoration-line-through fs-3">$70000</s></p>
-                                    <p class="card-text fw-bold fs-4">Ahora <s
-                                            class="text-danger fw-bold fs-4">$54900</s></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
+
+            <div class="col-md-4">
+                <div class="card product-card h-100" onclick="window.location.href='detalles_productos/pesebre.html';">
+                    <img src="img/pesebre_domo.png" class="card-img-top" alt="Peluche Unicornio">
+                    <div class="card-body">
+                        <h5 class="card-title">Pesebre con domo</h5>
+                        <p class="card-text">Pesebre navideño para mesas y una decoración sencilla</p>
+                        <p class="text-danger fw-bold">$54900</p>
+                        <button class="btn btn-primary">Añadir al carrito</button>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
     </section>
+
+
 
     <!-- Footer -->
     <footer class="text-center" id="contacto">
