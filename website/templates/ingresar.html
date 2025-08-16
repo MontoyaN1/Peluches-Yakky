@@ -1,0 +1,40 @@
+{% extends 'forms.html' %}
+
+{% block body %}
+
+<body class="d-flex justify-content-center m-5 fondo">
+    <form action="#" method="post"
+        class="formulario d-flex flex-column bg-light border border-warning shadow-lg rounded p-3 m-5"
+        style="width:500px ;">
+
+        <h1 class=" d-flex justify-content-center text-primary">Registrarse</h1>
+
+        <p>Registrate para hacer tickets</p>
+
+
+
+        <hr class="">
+
+        <div class="mb-3">
+            <label for="" class="form-label">{{form.email}} </label>
+            <input type="email" name="email" id="email" required class="form-control" placeholder="nombre@email.com">
+        </div>
+
+
+        <div class="mb-3">
+            <label for="" class=" form-label">Contraseña</label>
+            <input type="password" name="clave" id="clave" class="form-control">
+        </div>
+
+
+        <input type="submit" value="Enviar" class="btn btn-success">
+
+        <br>
+
+        <a href="sign-in.html">¿Ya tienes cuenta? inicia sesión aquí</a>
+    </form>
+
+
+</body>
+
+{% endblock %}

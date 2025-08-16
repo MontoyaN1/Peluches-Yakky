@@ -1,18 +1,16 @@
-from flask import Blueprint
+from flask import Blueprint, render_template
+from .forms import LoginForm, SingUpForm
 
 auth = Blueprint("auth", __name__)
 
 
-@auth.route('/')
-def home():
-    return 'Página de auth'
+@auth.route("/sing-up")
+def sing_up():
+    form = SingUpForm()
+    return render_template("nuevo.html")
 
 
 @auth.route("/login")
 def login():
-    return "Página de login"
-
-
-@auth.route("/sing-up")
-def sing_up():
-    return "Página de iniciar sesión"
+    form = LoginForm()
+    return render_template("ingresar.html", form=form)

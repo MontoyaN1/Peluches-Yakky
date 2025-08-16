@@ -4,12 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peluches Yakky - Amor en nuestas manos</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome (íconos) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css' ) }}">
+
+    <title>Peluches Yakky | {% block title %} {% endblock %} </title>
 
 </head>
 
@@ -17,11 +18,17 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="/index.html">Peluches Yakky</a>
+            <a class="navbar-brand fw-bold me-5" href="/index.html">Peluches Yakky</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
+
+                <form class="d-flex ms-5" role="search" action="#">
+                    <input class="form-control me-2" name="search" type="search" placeholder="Buscar"
+                        aria-label="Buscar">
+                    <button class="btn btn-warning  " type="submit">Buscar</button>
+                </form>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="index.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="productos.html">Productos</a></li>
@@ -31,140 +38,108 @@
                 <button class="btn btn-outline-light ms-3">
                     <i class="fas fa-shopping-cart"></i> Carrito
                 </button>
+
+
+
             </div>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item dropdown mx-2">
+                    <a class="nav-link dropdown-toggle text-grey" href="#" role="button" , id="profileDropdown"
+                        data-bs-toggle="dropdown" aria-hidden="false">
+                        Cuenta
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+
+                        <li><a class="dropdown-item" href="#">Perfil <i class="fa-solid fa-user"></i></a></li>
+                        <li><a class="dropdown-item" href="#">Pedido <i class="fa-solid fa-truck-fast"></i></a></li>
+                        <li><a class="dropdown-item" href="#">Salir de la sesión <i
+                                    class="fa-solid fa-right-from-bracket"></i></a>
+                        </li>
+
+                        <li><a class="dropdown-item" href="#">Iniciar Sesión <i
+                                    class="fa-solid fa-right-to-bracket"></i></a>
+                        </li>
+
+                    </ul>
+
+                </li>
+            </ul>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="hero-section bg-primary mb-5">
-        <div class="container">
-            <h1 class="display-4">¡Peluches para todos!</h1>
-            <p class="lead">Encuentra el peluche perfecto para regalar</p>
-            <!-- <a href="#" class="btn btn-light btn-lg">Ver Colección</a> -->
+    <!-- navbar section -->
+    <!--  <nav class="navbar navbar-expand-lg" style="background-color: white;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#" style="color: orange; font-size: 30px; margin-right: -2px;">
+                <i class="fa-brands fa-amazon"></i>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/"
+                            style="font-family: cursive; font-size: 19px;">Amazon</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-grey" href="#" style="font-size: 17px;">About Us</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link text-grey" href="#" style="font-size: 17px;">Contact us</a>
+                    </li>
+                </ul>
+
+                <form class="d-flex" role="search" action="#" style="margin-right: 170px;" >
+                    <input class="form-control me-2" name="search" type="search" placeholder="Search"
+                        aria-label="Search">
+                    <button class="btn" type="submit">Search</button>
+                </form>
+            </div>
+
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                <li class="nav-item mx-2" id="items">
+
+
+                    <a class="nav-link text-grey" href="#"><span class="badge bg-success"></span> Cart
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+
+
+
+
+
+
+                </li>
+
+                <li class="nav-item mx-2" id="items">
+                    <a class="nav-link text-grey" href="#"><span class="badge bg-success"></span> WishList
+                        <i class="fa-solid fa-heart"></i>
+                    </a>
+                </li>
+
+
+                
+
+            </ul>
+
+
         </div>
-    </section>
+    </nav> -->
 
-    <!-- Productos Destacados -->
-    <section class="container mb-5">
-        <h2 class="text-center mb-4">Productos Destacados</h2>
-        <div class="row g-4">
-            <!-- Producto 1 -->
-            <div class="col-md-4">
-                <div class="card product-card h-100" onclick="window.location.href='detalles_productos/nieve.html';">
-                    <img src="img/muñeco_nieve_faro.png" class="card-img-top" alt="Peluche Osito">
-                    <div class="card-body">
-                        <h5 class="card-title">Muñeco de nieve</h5>
-                        <p class="card-text">Repisa de muñeco de nieve con arbol navideño pequeño y farol con luces</p>
-                        <p class="text-danger fw-bold">$40000</p>
-                        <button class="btn btn-primary">Añadir al carrito</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Producto 2 -->
-            <div class="col-md-4">
-                <div class="card product-card h-100"
-                    onclick="window.location.href='detalles_productos/nieve_grande.html';">
-                    <img src="img/muñeco_nieve_faro_grande.png" class="card-img-top" alt="Peluche Conejo">
-                    <div class="card-body">
-                        <h5 class="card-title">Muñeco de nieve grande</h5>
-                        <p class="card-text">Repisa de muñeco de nieve con arbol navideño mediano y farol con luces</p>
-                        <p class="text-danger fw-bold">$50000</p>
-                        <button class="btn btn-primary">Añadir al
-                            carrito</button>
-                    </div>
-                </div>
-            </div>
-            <!-- Producto 3 -->
-            <div class="col-md-4">
-                <div class="card product-card h-100" onclick="window.location.href='detalles_productos/oso.html';">
-                    <img src="img/oso_faro.png" class="card-img-top" alt="Peluche Dragón">
-                    <div class="card-body">
-                        <h5 class="card-title">Oso navideño</h5>
-                        <p class="card-text">Repisa de oso con banca y farol de colores</p>
-                        <p class="text-danger fw-bold">$45000</p>
-                        <button class="btn btn-primary">Añadir al carrito</button>
-                    </div>
-                </div>
-            </div>
+    {% block body %}
 
-            <!-- Segunda fila: 2 cards centradas -->
-            <div class="col-md-4 offset-md-2"> <!-- offset-md-2 centra la card -->
-                <div class="card product-card h-100"
-                    onclick="window.location.href='detalles_productos/papa_noel.html';">
-                    <img src="img/papa_noel.png" class="card-img-top" alt="Peluche Elefante">
-                    <div class="card-body">
-                        <h5 class="card-title">Papa noel</h5>
-                        <p class="card-text">Repisa de papal noel con arbol navideño grande y faraol de colores</p>
-                        <p class="text-danger fw-bold">$35000</p>
-                        <button class="btn btn-primary">Añadir al carrito</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card product-card h-100" onclick="window.location.href='detalles_productos/reno.html';">
-                    <img src="img/reno_decoracion.png" class="card-img-top" alt="Peluche Unicornio">
-                    <div class="card-body">
-                        <h5 class="card-title">Reno navideño</h5>
-                        <p class="card-text">Hermosa repisa de reno con luces de colores</p>
-                        <p class="text-danger fw-bold">$55000</p>
-                        <button class="btn btn-primary">Añadir al carrito</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ofertas Especiales -->
-    <section class="bg-info py-5 mb-5" id="ofertas">
-        <div class="container">
-            <h2 class="text-center mb-4">Ofertas Especiales</h2>
-            <div class="row">
-
-                <div class="col-md-6">
-                    <div class="card product-card mb-3">
-                        <div class="row g-0" onclick="window.location.href='detalles_productos/papa_noel_grande.html';">
-                            <div class="col-md-4">
-                                <img src="img/papa_noel_faro_arbol.png" class="img-fluid rounded-start" alt="Oferta">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title fs-2">Papa Noel grande</h5>
-                                    <p class="card-text">Repisa para decorar mesa con Papa Noel, faro con
-                                        luces y gran arbol navideño </p>
-                                    <p class="  fw-bold fs-4">Antes <s class="text-danger fs-4">$90000</s></p>
+    {% endblock %}
 
 
-                                    <p class=" fw-bold fs-3">Ahora <span class="text-danger fw-bold fs-3">$44900</span>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="card product-card mb-3">
-                        <div class="row g-0" onclick="window.location.href='detalles_productos/pesebre.html';">
-                            <div class="col-md-4">
-                                <img src="img/pesebre_domo.png" class="img-fluid rounded-start" alt="Oferta">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title fs-2">Pesebre con domo</h5>
-                                    <p class="card-text">Pesebre navideño para cubrir </p>
-                                    <p class=" card-text fw-bold fs-4">Antes <s class="text-danger fs-4">$70000</s></p>
-                                    <p class="card-text fw-bold fs-3">Ahora <span
-                                            class="text-danger fw-bold fs-3">$54900</span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="text-center" id="contacto">

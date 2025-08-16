@@ -1,0 +1,136 @@
+{% extends 'index.html' %}
+
+{% block title %} Home {% endblock %}
+
+{% block body %}
+
+<!-- Hero Section -->
+<section class="hero-section bg-primary mb-5">
+    <div class="container">
+        <h1 class="display-4">¡Peluches para todos!</h1>
+        <p class="lead">Encuentra el peluche perfecto para regalar</p>
+        <!-- <a href="#" class="btn btn-light btn-lg">Ver Colección</a> -->
+    </div>
+</section>
+
+<!-- Productos Destacados -->
+<section class="container mb-5">
+    <h2 class="text-center mb-4">Productos Destacados</h2>
+    <div class="row g-4">
+        <!-- Producto 1 -->
+        <div class="col-md-4">
+            <div class="card product-card h-100" onclick="window.location.href='detalles_productos/nieve.html';">
+                <img src="img/muñeco_nieve_faro.png" class="card-img-top" alt="Peluche Osito">
+                <div class="card-body">
+                    <h5 class="card-title">Muñeco de nieve</h5>
+                    <p class="card-text">Repisa de muñeco de nieve con arbol navideño pequeño y farol con luces</p>
+                    <p class="text-danger fw-bold">$40000</p>
+                    <button class="btn btn-primary">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+        <!-- Producto 2 -->
+        <div class="col-md-4">
+            <div class="card product-card h-100" onclick="window.location.href='detalles_productos/nieve_grande.html';">
+                <img src="img/muñeco_nieve_faro_grande.png" class="card-img-top" alt="Peluche Conejo">
+                <div class="card-body">
+                    <h5 class="card-title">Muñeco de nieve grande</h5>
+                    <p class="card-text">Repisa de muñeco de nieve con arbol navideño mediano y farol con luces</p>
+                    <p class="text-danger fw-bold">$50000</p>
+                    <button class="btn btn-primary">Añadir al
+                        carrito</button>
+                </div>
+            </div>
+        </div>
+        <!-- Producto 3 -->
+        <div class="col-md-4">
+            <div class="card product-card h-100" onclick="window.location.href='detalles_productos/oso.html';">
+                <img src="img/oso_faro.png" class="card-img-top" alt="Peluche Dragón">
+                <div class="card-body">
+                    <h5 class="card-title">Oso navideño</h5>
+                    <p class="card-text">Repisa de oso con banca y farol de colores</p>
+                    <p class="text-danger fw-bold">$45000</p>
+                    <button class="btn btn-primary">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Segunda fila: 2 cards centradas -->
+        <div class="col-md-4 offset-md-2"> <!-- offset-md-2 centra la card -->
+            <div class="card product-card h-100" onclick="window.location.href='detalles_productos/papa_noel.html';">
+                <img src="img/papa_noel.png" class="card-img-top" alt="Peluche Elefante">
+                <div class="card-body">
+                    <h5 class="card-title">Papa noel</h5>
+                    <p class="card-text">Repisa de papal noel con arbol navideño grande y faraol de colores</p>
+                    <p class="text-danger fw-bold">$35000</p>
+                    <button class="btn btn-primary">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card product-card h-100" onclick="window.location.href='detalles_productos/reno.html';">
+                <img src="img/reno_decoracion.png" class="card-img-top" alt="Peluche Unicornio">
+                <div class="card-body">
+                    <h5 class="card-title">Reno navideño</h5>
+                    <p class="card-text">Hermosa repisa de reno con luces de colores</p>
+                    <p class="text-danger fw-bold">$55000</p>
+                    <button class="btn btn-primary">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Ofertas Especiales -->
+<section class="bg-info py-5 mb-5" id="ofertas">
+    <div class="container">
+        <h2 class="text-center mb-4">Ofertas Especiales</h2>
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card product-card mb-3">
+                    <div class="row g-0" onclick="window.location.href='detalles_productos/papa_noel_grande.html';">
+                        <div class="col-md-4">
+                            <img src="img/papa_noel_faro_arbol.png" class="img-fluid rounded-start" alt="Oferta">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title fs-2">Papa Noel grande</h5>
+                                <p class="card-text">Repisa para decorar mesa con Papa Noel, faro con
+                                    luces y gran arbol navideño </p>
+                                <p class="  fw-bold fs-4">Antes <s class="text-danger fs-4">$90000</s></p>
+
+
+                                <p class=" fw-bold fs-3">Ahora <span class="text-danger fw-bold fs-3">$44900</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card product-card mb-3">
+                    <div class="row g-0" onclick="window.location.href='detalles_productos/pesebre.html';">
+                        <div class="col-md-4">
+                            <img src="img/pesebre_domo.png" class="img-fluid rounded-start" alt="Oferta">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title fs-2">Pesebre con domo</h5>
+                                <p class="card-text">Pesebre navideño para cubrir </p>
+                                <p class=" card-text fw-bold fs-4">Antes <s class="text-danger fs-4">$70000</s></p>
+                                <p class="card-text fw-bold fs-3">Ahora <span
+                                        class="text-danger fw-bold fs-3">$54900</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

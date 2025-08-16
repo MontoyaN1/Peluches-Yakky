@@ -1,3 +1,11 @@
+.fondo {
+    background-image: url(../img/fondo.png);
+    background-position: center;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
 .hero-section {
     background: url('https://via.placeholder.com/1920x600') no-repeat center center;
     background-size: cover;
@@ -23,13 +31,13 @@ footer {
 
 
 .thumbnail-container {
-    width: 100px; 
-    height: 100px; 
+    width: 100px;
+    height: 100px;
     position: relative;
     overflow: hidden;
     border-radius: 0.25rem;
     border: 1px solid #dee2e6;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .img-thumbnail {
