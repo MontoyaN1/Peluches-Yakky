@@ -1,18 +1,22 @@
-from _init_ import db
+from ._init_ import db
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class User(db.Model, UserMixin):
-    id = db.Colum(db.Integer, primary_key=True)
-    email = db.Colum(db.String(100), unique=True)
+class Customer(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(100))
     password_hash = db.Column(db.String(150))
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
 
-    cart_items = db.relationship("Cart", backref=db.backref("customer", lazy=True))
-    orders = db.relationship("Order", backref=db.backref("customer", lazy=True))
+    cart_items = db.relationship(
+        "Cart", backref=db.backref("customer", lazy=True), cascade="all, delete-orphan"
+    )
+    orders = db.relationship(
+        "Order", backref=db.backref("customer", lazy=True), cascade="all, delete-orphan"
+    )
 
     @property
     def password(self):
@@ -26,7 +30,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password=password)
 
     def __str__(self):
-        return "<User %r>" % User.id
+        return "<Customer %r>" % Customer.id
 
 
 class Product(db.Model):
@@ -38,9 +42,14 @@ class Product(db.Model):
     product_picture = db.Column(db.String(1000), nullable=False)
     flash_sale = db.Column(db.Boolean, default=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+    descripcion = db.Column(db.String(1000), nullable=False)
 
-    carts = db.relationship("Cart", backref=db.backref("product", lazy=True))
-    orders = db.relationship("Order", backref=db.backref("product", lazy=True))
+    carts = db.relationship(
+        "Cart", backref=db.backref("product", lazy=True), cascade="all, delete-orphan"
+    )
+    orders = db.relationship(
+        "Order", backref=db.backref("product", lazy=True), cascade="all, delete-orphan"
+    )
 
     def __str__(self):
         return "<Product %r>" % self.product_name
@@ -65,6 +74,9 @@ class Order(db.Model):
     price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(100), nullable=False)
     payment_id = db.Column(db.String(1000), nullable=False)
+    """ address = db.Column(db.String(1000), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+ """
 
     customer_link = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
     product_link = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)

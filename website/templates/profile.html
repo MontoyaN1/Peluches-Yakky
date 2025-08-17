@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+
+{% block title %} Perfil
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">  <!-- Cambiado a container-fluid -->
+    <div class="row justify-content-center">  <!-- Centrado -->
+        <div class="col-lg-8">  <!-- Ancho máximo para pantallas grandes -->
+            <h3 class="text-light mb-4">  <!-- Clases de Bootstrap -->
+                Bienvenido <span class="text-capitalize">{{ customer.username }}</span>
+            </h3>
+
+            <div class="row">
+                <!-- Menú lateral -->
+                <div class="col-md-3 mb-4">  <!-- mb-4 para margen inferior -->
+                    <div class="card shadow-sm">  <!-- Sombra para profundidad -->
+                        <div class="card-body">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link active btn btn-primary mb-2" href="#">Profile</a>
+                                </li>
+                                <!-- Añade más opciones si es necesario -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contenido principal -->
+                <div class="col-md-8">  <!-- Ajuste de ancho -->
+                    <div class="card shadow-sm h-100">  <!-- Altura completa -->
+                        <div class="card-body">
+                            <h3 class="card-title">{{ customer.username }}</h3>
+                            <p class="card-text"><strong>Email:</strong> {{ customer.email }}</p>
+                            <!-- Añade más campos del perfil aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -3,8 +3,7 @@
 {% block body %}
 
 <body class="d-flex justify-content-center m-5 fondo">
-    <form action="#" method="post"
-        class="formulario d-flex flex-column bg-light border border-warning shadow-lg rounded p-3 m-5"
+    <form method="post" class="formulario d-flex flex-column bg-light border border-warning shadow-lg rounded p-3 m-5"
         style="width:500px ;">
 
         <h1 class=" d-flex justify-content-center text-primary">Registrarse</h1>
@@ -16,7 +15,8 @@
         <hr class="">
 
         <div class="mb-3">
-            <label for="" class="form-label">{{form.email}} </label>
+            <label for="" class="form-label">Correo</label>
+
             <input type="email" name="email" id="email" required class="form-control" placeholder="nombre@email.com">
         </div>
 
@@ -31,7 +31,7 @@
 
         <br>
 
-        <a href="sign-in.html">¿Ya tienes cuenta? inicia sesión aquí</a>
+        <a href="/sing-up">¿No tienes cuenta? Crea una aquí</a>
     </form>
 
 

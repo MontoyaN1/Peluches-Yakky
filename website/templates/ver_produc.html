@@ -1,0 +1,92 @@
+{% extends 'index.html' %}
+
+{% block title %} Adminstración
+
+{% endblock %}
+
+{% block body %}
+
+{% if productos | length < 1 %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+
+    <div class="container bg-light rounded-3 p-2 ">
+
+        <h3>No hay productos agregados</h3>
+
+    </div>
+
+    </div>
+
+    {% else %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+
+        <div class="container bg-light rounded-3 p-2 ">
+
+            <table class="table table-bordered">
+
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de producto</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Precio anterior</th>
+                        <th>Cantidad</th>
+                        <th>Imagen del producto</th>
+                        <th>Destacado</th>
+                        <th>Acciones</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for item in productos %}
+
+
+
+                    <tr>
+                        <td>{{ item.id }} </td>
+                        <td> {{ item.product_name }}</td>
+                        <td> {{ item.descripcion }}</td>
+                        <td> {{ item.current_price }}</td>
+                        <td> {{ item.previous_price }}</td>
+                        <td> {{ item.in_stock }}</td>
+                        <td> <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
+                                style="height: 100px; width: 100px; border-radius: 4px;">
+                        </td>
+
+                        {% if item.flash_sale %}
+                        <td> Si </td>
+
+                        {% else %}
+                        <td> No </td>
+
+
+                        {% endif %}
+
+                        <td>
+                            <a href="/elimi-producto/{{ item.id  }}" onclick="return confirmDelete()" class="delete"
+                                title="Eliminar" data-toggle="tooltip">
+                                <i class="material-icons">&#xE92B;</i>
+                            </a>
+
+                            <a href="/actua-producto/{{ item.id }}" class="edit" title="Editar" data-toggle="tooltip">
+                                <i class="material-icons">&#xE254;</i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function confirmDelete() {
+            return confirm('¿Seguro que deseas eliminar este elemento?');
+        }
+    </script>
+
+    {% endif %}
+
+
+    {% endblock %}

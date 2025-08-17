@@ -1,0 +1,64 @@
+{% extends 'index.html' %}
+
+{% block title %} Adminstración
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-2 ">
+
+        <h3 class="mb-4">Agregar nuevo producto</h3>
+
+        <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Nombre del producto*</label>
+                    <input type="text" class="form-control" name="product_name" required>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Descripción *</label>
+                    <input type="text" class="form-control" name="descipcion" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio actual*</label>
+                    <input type="number" step="0.01" class="form-control" name="current_price" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Precio anterior*</label>
+                    <input type="number" step="0.01" class="form-control" name="previous_price" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Stock*</label>
+                    <input type="number" class="form-control" name="in_stock" required >
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Imagen del producto*</label>
+                    <input type="file" class="form-control" name="product_picture" accept="image/*" required>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="flash_sale" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Oferta flash</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                    <i class="bi bi-cloud-plus me-2"></i> Guardar producto
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

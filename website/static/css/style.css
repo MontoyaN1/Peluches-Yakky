@@ -5,6 +5,13 @@
     background-attachment: fixed;
     background-size: cover;
 }
+.fondo_error {
+    background-image: url(../img/error_404.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size:contain;
+}
 
 .hero-section {
     background: url('https://via.placeholder.com/1920x600') no-repeat center center;
@@ -69,3 +76,4 @@ footer {
     background: #ddd;
     border-radius: 10px;
 }
+
