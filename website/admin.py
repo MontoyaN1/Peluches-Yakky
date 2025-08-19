@@ -9,10 +9,11 @@ from flask import (
     url_for,
 )
 from flask_login import login_required, current_user
+from sqlalchemy import func
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
-from .models import Product
+from .models import Order, Product, Customer
 from ._init_ import db
 
 
@@ -77,7 +78,7 @@ def agregar_productos():
                 db.session.commit()
                 flash(f"{product_name} agregado exitosamente")
                 print("Producto añadido")
-                return redirect(request.url)
+                return redirect("/ver-productos")
 
             except Exception as e:
 
@@ -111,26 +112,26 @@ def actua_productos(item_id):
             previous_price = request.form.get("previous_price")
             stock = request.form.get("in_stock")
             flash_sale = request.form.get("flash_sale") == "on"
-            descipcion = request.form.get("descripcion")
-
-
-            if "product_picture" not in request.files:
-                flash("No se seleccionó ninguna imagen")
-                return redirect(request.url)
+            descripcion = request.form.get("descripcion")
 
             file = request.files["product_picture"]
 
+            exist_image = request.form.get("existing_image")
+
             if file.filename == "":
-                flash("No se seleccionó ninguna imagen")
-                return redirect(request.url)
+                filepath = exist_image
 
-            if file and allowed_file(file.filename):
-                filename = secure_filename(file.filename)
+            else:
+                file_remove_name = os.path.basename(exist_image)
+                os.remove(f"./media/{file_remove_name}")
 
-            unique_filename = f"{datetime.now().timestamp()}_{filename}"
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
 
-            filepath = f"./media/{unique_filename}"
-            file.save(filepath)
+                unique_filename = f"{datetime.now().timestamp()}_{filename}"
+
+                filepath = f"./media/{unique_filename}"
+                file.save(filepath)
 
             product = Product()
             product.product_name = product_name
@@ -139,7 +140,7 @@ def actua_productos(item_id):
             product.in_stock = stock
             product.flash_sale = flash_sale
             product.product_picture = filepath
-            product.descipcion = descipcion
+            product.descripcion = descripcion
 
             try:
                 Product.query.filter_by(id=item_id).update(
@@ -150,7 +151,7 @@ def actua_productos(item_id):
                         in_stock=stock,
                         flash_sale=flash_sale,
                         product_picture=filepath,
-                        descipcion=descipcion
+                        descripcion=descripcion,
                     )
                 )
 
@@ -176,11 +177,8 @@ def elimi_productos(item_id):
             delete_product = Product.query.get(item_id)
 
             if delete_product.product_picture:
-                image_path = os.path.join(
-                    current_app.root_path, "media", delete_product.product_picture
-                )
-                if os.path.exists(image_path):
-                    os.remove(image_path)
+                file_remove_name = os.path.basename(delete_product.product_picture)
+                os.remove(f"./media/{file_remove_name}")
 
             db.session.delete(delete_product)
             db.session.commit()
@@ -192,4 +190,128 @@ def elimi_productos(item_id):
             db.session.rollback()
             flash(f"Fallo eliminación: {e}")
 
+    return render_template("error_404.html")
+
+
+@admin.route("/ver-pedidos", methods=["GET", "POST"])
+@login_required
+def ver_pedidos():
+    if current_user.id == 1:
+        pedidos = Order.query.all()
+        return render_template("ver_pedidos.html", pedidos=pedidos)
+    return render_template("error_404.html")
+
+
+@admin.route("/actua-pedido/<int:order_id>", methods=["GET", "POST"])
+@login_required
+def actua_pedidos(order_id):
+    if current_user.id == 1:
+        up_order = Order.query.get(order_id)
+        if request.method == "POST":
+            estado = request.form.get("estado")
+
+            order = Order()
+            order.status = estado
+
+            try:
+                Order.query.filter_by(id=order_id).update(dict(status=estado))
+
+                db.session.commit()
+                flash("Se actualizó correctamente estado ")
+                print("Estado actualizado")
+                return redirect(url_for("admin.ver_pedidos"))
+
+            except Exception as e:
+
+                db.session.rollback()
+                flash(f"Fallo creación de cuenta: {e}")
+
+        return render_template("actua-pedido.html")
+
+    return render_template("error_404.html")
+
+
+@admin.route("/usuarios")
+@login_required
+def usuarios():
+    if current_user.id == 1:
+        usuarios = Customer.query.filter(
+            Customer.email != "admin@peluchesyakky.com"
+        ).all()
+        return render_template("usuarios.html", usuarios=usuarios)
+    return render_template("error_404.html")
+
+
+@admin.route("/adminvista")
+@login_required
+def adminvista():
+    if current_user.id == 1:
+        pedidos: Order = Order.query.all()
+        return render_template("admin.html", pedidos=pedidos)
+    return render_template("error_404.html")
+
+
+IMPUESTO = 0.19
+DESCUENTO_FLASH_SALE = 0.10
+
+
+@admin.route("/ventas")
+@login_required
+def ventas():
+    if current_user.id == 1:
+
+        ordenes: Order = Order.query.all()
+
+        total_ventas = 0
+        total_impuestos = 0
+        total_descuentos = 0
+
+        orden: Order
+
+        """ Ventas, impuesto y descuento total  """
+
+        for orden in ordenes:
+            precio_unitario = orden.price
+
+            subtotal = precio_unitario * orden.quantity
+
+            producto: Product = Product.query.get(orden.product_link)
+            descuento = DESCUENTO_FLASH_SALE if producto.flash_sale else 0.0
+
+            total_ventas += subtotal * (1 + IMPUESTO - descuento)
+            total_impuestos += subtotal * IMPUESTO
+            total_descuentos += subtotal * descuento
+
+        """ ventas mensuales  """
+
+        hoy = datetime.now()
+        meses = []
+        ventas_mensuales = []
+
+        """  resultados = (
+            db.session.query(
+                func.strftime("%Y-%m", Order).label(
+                    "mes"
+                ),  # Formato: "2023-10"
+                func.sum(Order.price * Order.quantity).label("ventas"),
+                # Suma de (precio * cantidad)
+            )
+            .group_by("mes")
+            .order_by("mes")
+            .all()
+        )
+
+        for i in range(6):
+            mes = hoy - timedelta(days=30 * i)
+            meses.append(mes.strftime("%b %Y"))
+            ventas_mensuales.append """
+
+        return render_template(
+            "ventas.html",
+            total_ventas=round(total_ventas, 2),
+            total_impuestos=round(total_impuestos, 2),
+            total_descuentos=round(total_descuentos, 2),
+            impuesto=IMPUESTO,
+            descuento=DESCUENTO_FLASH_SALE,
+        )
     return render_template("error_404.html")

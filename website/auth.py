@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import Customer
+from .models import Cart, Customer, Order
 from ._init_ import db
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 auth = Blueprint("auth", __name__)
 
@@ -63,6 +63,17 @@ def log_out():
 @auth.route("/profile/<int:customer_id>")
 @login_required
 def profile(customer_id):
+
     customer = Customer.query.get(customer_id)
+    pedidos = Order.query.filter_by(customer_link=customer_id).all()
     print("Customer ID:", customer_id)
-    return render_template("profile.html", customer=customer)
+    return render_template(
+        "profile.html",
+        customer=customer,
+        pedidos=pedidos,
+        cart=(
+            Cart.query.filter_by(customer_link=current_user.id).all()
+            if current_user.is_authenticated
+            else []
+        ),
+    )

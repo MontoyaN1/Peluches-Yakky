@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -27,7 +28,6 @@ def create_app():
     login_manager.init_app(app)
     login_manager.login_view = "auth.login"
 
-
     from .views import views
     from .admin import admin
     from .auth import auth
@@ -37,7 +37,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         return Customer.query.get(int(id))
-    
+
     def create_admin():
         admin = Customer()
         admin.username = "Admin"
@@ -53,27 +53,19 @@ def create_app():
             db.session.rollback()
             print("Fallo crear admin")
 
-   
-
-    
-
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
     app.register_blueprint(admin, url_prefix="/")
-
 
     with app.app_context():
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
             db.create_all()
             print("Base de Datos creada")
-            
+
             # Crear admin solo si no existe
             if not Customer.query.filter_by(email="admin@peluchesyakky.com").first():
                 create_admin()
         else:
             print("La base de datos ya existe, omitiendo creación")
 
-
     return app
-
-

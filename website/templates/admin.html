@@ -1,0 +1,142 @@
+{% extends 'index.html' %}
+
+{% block title %} Perfil
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center bg-light m-4 p-4 rounded-3">
+        <div class="col-lg-10">
+
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    <i class="bi bi-speedometer2 me-3"></i>Panel de Administración
+                </h1>
+
+            </div>
+
+
+            <div class="row g-4">
+                <!-- Tarjeta 1 -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-primary">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-people fs-1 text-primary"></i>
+                            </div>
+                            <h3 class="h5">Gestión de Usuarios</h3>
+                            <p class="text-muted">Administra los usuarios</p>
+                            <a href="/usuarios" class="btn btn-outline-primary stretched-link">Acceder</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-success">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-cart fs-1 text-success"></i>
+                            </div>
+                            <h3 class="h5">Pedidos</h3>
+                            <p class="text-muted">Revisa y gestiona pedidos</p>
+                            <a href="/ver-pedidos" class="btn btn-outline-success stretched-link">Ver todos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-info">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-basket-fill fs-1 text-info"></i>
+                            </div>
+                            <h3 class="h5">Productos</h3>
+                            <p class="text-muted">Revisa y administra productos</p>
+                            <a href="/ver-productos" class="btn btn-outline-info stretched-link">Acceder</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="card shadow-sm h-100 border-start border-4 border-warning">
+                        <div class="card-body text-center">
+                            <div class="mb-3">
+                                <i class="bi bi-graph-up fs-1 text-warning"></i>
+                            </div>
+                            <h3 class="h5">Estadísticas</h3>
+                            <p class="text-muted">Métricas y reportes</p>
+                            <a href="/ventas" class="btn btn-outline-warning stretched-link">Ver datos</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row mt-4 g-4 justify-content-center">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="bi bi-exclamation-circle me-2"></i>Pedidos Recientes</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush ">
+
+                                {% if pedidos | length < 1 %} <li
+                                    class="list-group-item d-flex  justify-content-between align-items-center">
+                                    No hay pedidos recientes
+                                    </li>
+                                    {% else %} {% for item in pedidos[:3] %} <li
+                                        class="list-group-item d-flex  justify-content-between align-items-center">
+                                        {{item.product.product_name}} x {{item.quantity}}
+
+                                        {% if item.status == "Entregado" %}
+                                        <span class="badge bg-success rounded-pill ">{{item.status}}</span>
+
+
+                                        {% elif item.status == "Enviado" %}
+                                        <span class="badge bg-primary rounded-pill">{{item.status}}</span>
+
+
+                                        {% else %}
+
+                                        <span class="badge bg-warning rounded-pill text-black">{{item.status}}</span>
+
+
+                                        {% endif %}
+
+
+                                    </li>
+                                    {% endfor %}
+
+                                    {% endif %}
+
+
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <style>
+                    .card {
+                        transition: transform 0.3s, box-shadow 0.3s;
+                    }
+
+                    .card:hover {
+                        transform: translateY(-5px);
+                        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+                    }
+                </style>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}

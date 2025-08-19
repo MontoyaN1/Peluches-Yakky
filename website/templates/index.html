@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Krona+One|Poppins&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <!-- Font Awesome (íconos) -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css' ) }}">
 
@@ -19,7 +18,7 @@
 </head>
 
 <body>
-    <!-- Navbar -->
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand fw-bold me-5" href="/">Peluches Yakky</a>
@@ -28,22 +27,30 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
 
-                <form class="d-flex ms-5" role="search" action="#">
-                    <input class="form-control me-2" name="search" type="search" placeholder="Buscar"
+                <form class="d-flex ms-5" role="search" action="/buscar" method="post">
+                    <input class="form-control me-2" name="buscar" type="search" placeholder="Buscar"
                         aria-label="Buscar">
-                    <button class="btn btn-warning  " type="submit">Buscar</button>
+                    <button class="btn btn-warning" type="submit">Buscar</button>
                 </form>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link active" href="/">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Productos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ofertas">Ofertas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/productos-todo">Productos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
                 </ul>
-                <button class="btn btn-outline-light ms-3">
+
+
+                {% if cart | length < 1 %} <a href="/carrito" class="btn btn-outline-light ms-3">
                     <i class="fas fa-shopping-cart"></i> Carrito
-                </button>
+                    </a>
 
+                    {% else %}
 
+                    <a href="/carrito" class="btn btn-outline-light ms-3">
+                        <i class="fas fa-shopping-cart"></i> Carrito <i
+                            class="bi bi-{{ cart | length }}-circle-fill"></i>
+                    </a>
+
+                    {% endif %}
 
             </div>
 
@@ -58,93 +65,42 @@
 
                         {% if current_user.is_authenticated %}
 
-                        <li><a class="dropdown-item" href="/profile/{{ current_user.id }}">Perfil <i
-                                    class="fa-solid fa-user"></i></a></li>
-                        <li><a class="dropdown-item" href="#">Pedido <i class="fa-solid fa-truck-fast"></i></a></li>
+                        {% if current_user.id == 1 %}
+
+                        <li><a class="dropdown-item" href="/adminvista">Adminstración <i
+                                    class="bi bi-person-fill-gear"></i></a></li>
+
                         <li><a class="dropdown-item" href="/logout">Salir de la sesión <i
                                     class="fa-solid fa-right-from-bracket"></i></a>
-                        </li>
 
-                        {% else %}
-
-                        <li><a class="dropdown-item" href="/login">Iniciar Sesión <i
-                                    class="fa-solid fa-right-to-bracket"></i></a>
-                        </li>
-
-                        {% endif %}
-
-                    </ul>
+                            {% else %}
+                        <li><a class="dropdown-item" href="/profile/{{ current_user.id }}">Perfil <i
+                                    class="fa-solid fa-user"></i></a></li>
 
                 </li>
+                <li><a class="dropdown-item" href="/logout">Salir de la sesión <i
+                            class="fa-solid fa-right-from-bracket"></i></a>
+                </li>
+
+
+                {% endif %}
+
+
+
+                {% else %}
+
+                <li><a class="dropdown-item" href="/login">Iniciar Sesión <i
+                            class="fa-solid fa-right-to-bracket"></i></a>
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+            </li>
             </ul>
         </div>
     </nav>
-
-    <!-- navbar section -->
-    <!--  <nav class="navbar navbar-expand-lg" style="background-color: white;">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#" style="color: orange; font-size: 30px; margin-right: -2px;">
-                <i class="fa-brands fa-amazon"></i>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/"
-                            style="font-family: cursive; font-size: 19px;">Amazon</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-grey" href="#" style="font-size: 17px;">About Us</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link text-grey" href="#" style="font-size: 17px;">Contact us</a>
-                    </li>
-                </ul>
-
-                <form class="d-flex" role="search" action="#" style="margin-right: 170px;" >
-                    <input class="form-control me-2" name="search" type="search" placeholder="Search"
-                        aria-label="Search">
-                    <button class="btn" type="submit">Search</button>
-                </form>
-            </div>
-
-
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-                <li class="nav-item mx-2" id="items">
-
-
-                    <a class="nav-link text-grey" href="#"><span class="badge bg-success"></span> Cart
-                        <i class="fa-solid fa-cart-shopping"></i>
-                    </a>
-
-
-
-
-
-
-                </li>
-
-                <li class="nav-item mx-2" id="items">
-                    <a class="nav-link text-grey" href="#"><span class="badge bg-success"></span> WishList
-                        <i class="fa-solid fa-heart"></i>
-                    </a>
-                </li>
-
-
-                
-
-            </ul>
-
-
-        </div>
-    </nav> -->
 
     {% for message in get_flashed_messages() %}
 
@@ -193,8 +149,11 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
+    <!-- Al final del body, en este orden exacto -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/funciones.js') }}"></script>
+
 </body>
 
 </html>

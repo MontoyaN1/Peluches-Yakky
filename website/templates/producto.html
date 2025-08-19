@@ -1,0 +1,85 @@
+{% extends 'index.html' %}
+
+{% block title %} Producto
+
+{% endblock %}
+
+
+{% block body %}
+
+<main class="container my-5">
+    <div class="row">
+        <!-- Imágenes del producto -->
+        <div class="col-md-6 hover-effect">
+            <div class="card mb-3 p-1">
+                <!-- Imagen principal -->
+                <img src="../{{ producto.product_picture}} " class="card-img-top"
+                    style="height: 500px; object-fit: contain;">
+
+
+            </div>
+        </div>
+
+        <!-- Información del producto -->
+        <div class="col-md-6">
+
+            <div class="d-flex justify-content-between align-items-center m-3">
+                <h1 class="text-black mb-3">
+                    {{producto.product_name}}
+                </h1>
+
+                <div class="d-flex gap-3"><button onclick="window.location.href='/'" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                    </button>
+
+                </div>
+
+            </div>
+
+            <h3 class="text-success mb-4">$ {{producto.current_price}} </h3>
+
+
+
+            <div class="mb-4">
+                <p class="lead"> {{producto.descripcion}} </p>
+            </div>
+
+
+
+            <div class="d-grid gap-2 d-md-flex">
+                <a class="btn btn-primary btn-lg me-md-2" href="/agregar-carrito/{{ producto.id }}">
+                    <i class="fas fa-shopping-cart me-2"></i>Añadir al carrito
+                </a>
+
+            </div>
+
+            <div class="mt-4 p-3 bg-light rounded">
+                <div class="d-flex">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-truck fa-2x"></i>
+                    </div>
+                    <div>
+                        <h6>Envío rápido y seguro</h6>
+                        <p class="mb-0">Recibe tu pedido en 2-3 días hábiles. Envío gratis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<style>
+    .hover-effect {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
+
+
+
+{% endblock %}

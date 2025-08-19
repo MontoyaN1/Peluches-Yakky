@@ -6,41 +6,212 @@
 
 {% block body %}
 
-<div class="container-fluid fondo py-5" style="min-height: 100vh;">  <!-- Cambiado a container-fluid -->
-    <div class="row justify-content-center">  <!-- Centrado -->
-        <div class="col-lg-8">  <!-- Ancho máximo para pantallas grandes -->
-            <h3 class="text-light mb-4">  <!-- Clases de Bootstrap -->
-                Bienvenido <span class="text-capitalize">{{ customer.username }}</span>
-            </h3>
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center bg-light p-5 m-4">
+        <div class="col-lg-10">
+            <!-- Encabezado con bienvenida -->
+            <div class="d-flex justify-content-between align-items-center mb-5 ">
+                <h1 class="text-black mb-0 display-5 fw-bold">
+                    <i class="bi bi-person-circle me-3"></i>Hola, {{ customer.username }}
+                </h1>
+                <!-- <a href="/editar-perfil" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil-square me-2"></i>Editar perfil
+                </a> -->
+            </div>
 
-            <div class="row">
-                <!-- Menú lateral -->
-                <div class="col-md-3 mb-4">  <!-- mb-4 para margen inferior -->
-                    <div class="card shadow-sm">  <!-- Sombra para profundidad -->
-                        <div class="card-body">
-                            <ul class="nav flex-column">
-                                <li class="nav-item">
-                                    <a class="nav-link active btn btn-primary mb-2" href="#">Profile</a>
-                                </li>
-                                <!-- Añade más opciones si es necesario -->
-                            </ul>
+            <!-- Tarjetas de resumen -->
+            <div class="row g-4 mb-5">
+                <!-- Total de pedidos -->
+                <div class="col-md-4 ">
+                    <div class="card border-primary shadow-sm h-100 hover-effect">
+                        <div class="card-body text-center py-4">
+                            <i class="bi bi-box-seam fs-1 text-primary mb-3"></i>
+                            <h3 class="h5">Pedidos Totales</h3>
+                            <p class="display-6 fw-bold text-primary">
+                                {{ pedidos|length }}
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Contenido principal -->
-                <div class="col-md-8">  <!-- Ajuste de ancho -->
-                    <div class="card shadow-sm h-100">  <!-- Altura completa -->
-                        <div class="card-body">
-                            <h3 class="card-title">{{ customer.username }}</h3>
-                            <p class="card-text"><strong>Email:</strong> {{ customer.email }}</p>
-                            <!-- Añade más campos del perfil aquí -->
+                <!-- Pedidos pendientes -->
+                <div class="col-md-4">
+                    <div class="card border-warning shadow-sm h-100 hover-effect">
+                        <div class="card-body text-center py-4">
+                            <i class="bi bi-clock-history fs-1 text-warning mb-3"></i>
+                            <h3 class="h5">Pendientes</h3>
+                            <p class="display-6 fw-bold text-warning">
+                                {{ pedidos|selectattr('status', 'equalto', 'Pendiente')|list|length }}
+                            </p>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Pedidos completados -->
+                <div class="col-md-4">
+                    <div class="card border-success shadow-sm h-100 hover-effect">
+                        <div class="card-body text-center py-4">
+                            <i class="bi bi-check-circle fs-1 text-success mb-3"></i>
+                            <h3 class="h5">Completados</h3>
+                            <p class="display-6 fw-bold text-success">
+                                {{ pedidos|selectattr('status', 'equalto', 'Entregado')|list|length }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de últimos pedidos -->
+            <div class="card shadow-sm mb-5">
+                <div class="card-header bg-white border-bottom">
+                    <h3 class="mb-0">
+                        <i class="bi bi-receipt me-2"></i>Tus últimos pedidos
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {% if pedidos %}
+                    <div class="row g-4">
+                        {% for item in pedidos[:3] %}
+                        <div class="col-12">
+                            <div class="card product-card shadow-sm h-100 hover-effect">
+                                <div class="row g-0">
+                                    <div class="col-md-3 d-flex align-items-center justify-content-center p-3 bg-light">
+                                        <img src="../{{ item.product.product_picture }}"
+                                            alt="{{ item.product.product_name }}" class="img-fluid rounded"
+                                            style="max-height: 150px; object-fit: contain;">
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                                <div>
+                                                    <h4 class="h5 mb-1">{{ item.product.product_name }}</h4>
+                                                    <div class="d-flex gap-3 mb-2">
+                                                        <span class="badge bg-secondary">
+                                                            #{{ item.id }}
+                                                        </span>
+                                                        <span class="text-muted">
+                                                            {{ item.fecha_creacion.strftime('%d/%m/%Y') }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <span class="badge bg-{{ 
+                                                        'warning' if item.status == 'Pendiente' 
+                                                        else 'info' if item.status == 'Enviado' 
+                                                        else 'success' }} fs-6">
+                                                    {{ item.status }}
+                                                </span>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="d-flex gap-4 mb-3">
+                                                        <p class="mb-0"><strong>Cantidad:</strong> {{ item.quantity }}
+                                                        </p>
+                                                        <p class="mb-0"><strong>Precio:</strong> ${{ item.price }}</p>
+                                                        <p class="mb-0"><strong>Total:</strong> ${{ item.price *
+                                                            item.quantity }}</p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="progress" style="height: 10px;">
+                                                        <div class="progress-bar 
+                                                                {{ 'bg-warning' if item.status == 'Pendiente' }} 
+                                                                {{ 'bg-info progress-bar-striped' if item.status == 'Enviado' }} 
+                                                                {{ 'bg-success' if item.status == 'Entregado' }}"
+                                                            data-status="{{item.status}}" role="progressbar"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mt-2 small text-muted">
+                                                        <span>Pendiente</span>
+                                                        <span>Enviado</span>
+                                                        <span>Entregado</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-4">
+                        <a href="/pedidos" class="btn btn-primary">
+                            <i class="bi bi-list-ul me-2"></i>Ver historial pedidos
+                        </a>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
+                        <h4 class="text-muted">No tienes pedidos aún</h4>
+                        <a href="/productos" class="btn btn-primary mt-3">
+                            <i class="bi bi-bag me-2"></i>Explorar productos
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Información de contacto -->
+            <div class="card shadow-sm hover-effect">
+                <div class="card-header bg-white border-bottom">
+                    <h3 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Tu información
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-envelope me-2"></i>Email</span>
+                                    <span class="fw-bold">{{ customer.email }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-calendar me-2"></i>Miembro desde</span>
+                                    <span class="fw-bold">{{ customer.date_joined.strftime('%d/%m/%Y') if
+                                        customer.date_joined else 'Fecha no disponible' }}</span>
+                                </li>
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    .hover-effect {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .hover-effect:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .fondo {
+        background-color: #f8f9fa;
+    }
+
+    .product-card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+</style>
+
+
+<script>
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        const status = bar.getAttribute('data-status');
+        let width = '100%';
+        if (status === 'Pendiente') width = '20%';
+        else if (status === 'Enviado') width = '50%';
+        bar.style.width = width;
+    });
+</script>
 
 {% endblock %}

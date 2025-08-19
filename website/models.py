@@ -1,3 +1,4 @@
+import uuid
 from ._init_ import db
 from flask_login import UserMixin
 from datetime import datetime
@@ -36,8 +37,8 @@ class Customer(db.Model, UserMixin):
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(100), nullable=False)
-    current_price = db.Column(db.Float, nullable=False)
-    previous_price = db.Column(db.Float, nullable=False)
+    current_price = db.Column(db.Integer, nullable=False)
+    previous_price = db.Column(db.Integer, nullable=False)
     in_stock = db.Column(db.Integer, nullable=False)
     product_picture = db.Column(db.String(1000), nullable=False)
     flash_sale = db.Column(db.Boolean, default=False)
@@ -72,11 +73,13 @@ class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(100), nullable=False)
-    payment_id = db.Column(db.String(1000), nullable=False)
-    """ address = db.Column(db.String(1000), nullable=False)
+    status = db.Column(db.String(100), default="Pendiente")
+    payment_id = db.Column(db.String(1000), default=lambda: str(uuid.uuid4())[:8])
+    address = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
- """
+    forma_pago = db.Column(db.String(20), nullable=False)
+    fecha_creacion= db.Column(db.DateTime(), default=datetime.utcnow)
+
 
     customer_link = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
     product_link = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)

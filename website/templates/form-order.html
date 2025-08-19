@@ -1,0 +1,53 @@
+{% extends 'index.html' %}
+
+{% block title %} Pedido
+
+{% endblock %}
+
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-2 ">
+
+        <h3 class="text-center mb-4">Datos necesarios para pago</h3>
+
+        <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Dirección</label>
+                    <input type="text" class="form-control" name="direccion" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Telefono</label>
+                    <input type="number" class="form-control" name="phone" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Forma de pago</label>
+                    <select name="forma_pago" class="form-select" >
+                        <option>Efectivo</option>
+                        <option selected>Tarjeta</option>
+                        <option>Cheque</option>
+                        <option>Transferencia</option>
+                        <option>Criptomoneda</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                    <i class="bi bi-cloud-plus me-2"></i> Hacer pedido
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+
+
+{% endblock %}

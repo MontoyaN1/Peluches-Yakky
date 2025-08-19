@@ -8,9 +8,26 @@
 
 {% if productos | length < 1 %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
 
-    <div class="container bg-light rounded-3 p-2 ">
+    <div class="container bg-light rounded-3 p-4 ">
 
-        <h3>No hay productos agregados</h3>
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
+            </h1>
+
+            <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
+                <button onclick=" window.location.href='/agregar-productos'" class=" btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar
+                </button>
+            </div>
+
+        </div>
+
+        <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
+            <i class="bi bi-emoji-frown-fill fs-1 text-black m-3"></i> No hay productos
+        </h1>
 
     </div>
 
@@ -18,65 +35,83 @@
 
     {% else %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
 
-        <div class="container bg-light rounded-3 p-2 ">
+        <div class="container bg-light rounded-3 p-4 ">
 
-            <table class="table table-bordered">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
+                </h1>
 
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre de producto</th>
-                        <th>Descripción</th>
-                        <th>Precio</th>
-                        <th>Precio anterior</th>
-                        <th>Cantidad</th>
-                        <th>Imagen del producto</th>
-                        <th>Destacado</th>
-                        <th>Acciones</th>
+                <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                    </button>
+                    <button onclick=" window.location.href='/agregar-productos'" class=" btn btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Agregar
+                    </button>
+                </div>
 
-                    </tr>
-                </thead>
+            </div>
+            <div class="table-responsive-lg">
 
-                <tbody>
+                <table class="table table-bordered table-hover table-striped align-middle">
 
-                    {% for item in productos %}
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre de producto</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Precio pas.</th>
+                            <th>Cantidad</th>
+                            <th>Imagen del producto</th>
+                            <th>Destacado</th>
+                            <th>Acciones</th>
 
+                        </tr>
+                    </thead>
 
+                    <tbody>
 
-                    <tr>
-                        <td>{{ item.id }} </td>
-                        <td> {{ item.product_name }}</td>
-                        <td> {{ item.descripcion }}</td>
-                        <td> {{ item.current_price }}</td>
-                        <td> {{ item.previous_price }}</td>
-                        <td> {{ item.in_stock }}</td>
-                        <td> <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
-                                style="height: 100px; width: 100px; border-radius: 4px;">
-                        </td>
-
-                        {% if item.flash_sale %}
-                        <td> Si </td>
-
-                        {% else %}
-                        <td> No </td>
+                        {% for item in productos %}
 
 
-                        {% endif %}
 
-                        <td>
-                            <a href="/elimi-producto/{{ item.id  }}" onclick="return confirmDelete()" class="delete"
-                                title="Eliminar" data-toggle="tooltip">
-                                <i class="material-icons">&#xE92B;</i>
-                            </a>
+                        <tr>
+                            <td>{{ item.id }} </td>
+                            <td> {{ item.product_name }}</td>
+                            <td> {{ item.descripcion }}</td>
+                            <td> ${{ item.current_price }}</td>
+                            <td> ${{ item.previous_price }}</td>
+                            <td> {{ item.in_stock }}</td>
+                            <td> <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
+                                    style="height: 100px; width: 100px; border-radius: 4px;">
+                            </td>
 
-                            <a href="/actua-producto/{{ item.id }}" class="edit" title="Editar" data-toggle="tooltip">
-                                <i class="material-icons">&#xE254;</i>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                            {% if item.flash_sale %}
+                            <td> Si </td>
+
+                            {% else %}
+                            <td> No </td>
+
+
+                            {% endif %}
+
+                            <td>
+                                <a href="/elimi-producto/{{ item.id  }}" onclick="return confirmDelete()" class="delete"
+                                    title="Eliminar" data-toggle="tooltip">
+                                    <i class="material-icons">&#xE92B;</i>
+                                </a>
+
+                                <a href="/actua-producto/{{ item.id }}" class="edit" title="Editar"
+                                    data-toggle="tooltip">
+                                    <i class="material-icons">&#xE254;</i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

@@ -1,0 +1,124 @@
+{% extends 'index.html' %}
+
+{% block title %} Perfil
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center"> <!-- Centrado -->
+        <div class="col-lg-8">
+
+            <div class="row">
+
+                <div class="">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body m-5">
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <h1 class="text-black mb-0 display-4 fw-bold">
+                                    Historial de Pedidos
+                                </h1>
+
+                                <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
+                                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                                    </button>
+
+                                </div>
+
+                            </div>
+                            <br>
+
+
+                            {% if pedidos %}
+
+                            {% for item in pedidos %}
+
+                            <div class="row mb-4">
+                                <div class="card product-card shadow-sm h-100">
+                                    <div class="row g-0">
+
+                                        <div class="col-md-3 d-flex align-items-center justify-content-center p-3">
+                                            <img src="../{{ item.product.product_picture }}"
+                                                alt="{{ item.product.product_name }}" class="img-fluid rounded"
+                                                style="max-height: 150px; object-fit: contain;">
+                                        </div>
+
+                                        <div class="col-md-9">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between align-items-start">
+                                                    <div>
+                                                        <h3 class="card-title h5">{{ item.product.product_name }}
+                                                        </h3>
+                                                        <div class="d-flex gap-4 mb-3">
+                                                            <p class="mb-0"><strong>Cantidad:</strong> {{
+                                                                item.quantity
+                                                                }}</p>
+                                                            <p class="mb-0"><strong>Precio:</strong> ${{
+                                                                item.price
+                                                                }}</p>
+                                                            <p class="mb-0"><strong>Total:</strong> ${{
+                                                                item.price *
+                                                                item.quantity }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <span
+                                                        class="badge bg-{{ 'primary' if item.status == 'Pendiente' else 'info' if item.status == 'Enviado' else 'success' }}">
+                                                        {{ item.status }}
+                                                    </span>
+                                                </div>
+
+                                                <div class="mt-3">
+                                                    <div class="progress " style="height: 8px;">
+                                                        <div class="progress-bar 
+                                                            {{ 'bg-primary' if item.status == 'Pendiente' }} 
+                                                            {{ 'bg-info progress-bar-striped' if item.status == 'Enviado' }} 
+                                                            {{ 'bg-success' if item.status == 'Entregado' }}"
+                                                            role="progressbar" data-status="{{item.status}}"
+                                                            aria-valuenow="{{ '20' if item.status == 'Pendiente' else '50' if item.status == 'Enviado' else '100' }}"
+                                                            aria-valuemin="0" aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                    <div class="d-flex justify-content-between mt-1 small text-muted">
+                                                        <span>Pendiente</span>
+                                                        <span>Enviado</span>
+                                                        <span>Entregado</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+
+                            {% else %}
+
+                            <h3 class="text-black text-center mb-4">
+                                No tienes pedidos
+                            </h3>
+
+                            {% endif %}
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        const status = bar.getAttribute('data-status');
+        let width = '100%';
+        if (status === 'Pendiente') width = '20%';
+        else if (status === 'Enviado') width = '50%';
+        bar.style.width = width;
+    });
+</script>
+
+{% endblock %}

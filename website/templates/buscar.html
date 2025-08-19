@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+
+{% block title %} Busqueda {% endblock %}
+
+{% block body %}
+
+<section class="container-fluid mb-5 fondo " style="min-height: 100vh; padding-top: 20px;">
+
+    <div class="row m-5 bg-light p-4 d-flex  rounded-3">
+
+
+        <div class="d-flex justify-content-center align-items-center m-3">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                <i class="bi bi-search fs-1 text-black m-3"></i> Resultados de búsqueda
+            </h1>
+        </div>
+        <form method="post" action="/buscar" class="row g-3 align-items-end d-flex m-3 justify-content-center">
+
+            <!-- Filtro por rango de precios -->
+            <div class="col-md-4">
+                <label class="form-label">Rango de precios</label>
+                <select name="rango_precio" class="form-select">
+                    <option value="">Todos</option>
+                    <option value="0-10000">$0 -
+                        $10.000</option>
+                    <option value="10000-20000">$10.000 - $20.000</option>
+                    <option value="20000-50000">$20.000 - $50.000</option>
+                    <option value="50000">Más de
+                        $50.000</option>
+                </select>
+            </div>
+
+            <input type="hidden" name="buscar" value="{{ busqueda }}">
+
+            <!-- Botones -->
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+
+
+
+
+        {% if productos | length < 1 %} <h2 class="text-center mb-4">No se encontró nada</h2>
+
+            {% else %}
+
+
+
+            {% for item in productos %}
+
+            <div class="col-md-4">
+                <div class="card product-card h-100">
+                    <img src="{{ item.product_picture }}" class="card-img-top" alt="Peluche Unicornio">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.product_name }}</h5>
+                        <p class="card-text">{{ item.descripcion }}</p>
+                        <p class="  fw-bold fs-5">Antes <s class="text-danger fs-5">${{ item.previous_price }}</s></p>
+                        <p class=" fw-bold fs-4">Ahora <span class="text-danger fw-bold fs-4">${{
+                                item.current_price}}</span></p>
+                        <a href="/agregar-carrito/{{ item.id }}" class="btn btn-primary">Añadir al carrito</a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+            {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
