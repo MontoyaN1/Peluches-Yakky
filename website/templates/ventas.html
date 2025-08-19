@@ -6,8 +6,8 @@
 
 {% block body %}
 
-<div class="container-fluid fondo py-5" style="min-height: 100vh;">
-    <div class="row justify-content-center bg-light m-4 p-4 rounded-3">
+<div class="container-fluid fondo py-4" style="min-height: 100vh; padding-top: 20px;">
+    <div class="row justify-content-center bg-light m-5 p-4 rounded-3">
         <div class="col-lg-10">
 
             <div class="d-flex justify-content-between align-items-center mb-5">
@@ -82,32 +82,106 @@
                 </div>
             </div>
 
-            <style>
-                .card {
-                    transition: transform 0.3s, box-shadow 0.3s;
-                }
 
-                .card:hover {
-                    transform: translateY(-5px);
-                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-                }
-            </style>
 
-            <div class="row mt-4 g-4 justify-content-center">
-                <div class="col-md-6">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="bi bi-exclamation-circle me-2"></i>Alertas Recientes</h5>
+
+
+            <div class="row mt-4 g-4 justify-content-center p-3">
+                <div class="col-12 col-lg-10">
+                    <div class="card shadow-lg border-0">
+                        <div class="card-header bg-gradient-primary text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-graph-up me-2"></i>Ventas Recientes
+                                </h5>
+                                <span class="badge bg-light text-primary fs-6">
+                                    <i class="bi bi-calendar me-1"></i>Últimos 7 días
+                                </span>
+                            </div>
                         </div>
-                        <div class="card-body">
 
+                        <div class="card-body p-4">
+                            <!-- Contenedor responsive para la gráfica -->
+                            <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
+                                <canvas id="ventasChart"></canvas>
+                            </div>
+
+
+                        </div>
+
+                        <div class="card-footer bg-light py-3">
+                            <div class="text-center">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    {{ hoy }}
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+
+
+
+
+
         </div>
     </div>
 
+    <style>
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+    </style>
+
+    <script>
+        // Esperar a que el DOM esté completamente cargado
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = document.getElementById('ventasChart');
+
+            const dias = JSON.parse('{{ dias | tojson | safe }}');
+            const ventas = JSON.parse('{{ ventas_diarias  }}');
+            console.log("Datos para el gráfico :", dias, ventas);
+
+            const chart = new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: dias,
+                    datasets: [{
+                        label: 'Ventas Diarias',
+                        data: ventas,
+                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
     {% endblock %}

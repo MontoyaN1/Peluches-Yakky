@@ -285,26 +285,34 @@ def ventas():
         """ ventas mensuales  """
 
         hoy = datetime.now()
-        meses = []
-        ventas_mensuales = []
 
-        """  resultados = (
+        resultados = (
             db.session.query(
-                func.strftime("%Y-%m", Order).label(
-                    "mes"
-                ),  # Formato: "2023-10"
+                func.date(Order.fecha_creacion).label("dia"),
                 func.sum(Order.price * Order.quantity).label("ventas"),
-                # Suma de (precio * cantidad)
             )
-            .group_by("mes")
-            .order_by("mes")
+            .filter(
+                Order.fecha_creacion >= (hoy - timedelta(days=30))
+            )  # Últimos 30 días
+            .group_by("dia")
+            .order_by("dia")
             .all()
         )
 
-        for i in range(6):
-            mes = hoy - timedelta(days=30 * i)
-            meses.append(mes.strftime("%b %Y"))
-            ventas_mensuales.append """
+        
+        dias = []
+        ventas_diarias = []
+
+        for dia, ventas in resultados:
+            dia_dt = datetime.strptime(dia, "%Y-%m-%d")
+            dia_bonito = dia_dt.strftime("%d %b")  
+            dias.append(dia_bonito)
+            ventas_diarias.append(float(ventas)) 
+
+        print("Días con ventas REALES:", dias)
+        print("Ventas reales:", ventas_diarias)
+
+        formatted_string = hoy.strftime("%A, %B %d, %Y")
 
         return render_template(
             "ventas.html",
@@ -313,5 +321,8 @@ def ventas():
             total_descuentos=round(total_descuentos, 2),
             impuesto=IMPUESTO,
             descuento=DESCUENTO_FLASH_SALE,
+            dias=dias,
+            ventas_diarias=ventas_diarias,
+            hoy=formatted_string,
         )
     return render_template("error_404.html")

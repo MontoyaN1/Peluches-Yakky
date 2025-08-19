@@ -74,3 +74,5 @@ $('.remove-cart').click(function () {
 
 
 })
+
+
