@@ -5,6 +5,9 @@ from flask_login import LoginManager
 
 db = SQLAlchemy()
 DB_NAME = "database.sqlite3"
+ADMIN_NAME = "Admin"
+ADMIN_EMAIL = "admin@peluchesyakky.com"
+ADMIN_PASS = "TSzxvDl1nQ"
 
 
 def create_database():
@@ -39,9 +42,9 @@ def create_app():
 
     def create_admin():
         admin = Customer()
-        admin.username = "Admin"
-        admin.email = "admin@peluchesyakky.com"
-        admin.password = "TSzxvDl1nQ"
+        admin.username = ADMIN_NAME
+        admin.email = ADMIN_EMAIL
+        admin.password = ADMIN_PASS
 
         try:
             db.session.add(admin)
