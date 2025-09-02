@@ -23,7 +23,6 @@ def home():
 @views.route("/agregar-carrito/<int:item_id>")
 @login_required
 def agregar_carrito(item_id):
-
     item_to_add = Product.query.get(item_id)
     item_exist = Cart.query.filter_by(
         product_link=item_id, customer_link=current_user.id
@@ -47,7 +46,6 @@ def agregar_carrito(item_id):
     new_cart_item.customer_link = current_user.id
 
     try:
-
         db.session.add(new_cart_item)
         db.session.commit()
         flash(f"{new_cart_item.product.product_name} agregado al carrito")
@@ -64,12 +62,15 @@ def agregar_carrito(item_id):
 def carrito():
     cart = Cart.query.filter_by(customer_link=current_user.id).all()
     subtotal = 0
+    iva = 0
 
     for item in cart:
         subtotal += item.product.current_price * item.quantity
 
+    iva = subtotal * 0.19
+
     return render_template(
-        "carrito.html", cart=cart, subtotal=subtotal, total=subtotal + 20000
+        "carrito.html", cart=cart, subtotal=subtotal, total=subtotal + iva, iva=iva
     )
 
 
@@ -78,21 +79,36 @@ def carrito():
 def pluscart():
     if request.method == "GET":
         cart_id = request.args.get("cart_id")
-        cart_item = Cart.query.get(cart_id)
-        cart_item.quantity = cart_item.quantity + 1
+
+        cart_item: Cart = Cart.query.get(cart_id)
+        tope = False
+
+        if cart_item.quantity >= cart_item.product.in_stock:
+            tope = True
+
+        else:
+            cart_item.quantity = cart_item.quantity + 1
+
+        print(f"Cantidad sumando: {cart_item.quantity}")
+
+        cart: Cart = Cart.query.filter_by(customer_link=current_user.id).all()
+
         db.session.commit()
 
-        cart = Cart.query.filter_by(customer_link=current_user.id).all()
-
         subtotal = 0
+        iva = 0
 
         for item in cart:
             subtotal += item.product.current_price * item.quantity
 
+        iva = subtotal * 0.19
+
         data = {
             "cantidad": cart_item.quantity,
+            "tope": tope,
             "subtotal": subtotal,
-            "total": subtotal + 20000,
+            "total": subtotal + iva,
+            "iva": iva,
         }
 
         return jsonify(data)
@@ -102,32 +118,35 @@ def pluscart():
 @login_required
 def minuscart():
     if request.method == "GET":
-
         cart_id = request.args.get("cart_id")
         cart_item = Cart.query.get(cart_id)
 
-        if cart_item.quantity <= 1:
-            data = {
-                "cantidad": cart_item.quantity,
-                "subtotal": subtotal,
-                "total": subtotal + 20000,
-            }
-            return jsonify(data)
-
-        cart_item.quantity = cart_item.quantity - 1
-        db.session.commit()
+        subtotal = 0
+        iva = 0
 
         cart = Cart.query.filter_by(customer_link=current_user.id).all()
 
-        subtotal = 0
+        if cart_item.quantity == 1:
+            print("Se envia 1 como cantidad")
+            cart_item.quantity = 1
+
+        else:
+            cart_item.quantity = cart_item.quantity - 1
 
         for item in cart:
             subtotal += item.product.current_price * item.quantity
+        iva = subtotal * 0.19
+
+        print(f"Cantidad restando: {cart_item.quantity}")
+        print(f"Cantidad restando iva: {iva}")
+
+        db.session.commit()
 
         data = {
             "cantidad": cart_item.quantity,
             "subtotal": subtotal,
-            "total": subtotal + 20000,
+            "total": subtotal + iva,
+            "iva": iva,
         }
 
         return jsonify(data)
@@ -146,14 +165,18 @@ def removecart():
         cart = Cart.query.filter_by(customer_link=current_user.id).all()
 
         subtotal = 0
+        iva = 0
 
         for item in cart:
             subtotal += item.product.current_price * item.quantity
 
+        iva = subtotal * 0.19
+
         data = {
             "cantidad": cart_remove.quantity,
             "subtotal": subtotal,
-            "total": subtotal + 20000,
+            "total": subtotal + iva,
+            "iva": iva,
         }
 
         return jsonify(data)
@@ -165,9 +188,7 @@ def save_order():
     cart_user = Cart.query.filter_by(customer_link=current_user.id)
 
     if request.method == "POST":
-
         if cart_user:
-
             try:
                 total = 0
                 for item in cart_user:
@@ -221,12 +242,10 @@ def pedidos():
 @login_required
 def buscar():
     if request.method == "POST":
-
         busqueda = request.form.get("buscar")
         rango_precio = request.form.get("rango_precio")
 
         if rango_precio:
-
             if rango_precio.find("-") > 0:
                 inicio_str, final_str = rango_precio.split("-")
                 inicio = float(inicio_str.strip())

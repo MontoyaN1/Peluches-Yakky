@@ -13,9 +13,18 @@ $('.plus-cart').click(function () {
         success: function (data) {
             console.log(data)
             cantidad.innerText = data.cantidad
+
+
             document.getElementById(`quantity${id}`).innerText = data.cantidad
             document.getElementById('subtotal_st').innerText = data.subtotal
             document.getElementById('total_t').innerText = data.total
+            document.getElementById('iva_i').innerText = data.iva
+
+
+            if (data.tope) {
+                alert("Ya no hay stock disponible para el producto")
+
+            }
 
         }
     })
@@ -27,10 +36,7 @@ $('.minus-cart').click(function () {
     var id = $(this).attr('pid').toString()
     var cantidad = this.parentNode.children[2]
 
-    if (cantidad <= 1) {
-        return false
-
-    } $.ajax({
+    $.ajax({
         type: 'GET',
         url: '/minuscart',
         data: {
@@ -44,8 +50,10 @@ $('.minus-cart').click(function () {
                 document.getElementById(`quantity${id}`).innerText = data.cantidad
                 document.getElementById('subtotal_st').innerText = data.subtotal
                 document.getElementById('total_t').innerText = data.total
+                document.getElementById('iva_i').innerText = data.iva
 
             }
+            console.log("Cantidad menor a 1")
 
 
         }
@@ -68,6 +76,7 @@ $('.remove-cart').click(function () {
         success: function (data) {
             document.getElementById('subtotal_st').innerText = data.amount
             document.getElementById('total_t').innerText = data.total
+            document.getElementById('iva_i').innerText = data.iva
             to_remove.remove()
         }
     })

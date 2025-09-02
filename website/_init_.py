@@ -1,4 +1,3 @@
-from datetime import datetime
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -31,7 +30,7 @@ def create_app():
     from .views import views
     from .admin import admin
     from .auth import auth
-    from .models import Customer, Cart, Product, Order
+    from .models import Customer, Cart, Product, Order  # noqa: F401
     from sqlalchemy_utils import database_exists
 
     @login_manager.user_loader
@@ -51,7 +50,7 @@ def create_app():
 
         except Exception as e:
             db.session.rollback()
-            print("Fallo crear admin")
+            print(f"Fallo crear admin  {e}")
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")

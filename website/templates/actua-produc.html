@@ -11,17 +11,17 @@
     <div class="container bg-light rounded-3 p-4 ">
 
         <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="text-black mb-0 display-4 fw-bold">
-                    Actualizar Producto
-                </h1>
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                Actualizar Producto
+            </h1>
 
-                <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
-                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
-                    </button>
-
-                </div>
+            <div class="d-flex gap-3"><button onclick="window.location.href='/ver-productos'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
 
             </div>
+
+        </div>
 
 
 
@@ -48,6 +48,10 @@
                     <input type="number" step="0.01" class="form-control" name="previous_price" required
                         value="{{ item.previous_price }}">
                 </div>
+                <div class="col-md-3">
+                    <label class="form-label">Costo del producto</label>
+                    <input type="number" step="0.01" class="form-control" name="precio_costo" value="{{item.precio_costo}}" required>
+                </div>
             </div>
 
             <div class="row mb-3">
@@ -65,7 +69,7 @@
                         style="height: 100px; width: 100px; border-radius: 4px;">
                     <br>
                     <p class="text-muted small mt-1">Cambiar imagen</p>
-                    <input type="file" class="form-control" name="product_picture" accept="image/*" >
+                    <input type="file" class="form-control" name="product_picture" accept="image/*">
 
                 </div>
 
@@ -86,9 +90,7 @@
                     <i class="bi bi-pencil-square"></i> Actualizar
                 </button>
 
-                <a href="/ver-productos" class="btn btn-primary px-4 rounded-pill" data-toggle="tooltip">
-                    <i class="bi bi-arrow-return-left"></i>
-                </a>
+               
             </div>
 
         </form>

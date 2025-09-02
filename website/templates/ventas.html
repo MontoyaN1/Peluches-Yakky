@@ -24,6 +24,30 @@
             </div>
 
             <div class="row g-4 mb-4">
+
+
+                <form method="POST" action="{{ url_for('admin.ventas') }}" class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                            value="{{ fecha_inicio }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fecha_fin" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ fecha_fin }}"
+                            required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                    </div>
+                </form>
+
+                <!-- Mostrar el rango de fechas actual -->
+                <div class="alert alert-info">
+                    <strong>Período analizado:</strong>
+                    Desde {{ fecha_inicio }} hasta {{ fecha_fin }}
+                </div>
                 <!-- Ventas Totales -->
                 <div class="col-md-4">
                     <div class="card border-3 border-success shadow-sm h-100">
@@ -35,9 +59,7 @@
                             <p class="display-5 fw-bold text-success mb-1">
                                 ${{ "{:,.2f}".format(total_ventas) }}
                             </p>
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle"></i> Incluye impuestos ({{ impuesto*100 }}%)
-                            </small>
+
                         </div>
                     </div>
                 </div>
@@ -48,7 +70,7 @@
                         <div class="card-body text-center p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <h5 class="card-title mb-0 text-muted">Total con Impuestos</h5>
-                                <i class="bi bi-receipt fs-3 text-warning"></i>
+                                <i class="bi bi-bank fs-3 text-warning"></i>
                             </div>
                             <p class="display-5 fw-bold text-warning mb-1">
                                 ${{ "{:,.2f}".format(total_ventas - total_impuestos) }}
@@ -62,40 +84,49 @@
                     </div>
                 </div>
 
-
-                <!-- Total con Descuentos -->
+            
                 <div class="col-md-4">
+                    <div class="card border-3 border-primary shadow-sm h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="card-title mb-0 text-muted">Utilidades</h5>
+                                <i class="bi bi-tag fs-3 text-primary"></i>
+                            </div>
+                            <p class="display-5 fw-bold text-primary mb-1">
+                                ${{ "{:,.2f}".format(utilidad) }}
+                            </p>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                 <div class="col-md-4 offset-md-4 ">
                     <div class="card border-3 border-danger shadow-sm h-100">
                         <div class="card-body text-center p-4">
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0 text-muted">Descuentos</h5>
+                                <h5 class="card-title mb-0 text-muted">Costos</h5>
                                 <i class="bi bi-tag fs-3 text-danger"></i>
                             </div>
                             <p class="display-5 fw-bold text-danger mb-1">
-                                -${{ "{:,.2f}".format(total_descuentos) }}
+                                -${{ "{:,.2f}".format(total_costos) }}
                             </p>
-                            <small class="text-muted">
-                                <i class="bi bi-lightning"></i> {{ descuento*100 }}% en promociones
-                            </small>
+
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
-
 
             <div class="row mt-4 g-4 justify-content-center p-3">
                 <div class="col-12 col-lg-10">
                     <div class="card shadow-lg border-0">
                         <div class="card-header bg-gradient-primary text-white py-3">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
+                                <h4 class="mb-1">
                                     <i class="bi bi-graph-up me-2"></i>Ventas Recientes
-                                </h5>
+                                </h4>
                                 <span class="badge bg-light text-primary fs-6">
-                                    <i class="bi bi-calendar me-1"></i>Últimos 7 días
+                                    <i class="bi bi-calendar me-1"></i>Ventas díarias
                                 </span>
                             </div>
                         </div>
@@ -119,14 +150,9 @@
                         </div>
                     </div>
                 </div>
+
+                
             </div>
-
-
-
-
-
-
-
         </div>
     </div>
 
@@ -180,8 +206,6 @@
         });
     </script>
 
-
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 
     {% endblock %}

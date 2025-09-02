@@ -42,7 +42,7 @@
                     <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
                 </h1>
 
-                <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
+                <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
                         <i class="bi bi-arrow-return-left me-2  "></i>Volver
                     </button>
                     <button onclick=" window.location.href='/agregar-productos'" class=" btn btn-primary">
@@ -62,6 +62,7 @@
                             <th>Descripción</th>
                             <th>Precio</th>
                             <th>Precio pas.</th>
+                            <th>Costo producto</th>
                             <th>Cantidad</th>
                             <th>Imagen del producto</th>
                             <th>Destacado</th>
@@ -82,6 +83,7 @@
                             <td> {{ item.descripcion }}</td>
                             <td> ${{ item.current_price }}</td>
                             <td> ${{ item.previous_price }}</td>
+                            <td> ${{ item.precio_costo }}</td>
                             <td> {{ item.in_stock }}</td>
                             <td> <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
                                     style="height: 100px; width: 100px; border-radius: 4px;">

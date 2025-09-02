@@ -4,7 +4,6 @@ from flask import (
     request,
     redirect,
     flash,
-    current_app,
     send_from_directory,
     url_for,
 )
@@ -35,15 +34,14 @@ def allowed_file(filename):
 @login_required
 def agregar_productos():
     if current_user.id == 1:
-
         if request.method == "POST":
-
             product_name = request.form.get("product_name")
             current_price = request.form.get("current_price")
             previous_price = request.form.get("previous_price")
             stock = request.form.get("in_stock")
             flash_sale = request.form.get("flash_sale") == "on"
             descipcion = request.form.get("descripcion")
+            precio_costo = request.form.get("precio_costo")
 
             if "product_picture" not in request.files:
                 flash("No se seleccionó ninguna imagen")
@@ -71,9 +69,9 @@ def agregar_productos():
             new_product.flash_sale = flash_sale
             new_product.product_picture = filepath
             new_product.descripcion = descipcion
+            new_product.precio_costo = precio_costo
 
             try:
-
                 db.session.add(new_product)
                 db.session.commit()
                 flash(f"{product_name} agregado exitosamente")
@@ -81,7 +79,6 @@ def agregar_productos():
                 return redirect("/ver-productos")
 
             except Exception as e:
-
                 db.session.rollback()
                 flash(f"Fallo creación de cuenta: {e}")
 
@@ -106,13 +103,13 @@ def actua_productos(item_id):
         producto = Product.query.get(item_id)
 
         if request.method == "POST":
-
             product_name = request.form.get("product_name")
             current_price = request.form.get("current_price")
             previous_price = request.form.get("previous_price")
             stock = request.form.get("in_stock")
             flash_sale = request.form.get("flash_sale") == "on"
             descripcion = request.form.get("descripcion")
+            precio_costo = request.form.get("precio_costo")
 
             file = request.files["product_picture"]
 
@@ -141,6 +138,7 @@ def actua_productos(item_id):
             product.flash_sale = flash_sale
             product.product_picture = filepath
             product.descripcion = descripcion
+            product.precio_costo = precio_costo
 
             try:
                 Product.query.filter_by(id=item_id).update(
@@ -152,6 +150,7 @@ def actua_productos(item_id):
                         flash_sale=flash_sale,
                         product_picture=filepath,
                         descripcion=descripcion,
+                        precio_costo=precio_costo,
                     )
                 )
 
@@ -161,7 +160,6 @@ def actua_productos(item_id):
                 return redirect(url_for("admin.ver_productos"))
 
             except Exception as e:
-
                 db.session.rollback()
                 flash(f"Fallo creación de cuenta: {e}")
         return render_template("actua-produc.html", item=producto)
@@ -172,7 +170,6 @@ def actua_productos(item_id):
 @login_required
 def elimi_productos(item_id):
     if current_user.id == 1:
-
         try:
             delete_product = Product.query.get(item_id)
 
@@ -182,7 +179,7 @@ def elimi_productos(item_id):
 
             db.session.delete(delete_product)
             db.session.commit()
-            flash(f"Se eliminóexitosamente ")
+            flash("Se eliminóexitosamente ")
             print("Producto eliminado")
             return redirect(url_for("admin.ver_productos"))
 
@@ -206,7 +203,7 @@ def ver_pedidos():
 @login_required
 def actua_pedidos(order_id):
     if current_user.id == 1:
-        up_order = Order.query.get(order_id)
+        order = Order.query.get(order_id)
         if request.method == "POST":
             estado = request.form.get("estado")
 
@@ -222,11 +219,10 @@ def actua_pedidos(order_id):
                 return redirect(url_for("admin.ver_pedidos"))
 
             except Exception as e:
-
                 db.session.rollback()
                 flash(f"Fallo creación de cuenta: {e}")
 
-        return render_template("actua-pedido.html")
+        return render_template("actua-pedido.html", order=order)
 
     return render_template("error_404.html")
 
@@ -253,76 +249,103 @@ def adminvista():
 
 IMPUESTO = 0.19
 DESCUENTO_FLASH_SALE = 0.10
+GASTOS = 300000
 
 
-@admin.route("/ventas")
+@admin.route("/ventas", methods=["GET", "POST"])
 @login_required
 def ventas():
-    if current_user.id == 1:
+    if current_user.id != 1:
+        return render_template("error_404.html")
 
-        ordenes: Order = Order.query.all()
+    # Fechas por defecto (últimos 30 días)
 
-        total_ventas = 0
-        total_impuestos = 0
-        total_descuentos = 0
+    fecha_inicio = (datetime.now() - timedelta(days=30)).replace(
+        hour=00, minute=00, second=00, microsecond=00
+    )
+    fecha_fin = datetime.now().replace(hour=23, minute=59, second=59, microsecond=00)
 
-        orden: Order
+    # Verificar si se enviaron fechas desde el formulario
+    if request.method == "POST":
+        fecha_inicio_str = request.form.get("fecha_inicio")
+        fecha_fin_str = request.form.get("fecha_fin")
 
-        """ Ventas, impuesto y descuento total  """
+        if fecha_inicio_str and fecha_fin_str:
+            try:
+                fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d")
+                fecha_fin = datetime.strptime(fecha_fin_str, "%Y-%m-%d")
+                fecha_fin = fecha_fin.replace(hour=23, minute=59, second=59)
+                print(f"FORM Inicio: {fecha_inicio}, fin: {fecha_fin}")
 
-        for orden in ordenes:
-            precio_unitario = orden.price
+            except ValueError:
+                flash("Formato de fecha incorrecto", "error")
+    else:
+        print(f"Inicio: {fecha_inicio}, fin: {fecha_fin}")
 
-            subtotal = precio_unitario * orden.quantity
+    # FILTRAR órdenes por el rango de fechas
+    ordenes = Order.query.filter(
+        Order.fecha_creacion >= fecha_inicio, Order.fecha_creacion <= fecha_fin
+    ).all()
 
-            producto: Product = Product.query.get(orden.product_link)
+    total_ventas = 0
+    total_impuestos = 0
+    total_costos = 0
+
+    """ Ventas, impuesto y descuento total """
+    for orden in ordenes:
+        precio_unitario = orden.price
+        subtotal = precio_unitario * orden.quantity
+
+        producto = Product.query.get(orden.product_link)
+        if producto:
             descuento = DESCUENTO_FLASH_SALE if producto.flash_sale else 0.0
 
             total_ventas += subtotal * (1 + IMPUESTO - descuento)
             total_impuestos += subtotal * IMPUESTO
-            total_descuentos += subtotal * descuento
+            total_costos += producto.precio_costo * orden.quantity
 
-        """ ventas mensuales  """
-
-        hoy = datetime.now()
-
-        resultados = (
-            db.session.query(
-                func.date(Order.fecha_creacion).label("dia"),
-                func.sum(Order.price * Order.quantity).label("ventas"),
-            )
-            .filter(
-                Order.fecha_creacion >= (hoy - timedelta(days=30))
-            )  # Últimos 30 días
-            .group_by("dia")
-            .order_by("dia")
-            .all()
+    """ Ventas mensuales/diarias (también filtradas por fecha) """
+    resultados = (
+        db.session.query(
+            func.date(Order.fecha_creacion).label("dia"),
+            func.sum(Order.price * Order.quantity).label("ventas"),
         )
+        .filter(Order.fecha_creacion >= fecha_inicio, Order.fecha_creacion <= fecha_fin)
+        .group_by("dia")
+        .order_by("dia")
+        .all()
+    )
 
-        
-        dias = []
-        ventas_diarias = []
+    dias = []
+    ventas_diarias = []
 
-        for dia, ventas in resultados:
-            dia_dt = datetime.strptime(dia, "%Y-%m-%d")
-            dia_bonito = dia_dt.strftime("%d %b")  
-            dias.append(dia_bonito)
-            ventas_diarias.append(float(ventas)) 
+    for dia, ventas in resultados:
+        dia_dt = datetime.strptime(str(dia), "%Y-%m-%d")
+        dia_bonito = dia_dt.strftime("%d %b")
+        dias.append(dia_bonito)
+        ventas_diarias.append(float(ventas) if ventas else 0.0)
 
-        print("Días con ventas REALES:", dias)
-        print("Ventas reales:", ventas_diarias)
+    print(f"ventas: {total_ventas}, costos: {total_costos} y gastos: {GASTOS}")
 
-        formatted_string = hoy.strftime("%A, %B %d, %Y")
+    utilidad = total_ventas - (total_costos + GASTOS)
 
-        return render_template(
-            "ventas.html",
-            total_ventas=round(total_ventas, 2),
-            total_impuestos=round(total_impuestos, 2),
-            total_descuentos=round(total_descuentos, 2),
-            impuesto=IMPUESTO,
-            descuento=DESCUENTO_FLASH_SALE,
-            dias=dias,
-            ventas_diarias=ventas_diarias,
-            hoy=formatted_string,
-        )
-    return render_template("error_404.html")
+    print(f"Utilidad: {utilidad}")
+
+    # Formatear fechas para mostrar en el template
+    fecha_inicio_formatted = fecha_inicio.strftime("%Y-%m-%d")
+    fecha_fin_formatted = fecha_fin.strftime("%Y-%m-%d")
+    hoy_formatted = datetime.now().strftime("%A, %B %d, %Y")
+
+    return render_template(
+        "ventas.html",
+        total_ventas=round(total_ventas, 2),
+        total_impuestos=round(total_impuestos, 2),
+        impuesto=IMPUESTO,
+        dias=dias,
+        ventas_diarias=ventas_diarias,
+        hoy=hoy_formatted,
+        total_costos=round(total_costos, 2),
+        utilidad=round(utilidad, 2),
+        fecha_inicio=fecha_inicio_formatted,
+        fecha_fin=fecha_fin_formatted,
+    )

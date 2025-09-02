@@ -11,17 +11,17 @@
     <div class="container bg-light rounded-3 p-4 ">
 
         <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="text-black mb-0 display-4 fw-bold">
-                    Actualizar estado
-                </h1>
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                Actualizar estado
+            </h1>
 
-                <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
-                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
-                    </button>
-
-                </div>
+            <div class="d-flex gap-3"><button onclick="history.back()" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
 
             </div>
+
+        </div>
 
 
         <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
@@ -30,20 +30,52 @@
 
 
                 <div class="col-md-6">
-                    <label class="form-label">Estado</label>
+                    <label class="form-label">Estado {{ order.status}}</label>
+
+                    {% if order.status == 'Pendiente' %}
+
                     <select name="estado" class="form-select">
-                        <option>Pendiente</option>
+
                         <option selected>Enviado</option>
                         <option>Entregado</option>
                     </select>
+
+                    {% elif order.status == 'Enviado' %}
+
+                    <select name="estado" class="form-select">
+
+                        <option selected>Entregado</option>
+                    </select>
+
+
+                    {% else %}
+
+                    <h3> No es posible cambiar el estado de un pedido ya entregado</h3>
+
+
+                    {% endif %}
+
+
+
+
                 </div>
             </div>
 
+
+            {% if order.status != 'Entregado' %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                 <button type="submit" class="btn btn-primary px-4 rounded-pill">
                     <i class="bi bi-cloud-plus me-2"></i> Cambiar Estado
                 </button>
             </div>
+
+
+
+            {% endif %}
+
+
+
+
 
         </form>
 
