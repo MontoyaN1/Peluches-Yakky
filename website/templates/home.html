@@ -19,6 +19,8 @@
 
         {% for item in items %}
 
+        {% if item.in_stock > 0 %}
+
         <div class="col-md-4">
             <div class="card product-card h-100">
 
@@ -38,6 +40,15 @@
             </div>
         </div>
     </div>
+
+    {% else %}
+
+
+
+
+    {% endif %}
+
+
 
     {% endfor %}
 

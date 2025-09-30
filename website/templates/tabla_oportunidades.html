@@ -1,0 +1,91 @@
+{% extends 'index.html' %}
+
+{% block title %} Contactos
+
+{% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 100px;">
+
+    <div class="container bg-light rounded-3 p-4 ">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Oportunidades
+            </h1>
+
+            <div class="d-flex gap-3"><button onclick="window.location.href='/empleado'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
+            </div>
+
+        </div>
+
+        {% if oportunidades | length < 1 %} <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
+            <i class="bi bi-emoji-frown-fill fs-1 text-black m-3"></i> No hay Oportunidades
+            </h1>
+
+            {% else %}
+
+            <div class="table-responsive-lg">
+
+                <table class="table table-bordered table-hover table-striped align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Contacto</th>
+                            <th>Agente asignado</th>
+                            <th>Título</th>
+                            <th>Valor Estimado</th>
+                            <th>Etapa</th>
+                            <th>Probabilidad</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in oportunidades %}
+
+                        <tr>
+                            <td>{{ item.id_oportunidad }} </td>
+                            <td>
+                                <h6 class="mb-1"> {{ item.contacto.nombre }} </h6>
+                                <small class="text-muted"> Cel: {{ item.contacto.telefono }} </small>
+                            </td>
+                            <td>
+                                <h6 class="mb-1"> {{ item.contacto.agente.username }} </h6>
+
+                            </td>
+                            <td> {{ item.titulo }}</td>
+                            <td> {{ item.valor_estimado }}</td>
+                            <td> {{ item.etapa }}</td>
+                            <td> {{ item.probabilidad }}</td>
+                            <td> {{ item.descripcion }}</td>
+                            <td>
+                                <h6 class="mb-1"> Editar <a href="#" class="edit" title="Editar" data-toggle="tooltip">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a> </h6>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm('¿Seguro que deseas eliminar este elemento?');
+    }
+</script>
+
+{% endif %}
+
+
+{% endblock %}

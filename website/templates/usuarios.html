@@ -54,6 +54,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
+                            <th>Rol</th>
                             <th>Nombre usuario</th>
                             <th>Correo</th>
                             <th>Fecha de inscripción</th>
@@ -67,6 +68,16 @@
 
                         <tr>
                             <td>{{ item.id }} </td>
+                            {% if item.rol_id == 2 %}
+
+                            <td>Empleado</td>
+
+
+                            {% else %}
+                            <td>Cliente</td>
+
+
+                            {% endif %}
                             <td> {{ item.username }}</td>
                             <td> {{ item.email }}</td>
                             <td> {{ item.date_joined }}</td>

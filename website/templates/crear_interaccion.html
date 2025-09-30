@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+
+{% block title %} Crear Interacción {% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-2">
+        <div class="container bg-light rounded-3 p-4">
+
+
+            <!-- CASO: Mostrar formulario para crear contacto -->
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    Guardad Interacción
+                </h1>
+                <div class="d-flex gap-3">
+                    <button onclick="window.location.href='/empleado'" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2"></i>Volver
+                    </button>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Tipo de interacción (llamada, reunión, etc.)</label>
+                    <input type="text" name="interaccion" id="interaccion" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Descripción o nota</label>
+                    <input type="text" name="descripcion" id="descripcion" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Resultado (Posible cliente, Sin oportunidad, etc.)</label>
+                    <input type="text" name="resultado" id="resultado" required class="form-control">
+                </div>
+
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                        <i class="bi bi-person-plus me-2"></i> Guardar Interacción
+                    </button>
+                </div>
+            </form>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

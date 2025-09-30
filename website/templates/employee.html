@@ -1,0 +1,273 @@
+{% extends 'index.html' %}
+
+{% block title %} Empleado
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center bg-light m-4 p-4 rounded-3">
+        <div class="col-lg-12">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    <i class="bi bi-speedometer2 me-3"></i>Gestión de Contactos
+                </h1>
+                <div class="d-flex gap-3">
+                    <button onclick="window.location.href='/empleado/crear_contacto'" class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>Nuevo Contacto
+                    </button>
+                    <button onclick="window.location.href='/empleado/tabla-interacciones'" class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>Historial Interacciones
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Métricas Rápidas -->
+            <div class="row g-4 mb-5">
+                <!-- Tarjeta Contactos -->
+                <div class="col-md-8 col-lg-4">
+                    <div class="card shadow-sm h-100 border-start border-4 border-primary">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="card-title text-muted">CONTACTOS</h6>
+                                    <h2 class="text-primary"> {{metricas.contactos}} </h2>
+                                    <small class="text-success">+5 esta semana</small>
+                                </div>
+                                <i class="bi bi-people fs-4 text-primary"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Oportunidades -->
+                <div class="col-md-8 col-lg-4">
+                    <div class="card shadow-sm h-100 border-start border-4 border-success">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="card-title text-muted">OPORTUNIDADES</h6>
+                                    <h2 class="text-success"> {{metricas.oportunidades}} </h2>
+                                </div>
+                                <i class="bi bi-briefcase fs-4 text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta Actividades -->
+                <div class="col-md-8 col-lg-4">
+                    <div class="card shadow-sm h-100 border-start border-4 border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="card-title text-muted">ACTIVIDADES PENDIENTES</h6>
+                                    <h2 class="text-warning"> {{metricas.actividades}}</h2>
+                                </div>
+                                <i class="bi bi-calendar-check fs-4 text-warning"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Sección Principal: Contactos y Oportunidades -->
+            <div class="row g-4">
+                <!-- Columna Contactos -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-people me-2"></i>Contactos Recientes
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <!-- Contacto 1 -->
+
+                            {% for contacto in contactos[:3] %}
+
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+
+
+                                <div>
+                                    <h6 class="mb-1"> {{contacto.nombre}} </h6>
+                                    <small class="text-muted"> {{contacto.email}} - {{contacto.telefono}} </small>
+                                    <br>
+
+                                    {% if contacto.estado == 'Nuevo' %}
+
+                                    <span class="badge bg-primary">Nuevo</span>
+
+
+                                    {% elif contacto.estado == 'En seguimiento' %}
+
+                                    <span class="badge bg-warning text-dark">En seguimiento</span>
+
+
+                                    {% else %}
+                                    <span class="badge bg-success">Calificado</span>
+
+
+                                    {% endif %}
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <a href="/empleado/tabla-contactos" class="btn btn-outline-primary btn-sm">Ver todos los
+                                contactos</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Oportunidades -->
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-briefcase me-2"></i>Oportunidades Activas
+                            </h5>
+                        </div>
+                        <div class="card-body">
+
+                            {% for oportunidad in oportunidades[:3] %}
+
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="mb-0"> {{oportunidad.titulo}} </h6>
+
+                                    {% if oportunidad.probabilidad >= 50 and oportunidad.probabilidad <= 70 %} <span
+                                        class="badge bg-warning text-dark"> {{oportunidad.probabilidad}}%</span>
+
+
+                                        {% elif oportunidad.probabilidad >= 71 %}
+
+                                        <span class="badge bg-success">{{oportunidad.probabilidad}}%</span>
+
+
+                                        {% else %}
+
+                                        <span class="badge bg-danger">{{oportunidad.probabilidad}}%</span>
+
+                                        {% endif %}
+                                </div>
+                                <small class="text-muted d-block"> {{oportunidad.contacto.nombre}} - Valor:
+                                    {{oportunidad.valor_estimado}} </small>
+                                <div class="d-flex justify-content-between align-items-center mt-2">
+                                    <span class="badge bg-secondary">{{oportunidad.etapa}}</span>
+                                    <small class="text-muted">Vence: 15/Oct</small>
+                                </div>
+                            </div>
+
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <a href="/empleado/tabla-oportunidades" class="btn btn-outline-success btn-sm">Ver todas
+                                las
+                                oportunidades</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alertas y Actividades Pendientes -->
+            <div class="row g-4 mt-3">
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="alert alert-warning d-flex align-items-center mb-2">
+                                <i class="bi bi-clock-history me-2"></i>
+                                <small>2 seguimientos vencidos</small>
+                            </div>
+                            <div class="alert alert-danger d-flex align-items-center mb-2">
+                                <i class="bi bi-x-circle me-2"></i>
+                                <small>1 oportunidad estancada</small>
+                            </div>
+                            <div class="alert alert-info d-flex align-items-center">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <small>3 contactos nuevos sin evaluar</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-info">
+                        <div class="card-header bg-info text-white">
+                            <h6 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Próximas Actividades</h6>
+                        </div>
+                        <div class="card-body">
+
+                            {% for actividad in actividades[:3] %}
+
+                            {% set fecha = actividad.fecha_programada %}
+
+
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                                <div>
+                                    <small class="fw-bold"> {{actividad.titulo}} </small>
+
+                                    <br>
+                                    <small class="text-muted"> {{actividad.contacto.nombre}} - {{fecha.strftime('%b %d
+                                        %I:%M %p').lstrip('0')}}
+                                    </small>
+                                </div>
+                                {% if actividad.estado == "Pendiente" %}
+
+                                <span class="badge bg-primary"> Pendiente </span>
+
+
+                                {% elif actividad.estado == "En proceso" %}
+
+                                <span class="badge bg-warning text-dark">En proceso</span>
+
+
+                                {% else %}
+
+                                <span class="badge bg-success text-dark">Completada</span>
+
+
+                                {% endif %}
+                            </div>
+
+
+                            {% endfor %}
+
+                        </div>
+                        <div class="card-footer">
+                            <a href="/empleado/tabla-actividades" class="btn btn-outline-success btn-sm">Ver todas las
+                                actividades</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+
+
+
+{% endblock %}

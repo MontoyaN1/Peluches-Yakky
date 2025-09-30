@@ -1,0 +1,55 @@
+{% extends 'index.html' %}
+
+{% block title %} Crear Oportunidad {% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-2">
+        <div class="container bg-light rounded-3 p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    Crear Actividad
+                </h1>
+                <div class="d-flex gap-3">
+                    <button onclick="window.location.href='/empleado'" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2"></i>Volver
+                    </button>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Título</label>
+                    <input type="text" name="titulo" id="titulo" required class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Tipo de actividad (Ofrecer oferta, benecifios de compra,
+                        etc.)</label>
+                    <input type="text" name="actividad" id="actividad" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Descripción o notas</label>
+                    <input type="text" name="descripcion" id="descripcion" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Fecha programada </label>
+                    <input type="datetime-local" name="fecha" id="fecha" required class="form-control">
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                        <i class="bi bi-person-plus me-2"></i> Crear Actividad
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

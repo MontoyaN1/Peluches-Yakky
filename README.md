@@ -8,21 +8,21 @@ También cuenta con pedidos personalizados con atención por WhatsApp :telephone
 
 Página principal:
 
-![alt text](img/index.png)
+![alt text](/website/static/img/index.png)
 
 Ofertas y redes sociales:
 
-![alt text](img/footer.png)
+![alt text](/website/static/img/footer.png)
 
 Sección de productos:
 
-![alt text](img/productos.png)
+![alt text](/website/static/img/productos.png)
 
 
-![alt text](img/prodcutos2.png)
+![alt text](/website/static/img/prodcutos2.png)
 
 Detalles de cada producto:
 
-![alt text](img/detalle.png)
+![alt text](/website/static/img/detalle.png)
 
-![alt text](img/detalle2.png)
+![alt text](/website/static/img/detalle2.png)

@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 import os
 from .models import Order, Product, Customer
-from ._init_ import db
+from . import db
 
 
 admin = Blueprint("admin", __name__)
@@ -243,7 +243,8 @@ def usuarios():
 def adminvista():
     if current_user.id == 1:
         pedidos: Order = Order.query.all()
-        return render_template("admin.html", pedidos=pedidos)
+        productos:Product = Product.query.filter(Product.in_stock < 11).order_by(Product.in_stock).all()
+        return render_template("admin.html", pedidos=pedidos, productos=productos)
     return render_template("error_404.html")
 
 
@@ -349,3 +350,6 @@ def ventas():
         fecha_inicio=fecha_inicio_formatted,
         fecha_fin=fecha_fin_formatted,
     )
+
+
+

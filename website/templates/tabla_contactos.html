@@ -1,0 +1,90 @@
+{% extends 'index.html' %}
+
+{% block title %} Contactos
+
+{% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 100px;">
+
+    <div class="container bg-light rounded-3 p-4 ">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Contactos
+            </h1>
+
+            <div class="d-flex gap-3"><button onclick="window.location.href='/empleado'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
+                <button onclick="window.location.href='/empleado/crear_contacto'" class="btn btn-primary">
+                    <i class="bi bi-person-plus me-2"></i>Nuevo Contacto
+                </button>
+            </div>
+
+        </div>
+
+        {% if contactos | length < 1 %} <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
+            <i class="bi bi-emoji-frown-fill fs-1 text-black m-3"></i> No hay Contactos
+            </h1>
+
+            {% else %}
+
+            <div class="table-responsive-lg">
+
+                <table class="table table-bordered table-hover table-striped align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Celular</th>
+                            <th>Empresa</th>
+                            <th>Agente asignado</th>
+                            <th>Canal</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for item in contactos %}
+
+                        <tr>
+                            <td>{{ item.id_contacto }} </td>
+                            <td> {{ item.nombre }}</td>
+                            <td> {{ item.email }}</td>
+                            <td> {{ item.telefono }}</td>
+                            <td> {{ item.empresa }}</td>
+                            <td> {{ item.agente.username }}</td>
+                            <td> {{ item.canal }}</td>
+                            <td> {{ item.estado }}</td>
+
+                            <td>
+                                <h6 class="mb-1"> Editar <a href="/empleado/editar-contacto/{{item.id_contacto}}" class="edit"
+                                        title="Editar" data-toggle="tooltip">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a> </h6>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm('¿Seguro que deseas eliminar este elemento?');
+    }
+</script>
+
+{% endif %}
+
+
+{% endblock %}

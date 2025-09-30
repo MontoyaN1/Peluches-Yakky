@@ -1,0 +1,80 @@
+{% extends 'index.html' %}
+
+{% block title %} Crear Oportunidad {% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-2">
+        <div class="container bg-light rounded-3 p-4">
+
+            {% if creado %}
+
+            <div class="alert alert-success">
+                <h4>¡Oportunidad creada exitosamente!</h4>
+                <p>¿Qué te gustaría hacer ahora?</p>
+
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="/empleado/crear-actividad" class="btn btn-success">
+                        <i class="bi bi-briefcase me-2"></i>Crear Actividad
+                    </a>
+                    <a href="/empleado/crear-interaccion" class="btn btn-danger">
+                        <i class="bi bi-house me-2"></i>Guardad interacción y volver al menú
+                    </a>
+                </div>
+            </div>
+
+            {% else %}
+
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    Crear Oportunidad
+                </h1>
+                <div class="d-flex gap-3">
+                    <button onclick="window.location.href='/empleado'" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2"></i>Volver
+                    </button>
+                </div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Título</label>
+                    <input type="text" name="titulo" id="titulo" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Valor estimado (0-5) </label>
+                    <input type="text" name="estimado" id="estimado" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Probabilidad de cierre (0-100)</label>
+                    <input type="text" name="probabilidad" id="probabilidad" required class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="nombre" class="form-label">Descripción o notas</label>
+                    <input type="text" name="descripcion" id="descripcion" required class="form-control">
+                </div>
+
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                        <i class="bi bi-person-plus me-2"></i> Crear Oportunidad
+                    </button>
+                </div>
+            </form>
+
+
+
+
+            {% endif %}
+
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

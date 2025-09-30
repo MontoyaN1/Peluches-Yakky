@@ -1,5 +1,5 @@
 import uuid
-from ._init_ import db
+from . import db
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -7,6 +7,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class Customer(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    rol_id = db.Column(
+        db.Integer, db.ForeignKey("rol.id_rol"), nullable=True, default=3
+    )
     email = db.Column(db.String(100), unique=True)
     username = db.Column(db.String(100))
     password_hash = db.Column(db.String(150))
@@ -35,24 +38,21 @@ class Customer(db.Model, UserMixin):
 
 
 class Product(db.Model):
-
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(100), nullable=False)
 
-
     current_price = db.Column(db.Integer, nullable=False)
 
-    precio_costo = db.Column(db.Integer, nullable=False) #tarea
+    precio_costo = db.Column(db.Integer, nullable=False)  # tarea
     previous_price = db.Column(db.Integer, nullable=False)
-
 
     in_stock = db.Column(db.Integer, nullable=False)
     product_picture = db.Column(db.String(1000), nullable=False)
 
-
     flash_sale = db.Column(db.Boolean, default=False)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
     descripcion = db.Column(db.String(1000), nullable=False)
+    is_deleted = db.Column(db.Boolean, default=False)
 
     carts = db.relationship(
         "Cart", backref=db.backref("product", lazy=True), cascade="all, delete-orphan"
@@ -87,8 +87,7 @@ class Order(db.Model):
     address = db.Column(db.String(1000), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     forma_pago = db.Column(db.String(20), nullable=False)
-    fecha_creacion= db.Column(db.DateTime(), default=datetime.utcnow)
-
+    fecha_creacion = db.Column(db.DateTime(), default=datetime.utcnow)
 
     customer_link = db.Column(db.Integer, db.ForeignKey("customer.id"), nullable=False)
     product_link = db.Column(db.Integer, db.ForeignKey("product.id"), nullable=False)
