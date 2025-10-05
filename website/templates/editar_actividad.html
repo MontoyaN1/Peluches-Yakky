@@ -12,10 +12,10 @@
 
         <div class="d-flex justify-content-between align-items-center mb-5">
             <h1 class="text-black mb-0 display-4 fw-bold">
-                Actualizar Contacto
+                Actualizar Actividad
             </h1>
 
-            <div class="d-flex gap-3"><button onclick="window.location.href='/empleado/tabla-contactos'"
+            <div class="d-flex gap-3"><button onclick="window.location.href='/empleado/tabla-actividades'"
                     class="btn btn-primary">
                     <i class="bi bi-arrow-return-left me-2  "></i>Volver
                 </button>
@@ -28,17 +28,19 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" class="form-control" name="nombre" required value="{{ contacto.nombre}}">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="titulo" required value="{{ actividad.titulo}}">
                 </div>
 
                 <div class="col-md-3">
-                    <label class="form-label">Correo*</label>
-                    <input type="email" name="email" class="form-control" required value="{{ contacto.email }}">
+                    <label class="form-label">Tipo de actividad*</label>
+                    <input type="text" name="actividad" class="form-control" required
+                        value="{{ actividad.tipo_actividad }}">
                 </div>
                 <div class="col-md-3">
-                    <label class="form-label">Celular o teléfono </label>
-                    <input type="number" class="form-control" name="telefono" required value="{{ contacto.telefono }}">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" name="descripcion" required
+                        value="{{ actividad.descripcion }}">
                 </div>
 
 
@@ -47,19 +49,12 @@
             <div class="row mb-3">
 
                 <div class="col-md-6">
-                    <label class="form-label">Empresa</label>
-                    <input type="text" class="form-control" name="empresa" required value="{{ contacto.empresa}}">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Canal</label>
-                    <input type="text" class="form-control" name="canal" required value="{{ contacto.canal}}">
+                    <label class="form-label">Fecha programada</label>
+                    <input type="datetime-local" class="form-control" name="fecha" required
+                        value="{{ actividad.fecha_programada}}">
                 </div>
 
 
-                <div class="col-md-6">
-                    <label class="form-label">Satisfacción (En base a los comentarios del cliente)</label>
-                    <input type="text" class="form-control" name="satisfaccion" required value="{{ contacto.satisfaccion}}">
-                </div>
 
                 <div class="col-md-6">
                     <label class="form-label">Estado (Recuerda que no puedes deshacer los cambios)*</label>
@@ -84,7 +79,7 @@
                         const checkbox = document.getElementById('cambiar_estado');
                         const select = document.getElementById('estado_select');
                         const mensaje = document.getElementById('estado_mensaje');
-                        const estadoActual = "{{ contacto.estado }}";
+                        const estadoActual = "{{ actividad.estado }}";
 
                         if (checkbox.checked) {
                             // MODO EDICIÓN: Permitir selección
@@ -94,14 +89,14 @@
                             mensaje.className = 'text-primary';
 
                             let opciones = '';
-                            if (estadoActual === 'Nuevo') {
+                            if (estadoActual === 'Pendiente') {
                                 opciones = `
                 <option value="En seguimiento">En seguimiento</option>
-                <option value="Cliente">Cliente</option>
+                <option value="Completado">Completado</option>
             `;
                             } else if (estadoActual === 'En seguimiento') {
                                 opciones = `
-                <option value="Cliente">Cliente</option>
+                <option value="Completado">Completado</option>
             `;
                             }
                             select.innerHTML = opciones;
@@ -123,7 +118,6 @@
                         cambiarEstado();
                     });
                 </script>
-
 
             </div>
 

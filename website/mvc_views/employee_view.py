@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, flash, session
-from flask_login import current_user, login_required
+from flask import Blueprint, render_template, request, flash, session, redirect, url_for
+from flask_login import current_user
 from website.controllers.employee_cotller import (
     crear_contacto,
     crear_interaccion,
@@ -9,38 +9,50 @@ from website.controllers.employee_cotller import (
     todos_oportunidades,
     todos_oportunidades_sin_filtro,
     todos_actividades,
+    todos_actividades_empleado,
     todos_interacciones,
     metricas_empleado,
+    buscar_contacto,
+    actualizar_contacto,
+    buscar_oportunidad,
+    actualizar_oportunidad,
+    buscar_actividad,
+    actualizar_actividad,
+    buscar_interaccion,
+    actualizar_interaccion,
 )
+from website.decorators import rol_required, login_required
 
 
 employee = Blueprint("employee", __name__)
 
 
-@login_required
 @employee.route("/")
-def empleado_vista():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
-    contactos = todos_contactos()
-    oportunidades = todos_oportunidades()
-    actividades = todos_actividades()
-    metricas = metricas_empleado(current_user.id)
-
-    return render_template(
-        "employee.html",
-        contactos=contactos,
-        oportunidades=oportunidades,
-        actividades=actividades,
-        metricas=metricas,
-    )
-
-
 @login_required
+@rol_required(2)
+def empleado_vista():
+    try:
+        contactos = todos_contactos()
+        oportunidades = todos_oportunidades()
+        actividades = todos_actividades()
+        metricas = metricas_empleado(current_user.id)
+
+        return render_template(
+            "employee.html",
+            contactos=contactos,
+            oportunidades=oportunidades,
+            actividades=actividades,
+            metricas=metricas,
+        )
+    except Exception as e:
+        flash(e)
+        raise Exception(f"Error al mostrar datos {e}")
+
+
 @employee.route("/crear_contacto", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
 def crear_contacto_vista():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
     if request.method == "POST":
         nombre = request.form.get("nombre")
         email = request.form.get("email")
@@ -74,11 +86,10 @@ def crear_contacto_vista():
     return render_template("crear_contacto.html", creado=False)
 
 
-@login_required
 @employee.route("/crear-interaccion", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
 def crear_interaccion_vista():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
     if request.method == "POST":
         interaccion = request.form.get("interaccion")
         descripcion = request.form.get("descripcion")
@@ -90,31 +101,33 @@ def crear_interaccion_vista():
 
         id_agente = current_user.id
 
-        nueva_interaccion = crear_interaccion(
-            id_contacto=id_contacto,
-            id_agente=id_agente,
-            tipo_interaccion=interaccion,
-            descripcion=descripcion,
-            resultado=resultado,
-            id_oportunidad=id_oportunidad,
-            id_actividad=id_actividad,
-        )
+        try:
+            nueva_interaccion = crear_interaccion(
+                id_contacto=id_contacto,
+                id_agente=id_agente,
+                tipo_interaccion=interaccion,
+                descripcion=descripcion,
+                resultado=resultado,
+                id_oportunidad=id_oportunidad,
+                id_actividad=id_actividad,
+            )
 
-        if nueva_interaccion:
-            flash("Interacción creada correctamente")
-        else:
-            flash("Error al guardar la interacción")
+            if nueva_interaccion:
+                flash("Interacción creada correctamente")
+                return redirect(url_for("employee.empleado_vista"))
+        except Exception as e:
+            flash(e)
+            return redirect(url_for("employee.empleado_vista"))
 
         return render_template("employee.html")
 
     return render_template("crear_interaccion.html", creado=False)
 
 
-@login_required
 @employee.route("/crear-oportunidad", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
 def crear_oportunidad_vista():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
     if request.method == "POST":
         titulo = request.form.get("titulo")
         valor_estimado = request.form.get("estimado")
@@ -152,11 +165,10 @@ def crear_oportunidad_vista():
     return render_template("crear_oportunidad.html", creado=False)
 
 
-@login_required
 @employee.route("/crear-actividad", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
 def crear_actividad_vista():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
     if request.method == "POST":
         titulo = request.form.get("titulo")
         tipo_actividad = request.form.get("actividad")
@@ -177,73 +189,153 @@ def crear_actividad_vista():
                 fecha_programada=fecha_programada,
                 descripcion=descripcion,
             )
+
+            if nueva_actividad:
+                flash("Actividad creada correctamente")
+
+                return redirect(url_for("employee.crear_interaccion_vista"))
         except Exception as e:
             flash(f"{e}")
-            return render_template("employee.html")
-
-        if nueva_actividad:
-            flash("Actividad creada correctamente")
-
-            return render_template("employee.html")
-        else:
-            flash("Error al crear Actividad")
-
-        return render_template("employee.html")
+            return redirect("/empleado")
 
     return render_template("crear_actividad.html")
 
 
-@login_required
 @employee.route("/tabla-contactos")
-def tabla_contacos():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
-
+@login_required
+@rol_required(2)
+def tabla_contactos():
     contactos = todos_contactos()
 
     return render_template("tabla_contactos.html", contactos=contactos)
 
 
-@login_required
 @employee.route("/tabla-oportunidades")
+@login_required
+@rol_required(2)
 def tabla_oportunidades():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
-
     oportunidades = todos_oportunidades_sin_filtro()
 
     return render_template("tabla_oportunidades.html", oportunidades=oportunidades)
 
 
-@login_required
 @employee.route("/tabla-actividades")
+@login_required
+@rol_required(2)
 def tabla_actividades():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
-
-    actividades = todos_actividades()
+    actividades = todos_actividades_empleado()
 
     return render_template("tabla_actividades.html", actividades=actividades)
 
 
-@login_required
 @employee.route("/tabla-interacciones")
+@login_required
+@rol_required(2)
 def tabla_interacciones():
-    if current_user.rol_id != 2:
-        return render_template("home.html")
-
     interacciones = todos_interacciones()
 
     return render_template("tabla_interacciones.html", interacciones=interacciones)
 
 
-
+@employee.route("/editar-contacto/<int:id_contacto>", methods=["GET", "POST"])
 @login_required
-@employee.route("/editar-contacto/<int:id_contacto>",methods=["GET","POST"])
+@rol_required(2)
 def editar_contacto(id_contacto):
-    if current_user.rol_id != 2:
-        return render_template("home.html")
+    contacto = buscar_contacto(id_contacto)
 
-    
+    if request.method == "POST":
+        nombre = request.form.get("nombre")
+        email = request.form.get("email")
+        telefono = request.form.get("telefono")
+        empresa = request.form.get("empresa")
+        canal = request.form.get("canal")
+        estado = request.form.get("estado")
+        satisfaccion = request.form.get("satisfaccion")
 
-    return render_template("editar_contacto.html")
+        try:
+            contacto_editado = actualizar_contacto(
+                id_contacto=id_contacto,
+                nombre=nombre,
+                email=email,
+                telefono=telefono,
+                empresa=empresa,
+                canal=canal,
+                estado=estado,
+                satisfaccion=satisfaccion,
+            )
+
+            if contacto_editado:
+                flash("Contacto actualizado")
+                return redirect(url_for("employee.tabla_contactos"))
+        except Exception as e:
+            flash(e)
+            print(e)
+            return redirect(url_for("employee.tabla_contactos"))
+
+    return render_template("editar_contacto.html", contacto=contacto)
+
+
+@employee.route("/editar-oportunidad/<int:id_oportunidad>", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
+def editar_oportunidad(id_oportunidad):
+    oportunidad = buscar_oportunidad(id_oportunidad=id_oportunidad)
+
+    if request.method == "POST":
+        titulo = request.form.get("titulo")
+        valor_estimado = request.form.get("valor_estimado")
+        probabilidad = request.form.get("probabilidad")
+        etapa = request.form.get("etapa")
+        descripcion = request.form.get("descripcion")
+
+        try:
+            oportunidad_editada = actualizar_oportunidad(
+                id_oportunidad=id_oportunidad,
+                titulo=titulo,
+                valor_estimado=valor_estimado,
+                etapa=etapa,
+                probabilidad=probabilidad,
+                descripcion=descripcion,
+            )
+            if oportunidad_editada:
+                flash("Oportunidad actualizado")
+                return redirect(url_for("employee.tabla_oportunidades"))
+        except Exception as e:
+            flash(e)
+            print(e)
+            return redirect(url_for("employee.tabla_oportunidades"))
+
+    return render_template("editar_oportunidad.html", oportunidad=oportunidad)
+
+
+@employee.route("/editar-actividad/<int:id_actividad>", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
+def editar_actividad(id_actividad):
+    actividad = buscar_actividad(id_actividad=id_actividad)
+
+    if request.method == "POST":
+        titulo = request.form.get("titulo")
+        tipo_actividad = request.form.get("actividad")
+        descripcion = request.form.get("descripcion")
+        fecha_programda = request.form.get("fecha")
+        estado = request.form.get("estado")
+
+        try:
+            actividad_actualizada = actualizar_actividad(
+                id_actividad=id_actividad,
+                tipo_actividad=tipo_actividad,
+                titulo=titulo,
+                descripcion=descripcion,
+                fecha_programada=fecha_programda,
+                estado=estado,
+            )
+            if actividad_actualizada:
+                flash("Actividad actualizado")
+                return redirect(url_for("employee.tabla_actividades"))
+        except Exception as e:
+            flash(f"Error: {e}")
+            print(e)
+            return redirect(url_for("employee.tabla_actividades"))
+
+    return render_template("editar_actividad.html", actividad=actividad)

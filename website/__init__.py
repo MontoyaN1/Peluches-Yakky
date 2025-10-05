@@ -37,6 +37,7 @@ def create_app():
     from website.mvc_models.actividad_model import Actividad  
     from website.mvc_models.interaccion_model import Interaccion
     from sqlalchemy_utils import database_exists
+    from .decorators import login_required, rol_required, roles_required
 
     @login_manager.user_loader
     def load_user(id):
@@ -59,6 +60,7 @@ def create_app():
             print("La base de datos ya existe, omitiendo creación")
 
     return app
+__all__ = ['login_required', 'rol_required', 'roles_required', 'db', 'login_manager']
 
 
 def create_database():

@@ -21,7 +21,7 @@ class Actividad(db.Model):
 
     fecha_programada = db.Column(db.DateTime, nullable=False)
 
-    estado = db.Column(db.String(50), default="pendiente")
+    estado = db.Column(db.String(50), default="Pendiente")
 
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     fecha_completada = db.Column(db.DateTime, nullable=True)

@@ -22,7 +22,7 @@
 
         </div>
 
-        {% if actividades | length < 1 %} <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
+        {% if interacciones | length < 1 %} <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
             <i class="bi bi-emoji-frown-fill fs-1 text-black m-3"></i> No hay Interacciones
             </h1>
 
@@ -40,7 +40,7 @@
                             <th>Tipo de interacción</th>
                             <th>Descripción</th>
                             <th>Resultado</th>
-                            <th>Acciones</th>
+                            <th>Fecha</th>
 
                         </tr>
                     </thead>
@@ -51,7 +51,7 @@
 
 
                         <tr>
-                            <td>{{ item.id_actividad }} </td>
+                            <td>{{ item.id_interaccion }} </td>
                             <td>
                                 <h6 class="mb-1"> {{ item.contacto.nombre }} </h6>
                                 <small class="text-muted"> Cel: {{ item.contacto.telefono }} </small>
@@ -61,15 +61,9 @@
 
                             </td>
                             <td> {{ item.tipo_interaccion }}</td>
-                            <td> {{ item.tipo_actividad }}</td>
                             <td> {{ item.descripcion }}</td>
                             <td> {{ item.resultado }}</td>
-
-                            <td>
-                                <h6 class="mb-1"> Editar <a href="#" class="edit" title="Editar" data-toggle="tooltip">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </a> </h6>
-                            </td>
+                            <td> {{ item.fecha_interaccion }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

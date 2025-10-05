@@ -1,0 +1,155 @@
+{% extends 'index.html' %}
+
+{% block title %} Editar Oportunidad
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-4 ">
+
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                Actualizar Oportunidad
+            </h1>
+
+            <div class="d-flex gap-3"><button onclick="window.location.href='/empleado/tabla-oportunidades'"
+                    class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                </button>
+
+            </div>
+
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" name="titulo" required value="{{ oportunidad.titulo}}">
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Valor estimado</label>
+                    <input type="text" name="valor_estimado" class="form-control" required
+                        value="{{ oportunidad.valor_estimado }}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Probabilidad </label>
+                    <input type="number" class="form-control" name="probabilidad" required
+                        value="{{ oportunidad.probabilidad }}">
+                </div>
+
+
+            </div>
+
+            <div class="row mb-3">
+
+                <div class="col-md-6">
+    <label class="form-label">Etapa (Recuerda que no puedes deshacer los cambios)*</label>
+
+    <div class="form-check form-switch mb-3">
+        <input class="form-check-input" type="checkbox" id="cambiar_etapa" onchange="cambiarEtapa()" role="switch">
+        <label class="form-check-label" for="cambiar_etapa">
+            <strong>Modificar etapa actual</strong>
+        </label>
+    </div>
+
+    <select name="etapa" class="form-select" id="etapa_select">
+        <!-- Opciones generadas dinámicamente -->
+    </select>
+
+    <small class="text-muted" id="etapa_mensaje"></small>
+</div>
+
+<script>
+    function cambiarEtapa() {
+        const checkbox = document.getElementById('cambiar_etapa');
+        const select = document.getElementById('etapa_select');
+        const mensaje = document.getElementById('etapa_mensaje');
+        const etapaActual = "{{ oportunidad.etapa }}";
+
+        if (checkbox.checked) {
+            // MODO EDICIÓN: Permitir selección
+            select.disabled = false;
+            select.classList.remove('bg-light', 'text-muted');
+            mensaje.textContent = 'Selecciona la nueva etapa';
+            mensaje.className = 'text-primary';
+
+            let opciones = '';
+            if (etapaActual === 'Prospecto') {
+                opciones = `
+                    <option value="Propuesta">Propuesta</option>
+                    <option value="Cierre">Cierre</option>
+                `;
+            } else if (etapaActual === 'Propuesta') {
+                opciones = `
+                    <option value="Cierre">Cierre</option>
+                `;
+            }
+            select.innerHTML = opciones;
+
+        } else {
+            // MODO VISUALIZACIÓN: Solo mostrar etapa actual
+            select.disabled = false; // Mantener habilitado para envío
+            select.classList.add('bg-light', 'text-muted');
+            select.innerHTML = `<option value="${etapaActual}" selected>${etapaActual} (actual)</option>`;
+            mensaje.textContent = 'La etapa actual se mantendrá';
+            mensaje.className = 'text-muted';
+            
+            // IMPORTANTE: Asegurar que tenga el valor correcto
+            select.value = etapaActual;
+        }
+    }
+
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('cambiar_etapa').checked = false;
+        cambiarEtapa();
+        
+        // Asegurar que el select tenga valor antes de enviar
+        document.querySelector('form').addEventListener('submit', function() {
+            const select = document.getElementById('etapa_select');
+            const etapaActual = "{{ oportunidad.etapa }}";
+            const checkbox = document.getElementById('cambiar_etapa');
+            
+            // Si no está marcado el checkbox, forzar el valor actual
+            if (!checkbox.checked) {
+                select.value = etapaActual;
+            }
+        });
+    });
+</script>
+
+
+
+                <div class="col-md-6">
+                    <label class="form-label">Descripción</label>
+                    <input type="text" class="form-control" name="descripcion" required
+                        value="{{ oportunidad.descripcion}}">
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                    <i class="bi bi-pencil-square"></i> Actualizar
+                </button>
+
+
+
+            </div>
+
+
+
+
+    </div>
+
+    </form>
+
+</div>
+</div>
+
+{% endblock %}

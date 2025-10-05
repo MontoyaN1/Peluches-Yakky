@@ -14,6 +14,8 @@ class Customer(db.Model, UserMixin):
     username = db.Column(db.String(100))
     password_hash = db.Column(db.String(150))
     date_joined = db.Column(db.DateTime(), default=datetime.utcnow)
+    active = db.Column(db.Boolean, default=True)
+    telefono = db.Column(db.Integer, nullable=True)
 
     cart_items = db.relationship(
         "Cart", backref=db.backref("customer", lazy=True), cascade="all, delete-orphan"
@@ -21,6 +23,25 @@ class Customer(db.Model, UserMixin):
     orders = db.relationship(
         "Order", backref=db.backref("customer", lazy=True), cascade="all, delete-orphan"
     )
+
+    @property
+    def is_authenticated(self):
+        """Return True if the user is authenticated."""
+        return True  # Para usuarios reales siempre True
+
+    @property
+    def is_active(self):
+        """Return True if the user is active."""
+        return self.active  # Usa el campo que agregaste
+
+    @property
+    def is_anonymous(self):
+        """Return True if this is an anonymous user."""
+        return False  # Para usuarios reales siempre False
+
+    def get_id(self):
+        """Return the user ID as string."""
+        return str(self.id)
 
     @property
     def password(self):

@@ -45,6 +45,8 @@
                             <th>Agente asignado</th>
                             <th>Canal</th>
                             <th>Estado</th>
+                            <th>Satisfacción</th>
+
                             <th>Acciones</th>
 
                         </tr>
@@ -63,6 +65,8 @@
                             <td> {{ item.agente.username }}</td>
                             <td> {{ item.canal }}</td>
                             <td> {{ item.estado }}</td>
+                            <td> {{ item.satisfaccion }}</td>
+
 
                             <td>
                                 <h6 class="mb-1"> Editar <a href="/empleado/editar-contacto/{{item.id_contacto}}" class="edit"

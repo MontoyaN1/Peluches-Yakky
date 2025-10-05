@@ -1,0 +1,454 @@
+{% extends 'index.html' %}
+
+{% block title %}Métricas CRM{% endblock %}
+
+{% block body %}
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center bg-light m-4 p-4 rounded-3">
+        <!-- Header -->
+        <div class="row align-items-center py-4">
+            <div class="col">
+                <h1 class="text-black mb-0 display-4 fw-bold">
+                    <i class="bi bi-speedometer2 me-3"></i>Dashboard CRM
+                </h1>
+                <p class="text-white-50 mb-0">Métricas clave de desempeño y conversión</p>
+            </div>
+            <div class="col-auto">
+                <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
+                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('mvc_admin.metricas_crm') }}" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                            value="{{ fecha_inicio }}" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fecha_fin" class="form-label">Fecha Fin</label>
+                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ fecha_fin }}"
+                            required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+                    </div>
+                </form>
+
+                <!-- Rango de fechas -->
+                <div class="alert alert-info mt-3 mb-0">
+                    <i class="bi bi-calendar-range me-2"></i>
+                    <strong>Período analizado:</strong> {{ fecha_inicio }} hasta {{ fecha_fin }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Métricas Principales -->
+        <div class="row g-4 mb-4">
+            <!-- Tasa de Conversión -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">TASA DE CONVERSIÓN</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(tasa_conversion) }}%</h2>
+                                <p class="mb-0 small">Contactos a Ventas</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Valor Promedio por Cliente -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-success text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">VALOR PROMEDIO</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(promedio_cliente) }}</h2>
+                                <p class="mb-0 small">Puntuación Oportunidades</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-star-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tiempo de Respuesta -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-warning text-dark shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-dark-50 mb-2">TIEMPO RESPUESTA</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(tiempo_respuesta) }}h</h2>
+                                <p class="mb-0 small">Horas promedio</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-clock-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ciclo de Ventas -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-dark text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">CICLO DE VENTAS</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(ciclo_ventas) }}d</h2>
+                                <p class="mb-0 small">Días promedio</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-arrow-right-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Segunda Fila de Métricas -->
+        <div class="row g-4 mb-4">
+
+
+            <!-- Retención -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-info text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">TASA RETENCIÓN</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(tasa_retencion) }}%</h2>
+                                <p class="mb-0 small">Clientes recurrentes</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-arrow-repeat"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Churn Rate -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-danger text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">TASA ABANDONO</h6>
+                                <h2 class="fw-bold display-6">{{ "{:.1f}".format(churn_rate) }}%</h2>
+                                <p class="mb-0 small">Clientes perdidos</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-arrow-down-right"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Contactos -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-secondary text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">TOTAL CONTACTOS</h6>
+                                <h2 class="fw-bold display-6">{{ total_contactos }}</h2>
+                                <p class="mb-0 small">En el período</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Oportunidades Activas -->
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-purple text-white shadow-lg h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="card-title text-white-50 mb-2">OPORTUNIDADES</h6>
+                                <h2 class="fw-bold display-6">{{ total_oportunidades }}</h2>
+                                <p class="mb-0 small">Activas</p>
+                            </div>
+                            <div class="display-1 opacity-25">
+                                <i class="bi bi-briefcase-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row g-4">
+            <!-- Primera fila - 2 gráficos lado a lado -->
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-pie-chart-fill text-primary me-2"></i>
+                            Retención vs Churn
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="graficoRetencionChurn"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-bar-chart-fill text-success me-2"></i>
+                            Métricas Principales
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="graficoMetricasPrincipales"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Segunda fila - 2 gráficos lado a lado -->
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-clock-history text-warning me-2"></i>
+                            Tiempo de Respuesta
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="graficoTiempoRespuesta"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card shadow-lg h-100">
+                    <div class="card-header bg-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-funnel-fill text-danger me-2"></i>
+                            Conversión vs Oportunidades
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
+                            <canvas id="graficoConversionOportunidades"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    <script>
+        // Datos desde Flask
+        const datos = {{ datos_graficos | tojson }};
+
+        console.log('Datos recibidos:', datos);
+
+        // 1. Gráfico de Retención vs Churn (Doughnut)
+        const ctxRetencion = document.getElementById('graficoRetencionChurn').getContext('2d');
+        new Chart(ctxRetencion, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tasa Retención', 'Churn Rate'],
+                datasets: [{
+                    data: [datos.retencion_churn.tasa_retencion, datos.retencion_churn.churn_rate],
+                    backgroundColor: ['#36A2EB', '#FF6384'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': ' + context.parsed + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 2. Gráfico de Métricas Principales (Bar Chart)
+        const ctxMetricas = document.getElementById('graficoMetricasPrincipales').getContext('2d');
+        new Chart(ctxMetricas, {
+            type: 'bar',
+            data: {
+                labels: ['Tasa Conversión', 'Promedio Cliente', 'Ciclo Ventas', 'Total Contactos', 'Total Oportunidades'],
+                datasets: [{
+                    label: 'Valores',
+                    data: [
+                        datos.metricas_principales.tasa_conversion,
+                        datos.metricas_principales.promedio_cliente,
+                        datos.metricas_principales.ciclo_ventas,
+                        datos.metricas_principales.total_contactos,
+                        datos.metricas_principales.total_oportunidades
+                    ],
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ],
+                    borderColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 3. Gráfico de Tiempo de Respuesta (Gauge Style)
+        const ctxTiempo = document.getElementById('graficoTiempoRespuesta').getContext('2d');
+        new Chart(ctxTiempo, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tiempo Respuesta', 'Meta'],
+                datasets: [{
+                    data: [datos.tiempo_respuesta, 24 - datos.tiempo_respuesta], // Asumiendo meta de 24h
+                    backgroundColor: [
+                        datos.tiempo_respuesta > 12 ? '#FF6384' : '#4BC0C0',
+                        '#F0F0F0'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return context.label + ': ' + context.parsed + ' horas';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. Gráfico de Conversión vs Oportunidades
+        const ctxConversion = document.getElementById('graficoConversionOportunidades').getContext('2d');
+        new Chart(ctxConversion, {
+            type: 'bar',
+            data: {
+                labels: ['Contactos', 'Oportunidades', 'Conversiones'],
+                datasets: [{
+                    label: 'Cantidad',
+                    data: [
+                        datos.metricas_principales.total_contactos,
+                        datos.metricas_principales.total_oportunidades,
+                        datos.metricas_principales.total_oportunidades * (datos.metricas_principales.tasa_conversion / 100)
+                    ],
+                    backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                    borderColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+
+
+    <style>
+        .card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border: none;
+            border-radius: 1rem;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .bg-purple {
+            background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%) !important;
+        }
+
+        .display-6 {
+            font-size: 2.5rem;
+        }
+    </style>
+
+
+
+    {% endblock %}

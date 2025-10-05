@@ -16,6 +16,7 @@ class Contacto(db.Model):
 
     canal = db.Column(db.String(50))
     estado = db.Column(db.String(50), default="Nuevo")
+    satisfaccion = db.Column(db.Integer, nullable=True)
 
     fecha_registro = db.Column(db.DateTime, default=datetime.utcnow)
     fecha_actulizar = db.Column(

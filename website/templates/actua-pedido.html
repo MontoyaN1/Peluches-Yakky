@@ -23,6 +23,10 @@
 
         </div>
 
+        {% if order.status == "Completado" %}
+        <h3> No es posible cambiar el estado de un pedido ya entregado</h3>
+
+        {% else %}
 
         <form method="post" enctype="multipart/form-data" class="border p-4 rounded-3 shadow-sm">
 
@@ -47,37 +51,20 @@
                         <option selected>Entregado</option>
                     </select>
 
-
-                    {% else %}
-
-                    <h3> No es posible cambiar el estado de un pedido ya entregado</h3>
-
-
                     {% endif %}
-
-
-
 
                 </div>
             </div>
 
-
-            {% if order.status != 'Entregado' %}
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                 <button type="submit" class="btn btn-primary px-4 rounded-pill">
                     <i class="bi bi-cloud-plus me-2"></i> Cambiar Estado
                 </button>
             </div>
 
-
-
-            {% endif %}
-
-
-
-
-
         </form>
+
+        {% endif %}
 
     </div>
 </div>
