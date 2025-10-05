@@ -1,0 +1,456 @@
+{% extends 'index.html' %}
+
+{% block title %} Sobre Nosotros
+
+{% endblock %}
+
+{% block body %}
+
+<div class="fondo" style="min-height: 100vh; padding: 30px;">
+    <div class="container-fluid bg-light rounded-3 p-4 ">
+
+        <!-- Hero Section -->
+        <section class="hero-section card">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h1 class="display-4 fw-bold mb-4">Creando Sonrisas Desde 2020</h1>
+                        <p class="lead mb-4">En Peluches Yakky, no solo vendemos peluches, creamos compañeros de vida
+                            que traen
+                            alegría y comfort a cada hogar.</p>
+                        <div class="d-flex gap-3">
+                            <span class="badge bg-light text-dark p-2">🎯 Calidad Premium</span>
+                            <span class="badge bg-light text-dark p-2">❤️ Hechos con Amor</span>
+                            <span class="badge bg-light text-dark p-2">🚚 Envío Rápido</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <div style="font-size: 8rem;">🧸</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nuestra Historia -->
+        <section class="story-section">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 card p-4">
+                        <h2 class="fw-bold mb-4">Nuestra Historia</h2>
+                        <p class="lead">Todo comenzó en un pequeño taller familiar donde creábamos peluches
+                            personalizados para
+                            amigos y vecinos. La alegría que veíamos en sus caras nos inspiró a compartir esta magia con
+                            el
+                            mundo.</p>
+                        <p>Hoy, después de miles de peluches entregados, mantenemos esa misma esencia: cada peluche es
+                            creado
+                            con atención al detalle y mucho cariño, asegurando que llegue a su nuevo hogar como un
+                            verdadero
+                            amigo.</p>
+                        <div class="mt-4">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-heart text-primary me-3 fa-lg"></i>
+                                <span>Materiales 100% hipoalergénicos</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-leaf text-success me-3 fa-lg"></i>
+                                <span>Relleno ecológico y sustentable</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-award text-warning me-3 fa-lg"></i>
+                                <span>Calidad premium garantizada</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6  p-4">
+                        <div class="row g-3">
+                            <div class="col-6 card p-2">
+                                <img src="../static/img/muñeco_nieve_faro.png" class="img-fluid rounded shadow"
+                                    alt="Taller de peluches">
+                            </div>
+                            <div class="col-6 card p-2">
+                                <img src="../static/img/oso_faro.png" class="img-fluid rounded shadow mt-4"
+                                    alt="Peluches personalizados">
+                            </div>
+                            <div class="col-6 card p-2">
+                                <img src="../static/img/papa_noel.png" class="img-fluid rounded shadow"
+                                    alt="Materiales de calidad">
+                            </div>
+                            <div class="col-6 card p-2">
+                                <img src="../static/img/pesebre_domo.png" class="img-fluid rounded shadow mt-4"
+                                    alt="Clientes felices">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section class="py-5 ">
+            <div class="container-fluid">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">Números que Hablan por Nosotros</h2>
+                    <p class="lead text-muted">La confianza de nuestros clientes se refleja en estas métricas</p>
+                </div>
+
+                <!-- Métricas Principales -->
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-icon">🧸</div>
+                            <div class="metric-value" id="metric-peluches"></div>
+                            <div class="metric-label">Peluches Entregados</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-icon">😊</div>
+                            <div class="metric-value" id="metric-satisfaccion"></div>
+                            <div class="metric-label">Clientes Satisfechos</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-icon">🚚</div>
+                            <div class="metric-value" id="metric-entrega"></div>
+                            <div class="metric-label">Días de Entrega Promedio</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="metric-card">
+                            <div class="metric-icon">⭐</div>
+                            <div class="metric-value" id="metric-felices"></div>
+                            <div class="metric-label">Clientes Felices</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gráficos -->
+                <div class="row">
+                    <!-- Gráfico de Satisfacción -->
+                    <div class="col-lg-6">
+                        <div class="chart-container">
+                            <h5 class="text-center mb-4">😊 Nivel de Satisfacción General</h5>
+                            <div style="height: 250px; position: relative;">
+                                <canvas id="grafico-satisfaccion"></canvas>
+                                <div class="gauge-center">
+                                    <h3 class="mb-0" id="satisfaction-percent">96%</h3>
+                                    <small class="text-muted">Satisfacción</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Peluches Más Populares -->
+                    <div class="col-lg-6">
+                        <div class="chart-container">
+                            <h5 class="text-center mb-4">🎯 Nuestros Peluches Más Populares</h5>
+                            <div style="height: 250px;">
+                                <canvas id="grafico-peluches-populares"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tendencias de Ventas -->
+                    <div class="col-lg-12">
+                        <div class="chart-container">
+                            <h5 class="text-center mb-4">📈 Tendencias de Ventas Mensuales</h5>
+                            <div style="height: 300px;">
+                                <canvas id="grafico-tendencias"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Valores -->
+        <section class="values-section card">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <h2 class="fw-bold">Nuestros Valores</h2>
+                    <p class="lead">Los principios que guían cada peluche que creamos</p>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="value-card">
+                            <i class="bi bi-award-fill fa-3x mb-3"></i>
+                            <h4>Calidad Artesanal</h4>
+                            <p>Cada peluche es revisado minuciosamente para asegurar la máxima calidad en costura y
+                                materiales.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="value-card">
+                            <i class="fas fa-leaf fa-3x mb-3"></i>
+                            <h4>Sustentabilidad</h4>
+                            <p>Usamos materiales ecológicos y procesos responsables con el medio ambiente.</p>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="value-card">
+                            <i class="fas fa-smile-beam fa-3x mb-3"></i>
+                            <h4>Felicidad Garantizada</h4>
+                            <p>Cada peluche es una historia, ponemos la mayor dedicación para satisfacer a nuestros
+                                clientes </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <style>
+            .card {
+                transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+                border: none;
+                border-radius: 1rem;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            .hero-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 100px 0;
+            }
+
+            .metric-card {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                text-align: center;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border: none;
+                transition: transform 0.3s ease;
+                height: 100%;
+            }
+
+            .metric-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            .metric-icon {
+                font-size: 3rem;
+                margin-bottom: 1rem;
+            }
+
+            .metric-value {
+                font-size: 2.5rem;
+                font-weight: bold;
+                color: #333;
+                margin: 0.5rem 0;
+            }
+
+            .metric-label {
+                color: #666;
+                font-size: 0.9rem;
+            }
+
+            .chart-container {
+                background: white;
+                border-radius: 15px;
+                padding: 2rem;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease;
+                margin-bottom: 2rem;
+            }
+
+            .chart-container:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+            }
+
+            .story-section {
+                background: #f8f9fa;
+                padding: 80px 0;
+            }
+
+            .team-section {
+                padding: 80px 0;
+            }
+
+            .team-card {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .team-img {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-bottom: 1rem;
+                border: 5px solid #667eea;
+            }
+
+            .values-section {
+                background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+                color: white;
+                padding: 80px 0;
+            }
+
+            .value-card {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .gauge-center {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+            }
+        </style>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+        <script>
+            // Animación de números
+            // Animación de números
+            function animateValue(element, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const value = Math.floor(progress * (end - start) + start);
+
+                    if (element.classList.contains('percent')) {
+                        element.textContent = value + '%';
+                    } else {
+                        element.textContent = value.toLocaleString();
+                    }
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            // Inicializar gráficos cuando la página cargue
+            document.addEventListener('DOMContentLoaded', function () {
+                // Usar datos de Flask DIRECTAMENTE - sin JSON.parse
+                const totalPeluches = {{ total_peluches | tojson
+            }};
+            const clientesSatisfechos = {{ clientes_satisfechos | tojson }};
+            const clientesFelices = {{ clientes_felices | tojson }};
+            const productosLabels = {{ productos_labels | tojson }};
+            const productosDatos = {{ productos_datos | tojson }};
+            const ventasMensuales = {{ ventas_mensuales | tojson }};
+
+            console.log('Datos desde Flask:', {
+                totalPeluches,
+                clientesSatisfechos,
+                clientesFelices,
+                productosLabels,
+                productosDatos,
+                ventasMensuales
+            });
+
+            // Animar métricas con datos REALES de Flask
+            setTimeout(() => {
+                animateValue(document.getElementById('metric-peluches'), 0, totalPeluches, 2000);
+                animateValue(document.getElementById('metric-satisfaccion'), 0, clientesSatisfechos, 2000);
+                animateValue(document.getElementById('metric-entrega'), 0, 2, 2000);
+                animateValue(document.getElementById('metric-felices'), 0, clientesFelices, 2000);
+            }, 500);
+
+            // Gráfico de Satisfacción (Gauge)
+            const ctxSatisfaction = document.getElementById('grafico-satisfaccion').getContext('2d');
+            new Chart(ctxSatisfaction, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [clientesSatisfechos, 100 - clientesSatisfechos],
+                        backgroundColor: ['#4CAF50', '#F5F5F5'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+
+            // Gráfico de Peluches Populares
+            const ctxPopular = document.getElementById('grafico-peluches-populares').getContext('2d');
+            new Chart(ctxPopular, {
+                type: 'bar',
+                data: {
+                    labels: productosLabels,
+                    datasets: [{
+                        label: 'Ventas',
+                        data: productosDatos,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + ' unidades';
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Gráfico de Tendencias
+            const ctxTrend = document.getElementById('grafico-tendencias').getContext('2d');
+            new Chart(ctxTrend, {
+                type: 'line',
+                data: {
+                    labels: ventasMensuales.labels,
+                    datasets: [{
+                        label: 'Ventas Mensuales',
+                        data: ventasMensuales.datos,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function (value) {
+                                    return value + ' unidades';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+});
+        </script>
+
+    </div>
+</div>
+
+{% endblock %}

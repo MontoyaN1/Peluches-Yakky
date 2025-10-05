@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, render_template, flash, redirect, request
 from .models import Product, Cart, Order
-from flask_login import login_required, current_user
+from flask_login import  current_user
+from website.decorators import login_required
 from . import db
 
 views = Blueprint("views", __name__)
@@ -239,7 +240,6 @@ def pedidos():
 
 
 @views.route("/buscar", methods=["GET", "POST"])
-@login_required
 def buscar():
     if request.method == "POST":
         busqueda = request.form.get("buscar")
@@ -312,3 +312,6 @@ def productos_todos():
             else []
         ),
     )
+
+
+

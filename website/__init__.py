@@ -30,6 +30,8 @@ def create_app():
     from .auth import auth
     from website.mvc_views.employee_view import employee
     from website.mvc_views.admin_view import mvc_admin
+    from website.mvc_views.all_user_view import todos
+
     from .models import Customer, Cart, Product, Order  # noqa: F401
 
     from website.mvc_models.contacto_model import Contacto
@@ -48,6 +50,8 @@ def create_app():
     app.register_blueprint(admin, url_prefix="/")
     app.register_blueprint(employee, url_prefix="/empleado")
     app.register_blueprint(mvc_admin, url_prefix="/admin")
+    app.register_blueprint(todos, url_prefix="/")
+
 
 
     with app.app_context():

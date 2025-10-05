@@ -148,9 +148,9 @@ def satisfaccion_promedio(fecha_inicio=None, fecha_fin=None):
         fecha_fin = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
 
     resultados = Contacto.query.filter(
-        Contacto.fecha_encuesta.isnot(None),
-        Contacto.fecha_encuesta >= fecha_inicio,
-        Contacto.fecha_encuesta <= fecha_fin,
+        Contacto.fecha_registro.isnot(None),
+        Contacto.fecha_registro >= fecha_inicio,
+        Contacto.fecha_registro <= fecha_fin,
     ).all()
 
     if not resultados:
