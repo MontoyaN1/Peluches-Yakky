@@ -1,4 +1,4 @@
-from website.models import Customer, Order
+from website.models import Customer
 from website import db
 from datetime import datetime, timedelta
 from website.mvc_models.contacto_model import Contacto
@@ -170,8 +170,8 @@ def ciclo_ventas_promedio(fecha_inicio=None, fecha_fin=None):
         )
         fecha_fin = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
 
-    print(f"=== DEBUG CICLO VENTAS ===")
-    print(f"Rango: {fecha_inicio} a {fecha_fin}")
+    print("=== DEBUG CICLO VENTAS ===")
+    print("Rango: {fecha_inicio} a {fecha_fin}")
 
     # Oportunidades en CIERRE
     oportunidades = Oportunidad.query.filter(Oportunidad.etapa == "Cierre").all()
@@ -199,13 +199,13 @@ def ciclo_ventas_promedio(fecha_inicio=None, fecha_fin=None):
 
             # Validar que ambas fechas existan y no sean strings vacíos
             if not fecha_creacion or not fecha_cierre:
-                print(f"  ❌ Faltan fechas - Saltando")
+                print("  ❌ Faltan fechas - Saltando")
                 continue
 
             # Si son strings, convertirlos a datetime
             if isinstance(fecha_creacion, str):
                 if fecha_creacion.strip() == "":  # String vacío
-                    print(f"  ❌ fecha_creacion es string vacío - Saltando")
+                    print("  ❌ fecha_creacion es string vacío - Saltando")
                     continue
                 try:
                     fecha_creacion = datetime.fromisoformat(
@@ -217,7 +217,7 @@ def ciclo_ventas_promedio(fecha_inicio=None, fecha_fin=None):
 
             if isinstance(fecha_cierre, str):
                 if fecha_cierre.strip() == "":  # String vacío
-                    print(f"  ❌ fecha_cierre es string vacío - Saltando")
+                    print("  ❌ fecha_cierre es string vacío - Saltando")
                     continue
                 try:
                     fecha_cierre = datetime.fromisoformat(
@@ -231,7 +231,7 @@ def ciclo_ventas_promedio(fecha_inicio=None, fecha_fin=None):
             if not isinstance(fecha_creacion, datetime) or not isinstance(
                 fecha_cierre, datetime
             ):
-                print(f"  ❌ Fechas no son datetime objects - Saltando")
+                print("  ❌ Fechas no son datetime objects - Saltando")
                 continue
 
             # Calcular ciclo
@@ -271,7 +271,7 @@ def metricas_retencion_simplificada(fecha_inicio=None, fecha_fin=None):
         )
         fecha_fin = datetime.now().replace(hour=23, minute=59, second=59, microsecond=0)
 
-    print(f"=== DEBUG RETENCIÓN ===")
+    print("=== DEBUG RETENCIÓN ===")
     print(f"Periodo: {fecha_inicio} a {fecha_fin}")
 
     # Estrategia 1: Basada en estado de contactos
