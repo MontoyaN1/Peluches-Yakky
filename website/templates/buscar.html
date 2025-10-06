@@ -51,21 +51,25 @@
 
             <div class="col-md-4">
                 <div class="card product-card h-100">
-                    <img src="{{ item.product_picture }}" class="card-img-top" alt="Peluche Unicornio">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.product_name }}</h5>
-                        <p class="card-text">{{ item.descripcion }}</p>
-                        <p class="  fw-bold fs-5">Antes <s class="text-danger fs-5">${{ item.previous_price }}</s></p>
-                        <p class=" fw-bold fs-4">Ahora <span class="text-danger fw-bold fs-4">${{
-                                item.current_price}}</span></p>
-                        <a href="/agregar-carrito/{{ item.id }}" class="btn btn-primary">Añadir al carrito</a>
-                    </div>
+                    <a href="/producto/{{item.id}}" class="text-decoration-none text-black">
+                        <img src="{{ item.product_picture }}" class="card-img-top" alt="Peluche Unicornio">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product_name }}</h5>
+                            <p class="card-text">{{ item.descripcion }}</p>
+                            <p class="  fw-bold fs-5">Antes <s class="text-danger fs-5">${{ item.previous_price }}</s>
+                            </p>
+                            <p class=" fw-bold fs-4">Ahora <span class="text-danger fw-bold fs-4">${{
+                                    item.current_price}}</span></p>
+
+                    </a>
+                    <a href="/agregar-carrito/{{ item.id }}" class="btn btn-primary">Añadir al carrito</a>
                 </div>
             </div>
+    </div>
 
-            {% endfor %}
+    {% endfor %}
 
-            {% endif %}
+    {% endif %}
 
     </div>
 </section>
