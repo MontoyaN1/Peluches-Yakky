@@ -1,46 +1,55 @@
-{% extends 'forms.html' %}
+{% extends 'index.html' %}
+
+{% block title %} Registrarse
+
+{% endblock %}
 
 {% block body %}
 
-<body class="d-flex justify-content-center m-5 fondo">
-    <form method="post" class="formulario d-flex flex-column bg-light border border-warning shadow-lg rounded p-3 m-5"
-        style="width:500px ;">
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="row justify-content-center  m-4 p-4 rounded-3">
 
-        <h1 class=" d-flex justify-content-center text-primary">Registrarse</h1>
+        <form method="post"
+            class="formulario d-flex flex-column bg-light border border-warning shadow-lg rounded p-3 m-5"
+            style="width:500px ;">
 
-        <p>Registrate para hacer tickets</p>
+            <h1 class=" d-flex justify-content-center text-primary">Registrarse</h1>
 
-
-
-        <hr class="">
-
-        <div class="mb-3">
-            <label for="" class="form-label">Nombre</label>
-
-            <input type="text" name="nombre" id="nombre" required class="form-control">
-        </div>
-
-        <div class="mb-3">
-            <label for="" class="form-label">Correo</label>
-
-            <input type="email" name="email" id="email" required class="form-control" placeholder="nombre@email.com">
-        </div>
+            <p>Registrate para hacer tickets</p>
 
 
-        <div class="mb-3">
-            <label for="" class=" form-label">Contraseña</label>
-            <input type="password" name="clave" id="clave" class="form-control" minlength="6">
-        </div>
+
+            <hr class="">
+
+            <div class="mb-3">
+                <label for="" class="form-label">Nombre</label>
+
+                <input type="text" name="nombre" id="nombre" required class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="" class="form-label">Correo</label>
+
+                <input type="email" name="email" id="email" required class="form-control"
+                    placeholder="nombre@email.com">
+            </div>
 
 
-        <input type="submit" value="Enviar" class="btn btn-success">
-
-        <br>
-
-        <a href="/login">¿Ya tienes cuenta? Inicia sesión aquí</a>
-    </form>
+            <div class="mb-3">
+                <label for="" class=" form-label">Contraseña</label>
+                <input type="password" name="clave" id="clave" class="form-control" minlength="6">
+            </div>
 
 
-</body>
+            <input type="submit" value="Enviar" class="btn btn-success">
+
+            <br>
+
+            <a href="/login">¿Ya tienes cuenta? Inicia sesión aquí</a>
+        </form>
+    </div>
+
+
+</div>
 
 {% endblock %}
