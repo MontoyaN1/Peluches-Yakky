@@ -1,5 +1,9 @@
 from flask import Blueprint, jsonify, render_template, flash, redirect, request
-from .models import Product, Cart, Order
+
+from .models.cart_model import Cart
+
+from .models.producto_model import Product
+from .models.order_model import Order
 from flask_login import  current_user
 from website.decorators import login_required
 from . import db

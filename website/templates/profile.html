@@ -62,7 +62,7 @@
             </div>
 
             <!-- Sección de últimos pedidos -->
-            <div class="card shadow-sm mb-5">
+            <div class="card shadow-sm mb-5 hover-effect">
                 <div class="card-header bg-white border-bottom">
                     <h3 class="mb-0">
                         <i class="bi bi-receipt me-2"></i>Tus últimos pedidos
@@ -145,13 +145,196 @@
                     <div class="text-center py-5">
                         <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
                         <h4 class="text-muted">No tienes pedidos aún</h4>
-                        <a href="/productos" class="btn btn-primary mt-3">
-                            <i class="bi bi-bag me-2"></i>Explorar productos
+
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sección de PQRD Mejorada -->
+            <div class="card shadow-sm mb-5 hover-effect">
+                <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <i class="bi bi-headset me-2"></i>Tus PQRD
+                    </h3>
+                    <a href="/contacto" class="btn btn-primary btn-sm">
+                        <i class="bi bi-plus-circle me-2"></i>Nuevo PQRD
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if ticktes %}
+                    <!-- Filtros -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button class="btn btn-outline-secondary btn-sm active filter-btn" data-filter="all">
+                                    Todos <span class="badge bg-secondary ms-1">{{ tickets|length }}</span>
+                                </button>
+                                <button class="btn btn-outline-warning btn-sm filter-btn" data-filter="Abierto">
+                                    Abiertos <span class="badge bg-warning ms-1">{{ tickets|selectattr('estado',
+                                        'equalto', 'Abierto')|list|length }}</span>
+                                </button>
+                                <button class="btn btn-outline-info btn-sm filter-btn" data-filter="En progreso">
+                                    En Progreso <span class="badge bg-info ms-1">{{ tickets|selectattr('estado',
+                                        'equalto', 'En progreso')|list|length }}</span>
+                                </button>
+                                <button class="btn btn-outline-success btn-sm filter-btn" data-filter="Resuelto">
+                                    Resueltos <span class="badge bg-success ms-1">{{ tickets|selectattr('estado',
+                                        'equalto', 'Resuelto')|list|length }}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lista de PQRD -->
+                    <div class="row" id="tickets-container">
+                        {% for ticket in ticktes %}
+                        <div class="col-lg-6 mb-3 ticket-item"
+                            data-status="{{ ticket.estado|lower|replace(' ', '-') }}">
+                            <div class="card h-100 border-start border-4 
+                    {{ 'border-warning' if ticket.estado == 'Abierto' }}
+                    {{ 'border-info' if ticket.estado == 'En progreso' }}
+                    {{ 'border-success' if ticket.estado == 'Resuelto' }}
+                    {{ 'border-secondary' if ticket.estado == 'Cerrado' }}">
+
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <span class="badge 
+                                {{ 'bg-warning' if ticket.estado == 'Abierto' }}
+                                {{ 'bg-info' if ticket.estado == 'En progreso' }}
+                                {{ 'bg-success' if ticket.estado == 'Resuelto' }}
+                                {{ 'bg-secondary' if ticket.estado == 'Cerrado' }}">
+                                            <i class="bi 
+                                    {{ 'bi-clock' if ticket.estado == 'Abierto' }}
+                                    {{ 'bi-arrow-repeat' if ticket.estado == 'En progreso' }}
+                                    {{ 'bi-check-circle' if ticket.estado == 'Resuelto' }}
+                                    {{ 'bi-x-circle' if ticket.estado == 'Cerrado' }} me-1"></i>
+                                            {{ ticket.estado }}
+                                        </span>
+                                        <span class="badge 
+                                {{ 'bg-danger' if ticket.prioridad == 'Alta' }}
+                                {{ 'bg-warning' if ticket.prioridad == 'Media' }}
+                                {{ 'bg-success' if ticket.prioridad == 'Baja' }}">
+                                            <i class="bi 
+                                    {{ 'bi-exclamation-triangle' if ticket.prioridad == 'Alta' }}
+                                    {{ 'bi-exclamation' if ticket.prioridad == 'Media' }}
+                                    {{ 'bi-arrow-down' if ticket.prioridad == 'Baja' }} me-1"></i>
+                                            {{ ticket.prioridad }}
+                                        </span>
+                                    </div>
+
+                                    <h6 class="card-title fw-bold mb-2">{{ ticket.asunto }}</h6>
+
+                                    <p class="card-text text-muted small mb-3">
+                                        {{ ticket.descripcion|truncate(120) }}
+                                    </p>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted d-block">
+                                                <i class="bi bi-ticket-perforated me-1"></i>#{{ ticket.id_pqrd }}
+                                            </small>
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar me-1"></i>
+                                                {{ ticket.fecha_creacion.strftime('%d/%m/%Y') if ticket.fecha_creacion
+                                                else 'Fecha no disponible' }}
+                                            </small>
+                                        </div>
+                                        {% if ticket.id_agente %}
+                                        <span class="badge bg-primary">
+                                            <i class="bi bi-reply me-1"></i>Empleado asignado
+                                        </span>
+
+                                        {% else %}
+                                        <span class="badge bg-info">
+                                            <i class="bi bi-reply me-1"></i>Sin asignar
+                                        </span>
+
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Botón para ver más si hay muchos tickets -->
+                    {% if ticktes|length > 4 %}
+                    <div class="text-center mt-3">
+                        <button class="btn btn-outline-primary btn-sm" id="load-more-tickets">
+                            <i class="bi bi-chevron-down me-1"></i>Ver más
+                        </button>
+                    </div>
+                    {% endif %}
+
+                    {% else %}
+                    <!-- Estado vacío -->
+                    <div class="text-center py-4">
+                        <i class="bi bi-headset display-1 text-muted mb-3"></i>
+                        <h5 class="text-muted">No tienes PQRD registrados</h5>
+                        <p class="text-muted mb-3">¿Tienes alguna pregunta, queja, reclamo o sugerencia?</p>
+                        <a href="/contacto" class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>Crear tu primer PQRD
                         </a>
                     </div>
                     {% endif %}
                 </div>
             </div>
+
+            <script>
+                // Filtrado de PQRD
+                document.addEventListener('DOMContentLoaded', function () {
+                    const filterButtons = document.querySelectorAll('.filter-btn');
+                    const ticketItems = document.querySelectorAll('.ticket-item');
+
+                    filterButtons.forEach(button => {
+                        button.addEventListener('click', function () {
+                            const filter = this.getAttribute('data-filter');
+
+                            // Actualizar botones activos
+                            filterButtons.forEach(btn => btn.classList.remove('active'));
+                            this.classList.add('active');
+
+                            // Filtrar elementos
+                            ticketItems.forEach(item => {
+                                if (filter === 'all') {
+                                    item.style.display = 'block';
+                                } else {
+                                    const status = item.getAttribute('data-status');
+                                    if (status === filter.toLowerCase().replace(' ', '-')) {
+                                        item.style.display = 'block';
+                                    } else {
+                                        item.style.display = 'none';
+                                    }
+                                }
+                            });
+                        });
+                    });
+
+                    // Cargar más tickets (si existe el botón)
+                    const loadMoreBtn = document.getElementById('load-more-tickets');
+                    if (loadMoreBtn) {
+                        // Inicialmente mostrar solo 4 tickets
+                        ticketItems.forEach((item, index) => {
+                            if (index >= 4) {
+                                item.style.display = 'none';
+                            }
+                        });
+
+                        loadMoreBtn.addEventListener('click', function () {
+                            const hiddenTickets = document.querySelectorAll('.ticket-item[style="display: none"]');
+                            for (let i = 0; i < 4 && i < hiddenTickets.length; i++) {
+                                hiddenTickets[i].style.display = 'block';
+                            }
+
+                            // Ocultar botón si no hay más elementos
+                            if (document.querySelectorAll('.ticket-item[style="display: none"]').length === 0) {
+                                loadMoreBtn.style.display = 'none';
+                            }
+                        });
+                    }
+                });
+            </script>
 
             <!-- Información de contacto -->
             <div class="card shadow-sm hover-effect">
@@ -167,6 +350,18 @@
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span><i class="bi bi-envelope me-2"></i>Email</span>
                                     <span class="fw-bold">{{ customer.email }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><i class="bi bi-envelope me-2"></i>telefóno</span>
+                                    {% if customer.telefono %}
+                                    <span class="fw-bold">{{ customer.telefono }}</span>
+
+
+                                    {% else %}
+                                    <span class="fw-bold">No se ha registrado número</span>
+
+
+                                    {% endif %}
                                 </li>
                                 <li class="list-group-item d-flex justify-content-between align-items-center">
                                     <span><i class="bi bi-calendar me-2"></i>Miembro desde</span>
@@ -200,6 +395,47 @@
     .product-card {
         border-radius: 10px;
         overflow: hidden;
+    }
+
+    .status-badge {
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .priority-high {
+        background-color: #ff4757;
+        color: white;
+    }
+
+    .priority-medium {
+        background-color: #ffa502;
+        color: white;
+    }
+
+    .priority-low {
+        background-color: #2ed573;
+        color: white;
+    }
+
+    .status-open {
+        background-color: #ff6b81;
+        color: white;
+    }
+
+    .status-progress {
+        background-color: #3742fa;
+        color: white;
+    }
+
+    .status-resolved {
+        background-color: #2ed573;
+        color: white;
+    }
+
+    .status-closed {
+        background-color: #57606f;
+        color: white;
     }
 </style>
 

@@ -1,9 +1,9 @@
-from website.models import Customer
+from website.models.customer_model import Customer
 from website import db
 from datetime import datetime, timedelta
-from website.mvc_models.contacto_model import Contacto
-from website.mvc_models.oportunidad_model import Oportunidad
-from website.mvc_models.actividad_model import Actividad
+from website.models.contacto_model import Contacto
+from website.models.oportunidad_model import Oportunidad
+from website.models.actividad_model import Actividad
 
 from sqlalchemy import func
 

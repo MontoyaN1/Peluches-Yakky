@@ -3,8 +3,8 @@
 {% block title %}Métricas CRM{% endblock %}
 
 {% block body %}
-<div class="container-fluid fondo py-5" style="min-height: 100vh;">
-    <div class="row justify-content-center bg-light m-4 p-4 rounded-3">
+<div class="fondo" style="min-height: 100vh; padding: 30px;">
+    <div class="row justify-content-center bg-light m-4 p-4 rounded-3 ">
         <!-- Header -->
         <div class="row align-items-center py-4">
             <div class="col">
@@ -276,179 +276,180 @@
 
 
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
-    <script>
-        // Datos desde Flask
-        const datos = {{ datos_graficos | tojson }};
+<script>
+    // Datos desde Flask
+    const datos = {{ datos_graficos | tojson }};
 
-        console.log('Datos recibidos:', datos);
+    console.log('Datos recibidos:', datos);
 
-        // 1. Gráfico de Retención vs Churn (Doughnut)
-        const ctxRetencion = document.getElementById('graficoRetencionChurn').getContext('2d');
-        new Chart(ctxRetencion, {
-            type: 'doughnut',
-            data: {
-                labels: ['Tasa Retención', 'Churn Rate'],
-                datasets: [{
-                    data: [datos.retencion_churn.tasa_retencion, datos.retencion_churn.churn_rate],
-                    backgroundColor: ['#36A2EB', '#FF6384'],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.label + ': ' + context.parsed + '%';
-                            }
+    // 1. Gráfico de Retención vs Churn (Doughnut)
+    const ctxRetencion = document.getElementById('graficoRetencionChurn').getContext('2d');
+    new Chart(ctxRetencion, {
+        type: 'doughnut',
+        data: {
+            labels: ['Tasa Retención', 'Churn Rate'],
+            datasets: [{
+                data: [datos.retencion_churn.tasa_retencion, datos.retencion_churn.churn_rate],
+                backgroundColor: ['#36A2EB', '#FF6384'],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.label + ': ' + context.parsed + '%';
                         }
                     }
                 }
             }
-        });
+        }
+    });
 
-        // 2. Gráfico de Métricas Principales (Bar Chart)
-        const ctxMetricas = document.getElementById('graficoMetricasPrincipales').getContext('2d');
-        new Chart(ctxMetricas, {
-            type: 'bar',
-            data: {
-                labels: ['Tasa Conversión', 'Promedio Cliente', 'Ciclo Ventas', 'Total Contactos', 'Total Oportunidades'],
-                datasets: [{
-                    label: 'Valores',
-                    data: [
-                        datos.metricas_principales.tasa_conversion,
-                        datos.metricas_principales.promedio_cliente,
-                        datos.metricas_principales.ciclo_ventas,
-                        datos.metricas_principales.total_contactos,
-                        datos.metricas_principales.total_oportunidades
-                    ],
-                    backgroundColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
-                    ],
-                    borderColor: [
-                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
-                    ],
-                    borderWidth: 1
-                }]
+    // 2. Gráfico de Métricas Principales (Bar Chart)
+    const ctxMetricas = document.getElementById('graficoMetricasPrincipales').getContext('2d');
+    new Chart(ctxMetricas, {
+        type: 'bar',
+        data: {
+            labels: ['Tasa Conversión', 'Promedio Cliente', 'Ciclo Ventas', 'Total Contactos', 'Total Oportunidades'],
+            datasets: [{
+                label: 'Valores',
+                data: [
+                    datos.metricas_principales.tasa_conversion,
+                    datos.metricas_principales.promedio_cliente,
+                    datos.metricas_principales.ciclo_ventas,
+                    datos.metricas_principales.total_contactos,
+                    datos.metricas_principales.total_oportunidades
+                ],
+                backgroundColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                ],
+                borderColor: [
+                    '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
-        });
+        }
+    });
 
-        // 3. Gráfico de Tiempo de Respuesta (Gauge Style)
-        const ctxTiempo = document.getElementById('graficoTiempoRespuesta').getContext('2d');
-        new Chart(ctxTiempo, {
-            type: 'doughnut',
-            data: {
-                labels: ['Tiempo Respuesta', 'Meta'],
-                datasets: [{
-                    data: [datos.tiempo_respuesta, 24 - datos.tiempo_respuesta], // Asumiendo meta de 24h
-                    backgroundColor: [
-                        datos.tiempo_respuesta > 12 ? '#FF6384' : '#4BC0C0',
-                        '#F0F0F0'
-                    ],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.label + ': ' + context.parsed + ' horas';
-                            }
+    // 3. Gráfico de Tiempo de Respuesta (Gauge Style)
+    const ctxTiempo = document.getElementById('graficoTiempoRespuesta').getContext('2d');
+    new Chart(ctxTiempo, {
+        type: 'doughnut',
+        data: {
+            labels: ['Tiempo Respuesta', 'Meta'],
+            datasets: [{
+                data: [datos.tiempo_respuesta, 24 - datos.tiempo_respuesta], // Asumiendo meta de 24h
+                backgroundColor: [
+                    datos.tiempo_respuesta > 12 ? '#FF6384' : '#4BC0C0',
+                    '#F0F0F0'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return context.label + ': ' + context.parsed + ' horas';
                         }
                     }
                 }
             }
-        });
+        }
+    });
 
-        // 4. Gráfico de Conversión vs Oportunidades
-        const ctxConversion = document.getElementById('graficoConversionOportunidades').getContext('2d');
-        new Chart(ctxConversion, {
-            type: 'bar',
-            data: {
-                labels: ['Contactos', 'Oportunidades', 'Conversiones'],
-                datasets: [{
-                    label: 'Cantidad',
-                    data: [
-                        datos.metricas_principales.total_contactos,
-                        datos.metricas_principales.total_oportunidades,
-                        datos.metricas_principales.total_oportunidades * (datos.metricas_principales.tasa_conversion / 100)
-                    ],
-                    backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
-                    borderColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
-                    borderWidth: 1
-                }]
+    // 4. Gráfico de Conversión vs Oportunidades
+    const ctxConversion = document.getElementById('graficoConversionOportunidades').getContext('2d');
+    new Chart(ctxConversion, {
+        type: 'bar',
+        data: {
+            labels: ['Contactos', 'Oportunidades', 'Conversiones'],
+            datasets: [{
+                label: 'Cantidad',
+                data: [
+                    datos.metricas_principales.total_contactos,
+                    datos.metricas_principales.total_oportunidades,
+                    datos.metricas_principales.total_oportunidades * (datos.metricas_principales.tasa_conversion / 100)
+                ],
+                backgroundColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                borderColor: ['#36A2EB', '#FFCE56', '#4BC0C0'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+            plugins: {
+                legend: {
+                    display: false
                 }
             }
-        });
-    </script>
-
-
-
-    <style>
-        .card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            border: none;
-            border-radius: 1rem;
         }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-        }
-
-        .bg-purple {
-            background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%) !important;
-        }
-
-        .display-6 {
-            font-size: 2.5rem;
-        }
-    </style>
+    });
+</script>
 
 
 
-    {% endblock %}
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border: none;
+        border-radius: 1rem;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .bg-purple {
+        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%) !important;
+    }
+
+    .display-6 {
+        font-size: 2.5rem;
+    }
+</style>
+
+
+
+{% endblock %}

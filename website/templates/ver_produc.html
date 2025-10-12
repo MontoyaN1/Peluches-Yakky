@@ -1,129 +1,390 @@
 {% extends 'index.html' %}
 
-{% block title %} Adminstración
-
+{% block title %} Administración
 {% endblock %}
 
 {% block body %}
 
-{% if productos | length < 1 %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
-
+{% if productos | length < 1 %}
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
     <div class="container bg-light rounded-3 p-4 ">
-
         <div class="d-flex justify-content-between align-items-center mb-5">
             <h1 class="text-black mb-0 display-4 fw-bold">
                 <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
             </h1>
-
-            <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
-                    <i class="bi bi-arrow-return-left me-2  "></i>Volver
+            <div class="d-flex gap-3">
+                <button onclick="window.location.href='/adminvista'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2"></i>Volver
                 </button>
-                <button onclick=" window.location.href='/agregar-productos'" class=" btn btn-primary">
+                <button onclick="window.location.href='/agregar-productos'" class="btn btn-primary">
                     <i class="bi bi-plus-circle me-2"></i>Agregar
                 </button>
             </div>
-
         </div>
-
         <h1 class="text-black mb-0 display-4 fw-bold text-center p-5">
             <i class="bi bi-emoji-frown-fill fs-1 text-black m-3"></i> No hay productos
         </h1>
-
     </div>
-
-    </div>
-
-    {% else %} <div class="fondo" style="min-height: 100vh; padding-top: 20px;">
-
-        <div class="container bg-light rounded-3 p-4 ">
-
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="text-black mb-0 display-4 fw-bold">
-                    <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
-                </h1>
-
-                <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
-                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
-                    </button>
-                    <button onclick=" window.location.href='/agregar-productos'" class=" btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Agregar
-                    </button>
-                </div>
-
-            </div>
-            <div class="table-responsive-lg">
-
-                <table class="table table-bordered table-hover table-striped align-middle">
-
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre de producto</th>
-                            <th>Descripción</th>
-                            <th>Precio</th>
-                            <th>Precio pas.</th>
-                            <th>Costo producto</th>
-                            <th>Cantidad</th>
-                            <th>Imagen del producto</th>
-                            <th>Destacado</th>
-                            <th>Acciones</th>
-
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                        {% for item in productos %}
-
-
-
-                        <tr>
-                            <td>{{ item.id }} </td>
-                            <td> {{ item.product_name }}</td>
-                            <td> {{ item.descripcion }}</td>
-                            <td> ${{ item.current_price }}</td>
-                            <td> ${{ item.previous_price }}</td>
-                            <td> ${{ item.precio_costo }}</td>
-                            <td> {{ item.in_stock }}</td>
-                            <td> <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
-                                    style="height: 100px; width: 100px; border-radius: 4px;">
-                            </td>
-
-                            {% if item.flash_sale %}
-                            <td> Si </td>
-
-                            {% else %}
-                            <td> No </td>
-
-
-                            {% endif %}
-
-                            <td>
-                                <a href="/elimi-producto/{{ item.id  }}" onclick="return confirmDelete()" class="delete"
-                                    title="Eliminar" data-toggle="tooltip">
-                                    <i class="bi bi-trash3-fill"></i>
-                                </a>
-
-                                <a href="/actua-producto/{{ item.id }}" class="edit" title="Editar"
-                                    data-toggle="tooltip">
-                                    <i class="bi bi-pencil-fill"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+</div>
+{% else %}
+<div class="fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="container bg-light rounded-3 p-4 ">
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-black mb-0 display-4 fw-bold">
+                <i class="bi bi-basket-fill fs-1 text-black m-3"></i>Productos
+            </h1>
+            <div class="d-flex gap-3">
+                <button onclick="window.location.href='/adminvista'" class="btn btn-primary">
+                    <i class="bi bi-arrow-return-left me-2"></i>Volver
+                </button>
+                <button onclick="window.location.href='/agregar-productos'" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar
+                </button>
             </div>
         </div>
+
+        <!-- Sección de Filtros -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3">
+                    <i class="bi bi-funnel me-2"></i>Filtros
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Estado Stock</label>
+                        <select class="form-select" id="filterStock">
+                            <option value="all">Todo el stock</option>
+                            <option value="disponible">Disponible</option>
+                            <option value="agotado">Agotado</option>
+                            <option value="bajo">Stock bajo</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Destacado</label>
+                        <select class="form-select" id="filterDestacado">
+                            <option value="all">Todos</option>
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Precio</label>
+                        <select class="form-select" id="filterPrecio">
+                            <option value="all">Todos los precios</option>
+                            <option value="0-50">$0 - $50</option>
+                            <option value="51-100">$51 - $100</option>
+                            <option value="101-500">$101 - $500</option>
+                            <option value="501-99999">$501+</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Búsqueda</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Buscar por nombre, descripción...">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <button class="btn btn-outline-secondary btn-sm" id="clearFilters">
+                            <i class="bi bi-x-circle me-1"></i>Limpiar Filtros
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contador de resultados -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <small class="text-muted" id="resultCount">
+                Mostrando <span id="visibleCount">0</span> de <span id="totalCount">0</span> productos
+            </small>
+        </div>
+
+        <div class="table-responsive-lg">
+            <table class="table table-bordered table-hover table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de producto</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Precio pas.</th>
+                        <th>Costo producto</th>
+                        <th>Cantidad</th>
+                        <th>Imagen del producto</th>
+                        <th>Destacado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productosTableBody">
+                    {% for item in productos %}
+                    <tr class="producto-row" 
+                        data-stock="{{ item.in_stock }}"
+                        data-destacado="{{ 'si' if item.flash_sale else 'no' }}"
+                        data-precio="{{ item.current_price }}"
+                        data-search="{{ item.product_name ~ ' ' ~ item.descripcion }}">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.product_name }}</td>
+                        <td>
+                            <span title="{{ item.descripcion }}">
+                                {{ item.descripcion|truncate(50) }}
+                            </span>
+                        </td>
+                        <td>
+                            <strong class="text-success">${{ item.current_price }}</strong>
+                        </td>
+                        <td>
+                            {% if item.previous_price and item.previous_price > item.current_price %}
+                                <small class="text-danger text-decoration-line-through">${{ item.previous_price }}</small>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small class="text-muted">${{ item.precio_costo }}</small>
+                        </td>
+                        <td>
+                            <span class="badge 
+                                {% if item.in_stock == 0 %}bg-danger
+                                {% elif item.in_stock <= 10 %}bg-warning text-dark
+                                {% else %}bg-success{% endif %}">
+                                {{ item.in_stock }}
+                            </span>
+                        </td>
+                        <td>
+                            <img src="{{ item.product_picture }}" alt="{{ item.product_name }}"
+                                style="height: 60px; width: 60px; border-radius: 4px; object-fit: cover;">
+                        </td>
+                        <td>
+                            {% if item.flash_sale %}
+                                <span class="badge bg-warning text-dark">Sí</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a href="/elimi-producto/{{ item.id }}" 
+                                   onclick="return confirmDelete()" 
+                                   class="btn btn-sm btn-outline-danger" 
+                                   title="Eliminar">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                                <a href="/actua-producto/{{ item.id }}" 
+                                   class="btn btn-sm btn-outline-primary" 
+                                   title="Editar">
+                                    <i class="bi bi-pencil-fill"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <nav aria-label="Paginación de productos" class="mt-4">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- La paginación se generará con JavaScript -->
+            </ul>
+        </nav>
     </div>
+</div>
 
-    <script>
-        function confirmDelete() {
-            return confirm('¿Seguro que deseas eliminar este elemento?');
+<script>
+    function confirmDelete() {
+        return confirm('¿Seguro que deseas eliminar este elemento?');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const rows = document.querySelectorAll('.producto-row');
+        const filterStock = document.getElementById('filterStock');
+        const filterDestacado = document.getElementById('filterDestacado');
+        const filterPrecio = document.getElementById('filterPrecio');
+        const searchInput = document.getElementById('searchInput');
+        const clearFilters = document.getElementById('clearFilters');
+        const resultCount = document.getElementById('resultCount');
+        const visibleCount = document.getElementById('visibleCount');
+        const totalCount = document.getElementById('totalCount');
+        const pagination = document.getElementById('pagination');
+        
+        // Configuración de paginación
+        const itemsPerPage = 10;
+        let currentPage = 1;
+        
+        // Inicializar contadores
+        totalCount.textContent = rows.length;
+        
+        function aplicarFiltrosYBusqueda() {
+            const stockValue = filterStock.value;
+            const destacadoValue = filterDestacado.value;
+            const precioValue = filterPrecio.value;
+            const searchValue = searchInput.value.toLowerCase();
+            
+            let visibleRows = 0;
+            
+            rows.forEach(row => {
+                const stock = parseInt(row.getAttribute('data-stock'));
+                const destacado = row.getAttribute('data-destacado');
+                const precio = parseFloat(row.getAttribute('data-precio'));
+                const searchText = row.getAttribute('data-search').toLowerCase();
+                
+                let mostrar = true;
+                
+                // Filtro por stock
+                if (stockValue !== 'all') {
+                    switch(stockValue) {
+                        case 'disponible':
+                            if (stock <= 0) mostrar = false;
+                            break;
+                        case 'agotado':
+                            if (stock > 0) mostrar = false;
+                            break;
+                        case 'bajo':
+                            if (stock > 10 || stock === 0) mostrar = false;
+                            break;
+                    }
+                }
+                
+                // Filtro por destacado
+                if (destacadoValue !== 'all' && destacado !== destacadoValue) {
+                    mostrar = false;
+                }
+                
+                // Filtro por precio
+                if (precioValue !== 'all') {
+                    const [min, max] = precioValue.split('-').map(Number);
+                    if (precio < min || precio > max) {
+                        mostrar = false;
+                    }
+                }
+                
+                // Búsqueda
+                if (searchValue && !searchText.includes(searchValue)) {
+                    mostrar = false;
+                }
+                
+                if (mostrar) {
+                    row.classList.remove('hidden');
+                    visibleRows++;
+                } else {
+                    row.classList.add('hidden');
+                }
+            });
+            
+            // Actualizar contador
+            visibleCount.textContent = visibleRows;
+            resultCount.textContent = `Mostrando ${visibleRows} de ${rows.length} productos`;
+            
+            // Actualizar paginación
+            actualizarPaginacion(visibleRows);
+            
+            // Mostrar primera página
+            mostrarPagina(1);
         }
-    </script>
+        
+        function actualizarPaginacion(totalItems) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            pagination.innerHTML = '';
+            
+            if (totalPages <= 1) {
+                return;
+            }
+            
+            // Botón anterior
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#">Anterior</a>`;
+            prevLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage > 1) {
+                    mostrarPagina(currentPage - 1);
+                }
+            });
+            pagination.appendChild(prevLi);
+            
+            // Números de página
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                pageLi.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    mostrarPagina(i);
+                });
+                pagination.appendChild(pageLi);
+            }
+            
+            // Botón siguiente
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#">Siguiente</a>`;
+            nextLi.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (currentPage < totalPages) {
+                    mostrarPagina(currentPage + 1);
+                }
+            });
+            pagination.appendChild(nextLi);
+        }
+        
+        function mostrarPagina(page) {
+            currentPage = page;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            
+            let visibleIndex = 0;
+            
+            rows.forEach(row => {
+                if (!row.classList.contains('hidden')) {
+                    if (visibleIndex >= startIndex && visibleIndex < endIndex) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                    visibleIndex++;
+                }
+            });
+            
+            // Actualizar paginación
+            actualizarPaginacion(visibleIndex);
+        }
+        
+        // Event listeners
+        filterStock.addEventListener('change', aplicarFiltrosYBusqueda);
+        filterDestacado.addEventListener('change', aplicarFiltrosYBusqueda);
+        filterPrecio.addEventListener('change', aplicarFiltrosYBusqueda);
+        searchInput.addEventListener('input', aplicarFiltrosYBusqueda);
+        
+        clearFilters.addEventListener('click', function() {
+            filterStock.value = 'all';
+            filterDestacado.value = 'all';
+            filterPrecio.value = 'all';
+            searchInput.value = '';
+            aplicarFiltrosYBusqueda();
+        });
+        
+        // Inicializar
+        aplicarFiltrosYBusqueda();
+    });
+</script>
 
-    {% endif %}
-
-
-    {% endblock %}
+<style>
+    .producto-row {
+        transition: all 0.3s ease;
+    }
+    
+    .producto-row.hidden {
+        display: none;
+    }
+    
+    .page-link {
+        cursor: pointer;
+    }
+    
+    .btn-group .btn {
+        padding: 0.25rem 0.5rem;
+    }
+</style>
+{% endif %}
+{% endblock %}

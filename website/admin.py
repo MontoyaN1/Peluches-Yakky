@@ -12,7 +12,11 @@ from sqlalchemy import func
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 import os
-from .models import Order, Product, Customer
+
+from .models.producto_model import Product
+
+from .models.customer_model import Customer
+from .models.order_model import Order
 from . import db
 
 

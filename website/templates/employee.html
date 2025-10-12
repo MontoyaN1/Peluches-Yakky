@@ -15,10 +15,16 @@
                     <i class="bi bi-speedometer2 me-3"></i>Gestión de Contactos
                 </h1>
                 <div class="d-flex gap-3">
-                    <button onclick="window.location.href='/empleado/crear_contacto'" class="btn btn-primary">
+                    <button onclick="window.location.href='{{url_for('employee.gestion_pqrd_empleado')}}'"
+                        class="btn btn-primary">
+                        <i class="bi bi-person-plus me-2"></i>Gestión de PQRD
+                    </button>
+                    <button onclick="window.location.href='{{url_for('employee.crear_contacto_vista')}}'"
+                        class="btn btn-primary">
                         <i class="bi bi-person-plus me-2"></i>Nuevo Contacto
                     </button>
-                    <button onclick="window.location.href='/empleado/tabla-interacciones'" class="btn btn-primary">
+                    <button onclick="window.location.href='{{url_for('employee.tabla_interacciones')}}'"
+                        class="btn btn-primary">
                         <i class="bi bi-person-plus me-2"></i>Historial Interacciones
                     </button>
                 </div>
@@ -86,39 +92,44 @@
                                 <i class="bi bi-people me-2"></i>Contactos Recientes
                             </h5>
                         </div>
+
+
                         <div class="card-body">
                             <!-- Contacto 1 -->
 
+                            {% set agent_contacts = [] %}
                             {% for contacto in contactos[:3] %}
+                            {% if contacto.id_agente == current_user.id %}
+                            {% set _ = agent_contacts.append(contacto) %}
+                            {% endif %}
+                            {% endfor %}
 
+                            {% if agent_contacts %}
+                            {% for contacto in agent_contacts %}
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-
-
                                 <div>
-                                    <h6 class="mb-1"> {{contacto.nombre}} </h6>
-                                    <small class="text-muted"> {{contacto.email}} - {{contacto.telefono}} </small>
+                                    <h6 class="mb-1">{{ contacto.nombre }}</h6>
+                                    <small class="text-muted">{{ contacto.email }} - {{ contacto.telefono }}</small>
                                     <br>
-
                                     {% if contacto.estado == 'Nuevo' %}
-
                                     <span class="badge bg-primary">Nuevo</span>
-
-
                                     {% elif contacto.estado == 'En seguimiento' %}
-
                                     <span class="badge bg-warning text-dark">En seguimiento</span>
-
-
                                     {% else %}
                                     <span class="badge bg-success">Calificado</span>
-
-
                                     {% endif %}
                                 </div>
-
                             </div>
-
                             {% endfor %}
+                            {% else %}
+                            <div class="d-flex align-items-center justify-content-center min-vh-20 py-5">
+                                <div class="text-center">
+                                    <i class="bi bi-person-x display-4 text-muted mb-3"></i>
+                                    <h6 class="text-muted">No tienes contactos creados</h6>
+                                    <small class="text-muted">Crea un contacto para comenzar</small>
+                                </div>
+                            </div>
+                            {% endif %}
 
                         </div>
                         <div class="card-footer">
@@ -138,7 +149,16 @@
                         </div>
                         <div class="card-body">
 
+                            {% set agent_oportunidad = [] %}
                             {% for oportunidad in oportunidades[:3] %}
+                            {% if oportunidad.id_agente == current_user.id %}
+                            {% set _ = agent_oportunidad.append(oportunidad) %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if agent_oportunidad %}
+
+                            {% for oportunidad in agent_oportunidad[:3] %}
 
                             <div class="border-bottom pb-3 mb-3">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
@@ -169,6 +189,20 @@
 
                             {% endfor %}
 
+                            {% else %}
+
+                            <div class="d-flex align-items-center justify-content-center min-vh-20 py-5">
+                                <div class="text-center">
+                                    <i class="bi bi-briefcase display-4 text-muted mb-3"></i>
+                                    <h6 class="text-muted">No tienes oportunidades </h6>
+                                    <small class="text-muted">Empieza creando contactos</small>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+
+
                         </div>
                         <div class="card-footer">
                             <a href="/empleado/tabla-oportunidades" class="btn btn-outline-success btn-sm">Ver todas
@@ -181,36 +215,25 @@
 
             <!-- Alertas y Actividades Pendientes -->
             <div class="row g-4 mt-3">
-                <div class="col-lg-6">
-                    <div class="card shadow-sm border-warning">
-                        <div class="card-header bg-warning text-dark">
-                            <h6 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Alertas</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="alert alert-warning d-flex align-items-center mb-2">
-                                <i class="bi bi-clock-history me-2"></i>
-                                <small>2 seguimientos vencidos</small>
-                            </div>
-                            <div class="alert alert-danger d-flex align-items-center mb-2">
-                                <i class="bi bi-x-circle me-2"></i>
-                                <small>1 oportunidad estancada</small>
-                            </div>
-                            <div class="alert alert-info d-flex align-items-center">
-                                <i class="bi bi-info-circle me-2"></i>
-                                <small>3 contactos nuevos sin evaluar</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-6">
+
+                <div class="col-lg-12">
                     <div class="card shadow-sm border-info">
                         <div class="card-header bg-info text-white">
                             <h6 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Próximas Actividades</h6>
                         </div>
                         <div class="card-body">
 
+                            {% set agent_actividad = [] %}
                             {% for actividad in actividades[:3] %}
+                            {% if actividad.id_agente == current_user.id %}
+                            {% set _ = agent_actividad.append(actividad) %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if agent_actividad %}
+
+                            {% for actividad in agent_actividad[:3] %}
 
                             {% set fecha = actividad.fecha_programada %}
 
@@ -236,7 +259,7 @@
 
                                 {% else %}
 
-                                <span class="badge bg-success text-dark">Completada</span>
+                                <span class="badge bg-success text-white">Completada</span>
 
 
                                 {% endif %}
@@ -244,6 +267,20 @@
 
 
                             {% endfor %}
+
+                            {% else %}
+
+                            <div class="d-flex align-items-center justify-content-center min-vh-20 py-5">
+                                <div class="text-center">
+                                    <i class="bi bi-calendar-x display-4 text-muted mb-3"></i>
+                                    <h6 class="text-muted">No tienes actividades creadas</h6>
+                                    <small class="text-muted">Crea contacto para empezar</small>
+                                </div>
+                            </div>
+
+                            {% endif %}
+
+
 
                         </div>
                         <div class="card-footer">

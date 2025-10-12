@@ -1,0 +1,338 @@
+{% extends 'index.html' %}
+
+{% block title %} PQRD
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid py-4 bg-light min-vh-100">
+    <!-- Header del Dashboard -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h2 fw-bold text-primary">
+                        <i class="bi bi-gear-fill me-2"></i>
+                        Gestionar PQRD
+                    </h1>
+                    <p class="text-muted mb-0">Gestión completa de quejas, reclamos, sugerencias, entre otros</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-ticket-perforated text-primary fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="fw-bold mb-0">{{estados.total}}</h3>
+                            <p class="text-muted mb-0">Tickets Totales</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-success bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-people text-success fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="fw-bold mb-0">{{estados.clientes}}</h3>
+                            <p class="text-muted mb-0">Clientes Activos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-info bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-headset text-info fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="fw-bold mb-0">{{estados.tecnicos}}</h3>
+                            <p class="text-muted mb-0">Técnicos Disponibles</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <div class="bg-danger bg-opacity-10 p-3 rounded">
+                                <i class="bi bi-clock text-danger fs-4"></i>
+                            </div>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <h3 class="fw-bold mb-0">{{estados.alta}}</h3>
+                            <p class="text-muted mb-0">Alta Prioridad</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección de Tabs -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom">
+            <ul class="nav nav-tabs card-header-tabs" id="adminTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tickets-tab" data-bs-toggle="tab" data-bs-target="#tickets"
+                        type="button" role="tab">
+                        <i class="bi bi-ticket-perforated me-2"></i>Tickets
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios"
+                        type="button" role="tab">
+                        <i class="bi bi-people me-2"></i>Clientes
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tecnicos-tab" data-bs-toggle="tab" data-bs-target="#tecnicos"
+                        type="button" role="tab">
+                        <i class="bi bi-headset me-2"></i>Técnicos
+                    </button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card-body">
+            <div class="tab-content" id="adminTabContent">
+                <!-- TAB: TICKETS -->
+                <div class="tab-pane fade show active" id="tickets" role="tabpanel">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="h4 mb-0">Todos los Tickets</h3>
+                        <div class="d-flex gap-2">
+                            <select class="form-select form-select-sm w-auto">
+                                <option>Filtrar por estado</option>
+                                <option>Abierto</option>
+                                <option>En progreso</option>
+                                <option>Pendiente</option>
+                                <option>Resuelto</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-sort-down me-1"></i> Ordenar
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tickets Grid -->
+                    <div class="row g-3">
+                        {% for ticket in tickets %}
+                        <div class="col-xxl-4 col-lg-6">
+                            <div class="card h-100 border-start border-4 
+                                {{ 'border-warning' if ticket.estado == 'Abierto' }}
+                                {{ 'border-info' if ticket.estado == 'En progreso' }}
+                                {{ 'border-success' if ticket.estado == 'Resuelto' }}
+                                {{ 'border-secondary' if ticket.estado in ['Pendiente', 'Cerrado'] }}">
+
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <span class="badge 
+                                            {{ 'bg-warning' if ticket.estado == 'Abierto' }}
+                                            {{ 'bg-info' if ticket.estado == 'En progreso' }}
+                                            {{ 'bg-success' if ticket.estado == 'Resuelto' }}
+                                            {{ 'bg-secondary' if ticket.estado in ['Pendiente', 'Cerrado'] }}">
+                                            {{ ticket.estado }}
+                                        </span>
+                                        <span class="badge 
+                                            {{ 'bg-danger' if ticket.prioridad == 'Alta' }}
+                                            {{ 'bg-warning' if ticket.prioridad == 'Media' }}
+                                            {{ 'bg-success' if ticket.prioridad == 'Baja' }}">
+                                            {{ ticket.prioridad }}
+                                        </span>
+                                    </div>
+
+                                    <h5 class="card-title fw-bold mb-2">{{ ticket.titulo }}</h5>
+                                    <p class="card-text text-muted small mb-3">{{ ticket.descripcion|truncate(100) }}
+                                    </p>
+
+                                    <div class="ticket-info small text-muted mb-3">
+                                        <div class="mb-1">
+                                            <strong>Técnico:</strong>
+                                            {% if ticket.tecnico_id %}
+                                            <span class="badge bg-primary">#TECNICO-{{ticket.tecnico_id}}</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary">Sin Asignar</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="mb-1">
+                                            <strong>Cliente:</strong> ID-{{ ticket.usuario_id }}
+                                        </div>
+                                        <div>
+                                            <strong>Ticket:</strong> #TICKET-{{ ticket.id }}
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {{ ticket.date_created }}
+                                        </small>
+                                        <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal"
+                                            data-bs-target="#asignarTecnicoModal" data-ticket-id="{{ ticket.id }}"
+                                            data-ticket-title="{{ ticket.titulo }}">
+                                            <i class="bi bi-person-plus me-1"></i>
+                                            Asignar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Paginación -->
+                    <nav class="d-flex justify-content-center mt-4">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <!-- TAB: USUARIOS (placeholder) -->
+                <div class="tab-pane fade" id="usuarios" role="tabpanel">
+                    <div class="text-center py-5">
+                        <i class="bi bi-people display-1 text-muted mb-3"></i>
+                        <h4 class="text-muted">Gestión de Clientes</h4>
+                        <p class="text-muted">Aquí podrás gestionar todos los clientes del sistema.</p>
+                    </div>
+                </div>
+
+                <!-- TAB: TÉCNICOS (placeholder) -->
+                <div class="tab-pane fade" id="tecnicos" role="tabpanel">
+                    <div class="text-center py-5">
+                        <i class="bi bi-headset display-1 text-muted mb-3"></i>
+                        <h4 class="text-muted">Gestión de Técnicos</h4>
+                        <p class="text-muted">Aquí podrás gestionar todos los técnicos del sistema.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Asignar Técnico -->
+<div class="modal fade" id="asignarTecnicoModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-person-plus me-2"></i>
+                    Asignar Técnico a Ticket
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="assignTechnicianForm" method="post" action="/asignar-tecnico">
+                    <input type="hidden" id="ticket_id" name="ticket_id">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Ticket seleccionado</label>
+                            <input type="text" class="form-control" id="ticket_display" readonly>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Seleccionar técnico *</label>
+                            <select class="form-select" name="tecnico_id" required>
+                                <option value="">Seleccionar técnico...</option>
+                                {% for tecnico in tecnicos %}
+                                <option value="{{ tecnico.id }}">{{ tecnico.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Prioridad</label>
+                            <select class="form-select" name="prioridad">
+                                <option value="Baja">Baja</option>
+                                <option value="Media">Media</option>
+                                <option value="Alta">Alta</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Estado</label>
+                            <select class="form-select" name="estado">
+                                <option value="En progreso">En Progreso</option>
+                                <option value="Pendiente cliente">Pendiente cliente</option>
+                                <option value="Pendiente tercero">Pendiente de tercero</option>
+                                <option value="Pendiente aprovacion">Pendiente de aprobación</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check me-2"></i>
+                            Asignar Técnico
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    // Script para el modal de asignar técnico
+    document.addEventListener('DOMContentLoaded', function () {
+        const asignarTecnicoModal = document.getElementById('asignarTecnicoModal');
+
+        if (asignarTecnicoModal) {
+            asignarTecnicoModal.addEventListener('show.bs.modal', function (event) {
+                const button = event.relatedTarget;
+                const ticketId = button.getAttribute('data-ticket-id');
+                const ticketTitle = button.getAttribute('data-ticket-title');
+
+                // Actualizar el formulario
+                document.getElementById('ticket_id').value = ticketId;
+                document.getElementById('ticket_display').value = ticketTitle;
+            });
+        }
+    });
+</script>
+{% endblock %}

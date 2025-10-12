@@ -1,7 +1,8 @@
 from website import db
-from website.models import Order, Product
+from website.models.producto_model import Product
+from website.models.order_model import Order
 from sqlalchemy import func
-from website.mvc_models.contacto_model import Contacto
+from website.models.contacto_model import Contacto
 
 
 def peluches_vendidos_total():

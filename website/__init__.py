@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
 
+
+
 db = SQLAlchemy()
 DB_NAME = "database.sqlite3"
 ADMIN_NAME = "Admin"
@@ -27,22 +29,23 @@ def create_app():
 
     from .views import views
     from .admin import admin
-    from .auth import auth
+    from .mvc_views.auth_view import auth
     from website.mvc_views.employee_view import employee
     from website.mvc_views.admin_view import mvc_admin
     from website.mvc_views.all_user_view import todos
 
-    from .models import Customer, Cart, Product, Order  # noqa: F401
+    from .models.order_model import Order  # noqa: F401
 
-    from website.mvc_models.contacto_model import Contacto
-    from website.mvc_models.oportunidad_model import Oportunidad
-    from website.mvc_models.actividad_model import Actividad  
-    from website.mvc_models.interaccion_model import Interaccion
+    from website.models.contacto_model import Contacto
+    from website.models.oportunidad_model import Oportunidad
+    from website.models.actividad_model import Actividad  
+    from website.models.interaccion_model import Interaccion
     from sqlalchemy_utils import database_exists
     from .decorators import login_required, rol_required, roles_required
 
     @login_manager.user_loader
     def load_user(id):
+        from website.models.customer_model import Customer
         return Customer.query.get(int(id))
 
     app.register_blueprint(views, url_prefix="/")
@@ -74,7 +77,7 @@ def create_database():
 def create_initial_roles():
     """Crear roles con autoflush deshabilitado"""
     try:
-        from website.mvc_models.rol_model import Rol
+        from website.models.rol_model import Rol
         
         roles = ["administrador", "empleado", "cliente"]
         
@@ -96,7 +99,7 @@ def create_initial_roles():
 def create_admin():
     """Crear admin después de los roles"""
     try:
-        from website.models import Customer
+        from website.models.customer_model import Customer
         
         # Verificar si ya existe
         if Customer.query.filter_by(email=ADMIN_EMAIL).first():

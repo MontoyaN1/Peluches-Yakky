@@ -1,3 +1,4 @@
+import datetime
 from flask import Blueprint, render_template, request, flash, session, redirect, url_for
 from flask_login import current_user
 from website.controllers.employee_cotller import (
@@ -18,10 +19,14 @@ from website.controllers.employee_cotller import (
     actualizar_oportunidad,
     buscar_actividad,
     actualizar_actividad,
-    buscar_interaccion,
-    actualizar_interaccion,
 )
 from website.decorators import rol_required, login_required
+from website.controllers.pqrd_corller import (
+    pqrd_total_estados_empleado,
+    mostrar_todospqrd_empleado,
+)
+from website.controllers.customer_cotller import mostrar_todos_empleados
+from website.controllers.pqrd_corller import cambiar_pqrd
 
 
 employee = Blueprint("employee", __name__)
@@ -225,7 +230,9 @@ def tabla_oportunidades():
 def tabla_actividades():
     actividades = todos_actividades_empleado()
 
-    return render_template("tabla_actividades.html", actividades=actividades)
+    return render_template(
+        "tabla_actividades.html", actividades=actividades, now=datetime.datetime.now()
+    )
 
 
 @employee.route("/tabla-interacciones")
@@ -339,3 +346,46 @@ def editar_actividad(id_actividad):
             return redirect(url_for("employee.tabla_actividades"))
 
     return render_template("editar_actividad.html", actividad=actividad)
+
+
+@employee.route("/gestion-pqrd-empleado", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
+def gestion_pqrd_empleado():
+    id_agente = current_user.id
+    estados = pqrd_total_estados_empleado(id_agente=id_agente)
+    pqrds = mostrar_todospqrd_empleado(id_agente=id_agente)
+    empleados = mostrar_todos_empleados()
+    return render_template(
+        "pqrd.html", estados=estados, pqrds=pqrds, empleados=empleados
+    )
+
+
+@employee.route("/actualizar-pqrd", methods=["GET", "POST"])
+@login_required
+@rol_required(2)
+def actualizar_pqrd():
+    if request.method == "POST":
+        try:
+            ticket_id = request.form.get("ticket_id")
+
+            prioridad = request.form.get("prioridad")
+            estado = request.form.get("estado")
+            print(f"ticket id: {ticket_id}")
+
+            print(f"prioridad: {prioridad}")
+            print(f"estado id: {estado}")
+
+            pqrd_asignado = cambiar_pqrd(
+                pqrd_id=ticket_id,
+                prioridad=prioridad,
+                estado=estado,
+            )
+
+            if pqrd_asignado:
+                flash("PQRD actualizado correctamente")
+                return redirect(url_for("employee.gestion_pqrd_empleado"))
+
+        except Exception as e:
+            flash(f"Error al crear cuenta: {e}", "error")
+            return redirect(url_for("employee.gestion_pqrd_empleado"))

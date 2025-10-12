@@ -1,8 +1,8 @@
 from website import db
-from website.mvc_models.contacto_model import Contacto
-from website.mvc_models.interaccion_model import Interaccion
-from website.mvc_models.oportunidad_model import Oportunidad
-from website.mvc_models.actividad_model import Actividad
+from website.models.contacto_model import Contacto
+from website.models.interaccion_model import Interaccion
+from website.models.oportunidad_model import Oportunidad
+from website.models.actividad_model import Actividad
 from datetime import datetime
 from sqlalchemy import desc
 
@@ -171,11 +171,7 @@ def todos_actividades():
 
 def todos_actividades_empleado():
     try:
-        actividades = (
-            Actividad.query.filter(Actividad.estado != "Completado")
-            .order_by(desc(Actividad.fecha_programada))
-            .all()
-        )
+        actividades = Actividad.query.order_by(desc(Actividad.fecha_programada)).all()
 
         return actividades
 
@@ -258,7 +254,9 @@ def buscar_interaccion(id_interaccion):
         raise Exception(f"Error buscar interaccion: {e}")
 
 
-def actualizar_contacto(id_contacto, nombre, email, telefono, empresa, canal, estado,satisfaccion):
+def actualizar_contacto(
+    id_contacto, nombre, email, telefono, empresa, canal, estado, satisfaccion
+):
     try:
         Contacto.query.filter_by(id_contacto=id_contacto).update(
             dict(
@@ -268,7 +266,7 @@ def actualizar_contacto(id_contacto, nombre, email, telefono, empresa, canal, es
                 empresa=empresa,
                 canal=canal,
                 estado=estado,
-                satisfaccion=satisfaccion
+                satisfaccion=satisfaccion,
             )
         )
 

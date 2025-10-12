@@ -1,4 +1,4 @@
-from flask import render_template, Blueprint, request, flash
+from flask import render_template, Blueprint, request, flash, redirect, url_for
 from flask_login import current_user
 from website.controllers.admin_cotller import (
     crer_empleado,
@@ -12,6 +12,13 @@ from website.controllers.admin_cotller import (
 )
 from website.decorators import login_required, rol_required
 from datetime import datetime, timedelta
+from website.controllers.pqrd_corller import (
+    pqrd_total_estados,
+    mostrar_todos,
+    asignar_ticket,
+)
+from website.controllers.customer_cotller import mostrar_todos_empleados
+
 
 mvc_admin = Blueprint("mvc_admin", __name__)
 
@@ -84,18 +91,15 @@ def metricas_crm():
     )
 
     datos_graficos = {
-        'metricas_principales': {
-            'tasa_conversion': tasa_conversion_dato,
-            'promedio_cliente': promedio_cliente_dato,
-            'ciclo_ventas': ciclo_ventas,
-            'total_contactos': total_contactos_dato,
-            'total_oportunidades': total_oportunidades_dato
+        "metricas_principales": {
+            "tasa_conversion": tasa_conversion_dato,
+            "promedio_cliente": promedio_cliente_dato,
+            "ciclo_ventas": ciclo_ventas,
+            "total_contactos": total_contactos_dato,
+            "total_oportunidades": total_oportunidades_dato,
         },
-        'retencion_churn': {
-            'tasa_retencion': tasa_retencion,
-            'churn_rate': churn_rate
-        },
-        'tiempo_respuesta': tiempo_respuesta
+        "retencion_churn": {"tasa_retencion": tasa_retencion, "churn_rate": churn_rate},
+        "tiempo_respuesta": tiempo_respuesta,
     }
 
     return render_template(
@@ -110,5 +114,49 @@ def metricas_crm():
         ciclo_ventas=ciclo_ventas,
         total_contactos=total_contactos_dato,
         total_oportunidades=total_oportunidades_dato,
-        datos_graficos=datos_graficos
+        datos_graficos=datos_graficos,
     )
+
+
+@mvc_admin.route("/gestion-pqrd", methods=["GET", "POST"])
+@login_required
+@rol_required(1)
+def gestion_pqrd():
+    estados = pqrd_total_estados()
+    pqrds = mostrar_todos()
+    empleados = mostrar_todos_empleados()
+
+    return render_template(
+        "pqrd.html", estados=estados, pqrds=pqrds, empleados=empleados
+    )
+
+
+@mvc_admin.route("/asignar-tecnico", methods=["POST"])
+@login_required
+@rol_required(1)
+def asignar_tecnico():
+    if request.method == "POST":
+        try:
+            ticket_id = request.form.get("ticket_id")
+            tecnico_id = request.form.get("tecnico_id")
+            prioridad = request.form.get("prioridad")
+            estado = request.form.get("estado")
+            print(f"ticket id: {ticket_id}")
+            print(f"tecnico id: {tecnico_id}")
+            print(f"prioridad: {prioridad}")
+            print(f"estado id: {estado}")
+
+            pqrd_asignado = asignar_ticket(
+                pqrd_id=ticket_id,
+                id_agente=tecnico_id,
+                prioridad=prioridad,
+                estado=estado,
+            )
+
+            if pqrd_asignado:
+                flash("Empleado asignado correctamente")
+                return redirect(url_for("mvc_admin.gestion_pqrd"))
+
+        except Exception as e:
+            flash(f"Error al asignar empleado: {e}", "error")
+            return redirect(url_for("mvc_admin.gestion_pqrd"))

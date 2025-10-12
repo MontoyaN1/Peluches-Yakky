@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="/media/Data/Universidad/sexto/apps_empresariales/corte2/peluches_yakky/instance/database.sqlite3" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="4209"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="7" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,8:maincustomer"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="actividades" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="82"/><column index="2" value="79"/><column index="3" value="103"/><column index="4" value="68"/><column index="6" value="277"/><column index="7" value="300"/><column index="8" value="178"/><column index="9" value="102"/><column index="10" value="179"/><column index="11" value="179"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table><table schema="main" name="customer" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="41"/><column index="2" value="41"/><column index="3" value="228"/><column index="4" value="102"/><column index="5" value="300"/><column index="6" value="178"/><column index="7" value="44"/><column index="8" value="82"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- Crear la tabla PQRD
+CREATE TABLE IF NOT EXISTS pqrd (
+    id_pqrd INTEGER PRIMARY KEY AUTOINCREMENT,
+    id_agente INTEGER,
+    id_cliente INTEGER NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    telefono VARCHAR(20) NOT NULL,
+    tipo_solicitud VARCHAR(50) NOT NULL,
+    asunto VARCHAR(200) NOT NULL,
+    descripcion TEXT NOT NULL,
+    prioridad VARCHAR(50) NOT NULL DEFAULT 'Media',
+    estado VARCHAR(50) NOT NULL DEFAULT 'Abierto',
+    fecha_creacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+    fecha_completada DATETIME NULL,
+    
+    FOREIGN KEY (id_agente) REFERENCES customer(id),
+    FOREIGN KEY (id_cliente) REFERENCES customer(id)
+);
+
+-- Crear índices para mejorar el rendimiento
+CREATE INDEX IF NOT EXISTS idx_pqrd_id_cliente ON pqrd(id_cliente);
+CREATE INDEX IF NOT EXISTS idx_pqrd_id_agente ON pqrd(id_agente);
+CREATE INDEX IF NOT EXISTS idx_pqrd_estado ON pqrd(estado);
+CREATE INDEX IF NOT EXISTS idx_pqrd_fecha_creacion ON pqrd(fecha_creacion);
+
+-- Trigger para actualizar automáticamente fecha_actualizacion
+CREATE TRIGGER IF NOT EXISTS update_pqrd_timestamp 
+AFTER UPDATE ON pqrd
+FOR EACH ROW
+BEGIN
+    UPDATE pqrd 
+    SET fecha_actualizacion = CURRENT_TIMESTAMP 
+    WHERE id_pqrd = NEW.id_pqrd;
+END;</sql><current_tab id="0"/></tab_sql></sqlb_project>

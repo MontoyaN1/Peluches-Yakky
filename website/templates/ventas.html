@@ -1,211 +1,343 @@
 {% extends 'index.html' %}
 
-{% block title %} Perfil
-
+{% block title %} Métricas y Ventas
 {% endblock %}
 
 {% block body %}
 
-<div class="container-fluid fondo py-4" style="min-height: 100vh; padding-top: 20px;">
-    <div class="row justify-content-center bg-light m-5 p-4 rounded-3">
-        <div class="col-lg-10">
-
-            <div class="d-flex justify-content-between align-items-center mb-5">
-                <h1 class="text-black mb-0 display-4 fw-bold">
-                    <i class="bi bi-graph-up fs-1 text-black"></i> Ventas y Métricas
-                </h1>
-
-                <div class="d-flex gap-3"><button onclick="window.location.href='/adminvista'" class="btn btn-primary">
-                        <i class="bi bi-arrow-return-left me-2  "></i>Volver
+<div class="fondo" style="min-height: 100vh; padding: 30px;">
+    <div class="container-fluid bg-light rounded-3 p-4">
+        <div class="row justify-content-center">
+            <div class="col-xxl-10">
+                <!-- Header Minimalista -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="text-black mb-1 fw-bold">
+                            <i class="bi bi-graph-up me-2"></i>Métricas de Ventas
+                        </h1>
+                        <p class="text-muted mb-0">Período: {{ fecha_inicio }} al {{ fecha_fin }}</p>
+                    </div>
+                    <button onclick="window.location.href='/adminvista'" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-return-left me-1"></i>Volver
                     </button>
-
                 </div>
 
-            </div>
-
-            <div class="row g-4 mb-4">
-
-
-                <form method="POST" action="{{ url_for('admin.ventas') }}" class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label for="fecha_inicio" class="form-label">Fecha Inicio</label>
-                        <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
-                            value="{{ fecha_inicio }}" required>
-                    </div>
-                    <div class="col-md-4">
-                        <label for="fecha_fin" class="form-label">Fecha Fin</label>
-                        <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" value="{{ fecha_fin }}"
-                            required>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">&nbsp;</label>
-                        <button type="submit" class="btn btn-primary w-100">Filtrar</button>
-                    </div>
-                </form>
-
-                <!-- Mostrar el rango de fechas actual -->
-                <div class="alert alert-info">
-                    <strong>Período analizado:</strong>
-                    Desde {{ fecha_inicio }} hasta {{ fecha_fin }}
-                </div>
-                <!-- Ventas Totales -->
-                <div class="col-md-4">
-                    <div class="card border-3 border-success shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0 text-muted">Ventas Totales</h5>
-                                <i class="bi bi-currency-dollar fs-3 text-success"></i>
+                <!-- Filtro Simple -->
+                <div class="card border-light shadow-sm mb-4">
+                    <div class="card-body p-3">
+                        <form method="POST" action="{{ url_for('admin.ventas') }}" class="row g-2 align-items-end">
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Fecha Inicio</label>
+                                <input type="date" class="form-control form-control-sm" name="fecha_inicio"
+                                    value="{{ fecha_inicio }}" required>
                             </div>
-                            <p class="display-5 fw-bold text-success mb-1">
-                                ${{ "{:,.2f}".format(total_ventas) }}
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total de Impuestos -->
-                <div class="col-md-4">
-                    <div class="card border-3 border-warning shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0 text-muted">Total con Impuestos</h5>
-                                <i class="bi bi-bank fs-3 text-warning"></i>
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold">Fecha Fin</label>
+                                <input type="date" class="form-control form-control-sm" name="fecha_fin"
+                                    value="{{ fecha_fin }}" required>
                             </div>
-                            <p class="display-5 fw-bold text-warning mb-1">
-                                ${{ "{:,.2f}".format(total_ventas - total_impuestos) }}
-                            </p>
-
-                            <small class="text-muted">
-                                <i class="bi bi-calendar"></i> Total impuestos ${{ "{:,.2f}".format(total_impuestos) }}
-                            </small>
-                            <br>
-                        </div>
-                    </div>
-                </div>
-
-            
-                <div class="col-md-4">
-                    <div class="card border-3 border-primary shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0 text-muted">Utilidades</h5>
-                                <i class="bi bi-tag fs-3 text-primary"></i>
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i class="bi bi-funnel me-1"></i>Filtrar
+                                </button>
                             </div>
-                            <p class="display-5 fw-bold text-primary mb-1">
-                                ${{ "{:,.2f}".format(utilidad) }}
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-
-
-                 <div class="col-md-4 offset-md-4 ">
-                    <div class="card border-3 border-danger shadow-sm h-100">
-                        <div class="card-body text-center p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title mb-0 text-muted">Costos</h5>
-                                <i class="bi bi-tag fs-3 text-danger"></i>
-                            </div>
-                            <p class="display-5 fw-bold text-danger mb-1">
-                                -${{ "{:,.2f}".format(total_costos) }}
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row mt-4 g-4 justify-content-center p-3">
-                <div class="col-12 col-lg-10">
-                    <div class="card shadow-lg border-0">
-                        <div class="card-header bg-gradient-primary text-white py-3">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h4 class="mb-1">
-                                    <i class="bi bi-graph-up me-2"></i>Ventas Recientes
-                                </h4>
-                                <span class="badge bg-light text-primary fs-6">
-                                    <i class="bi bi-calendar me-1"></i>Ventas díarias
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="card-body p-4">
-                            <!-- Contenedor responsive para la gráfica -->
-                            <div class="chart-container" style="position: relative; height: 350px; width: 100%;">
-                                <canvas id="ventasChart"></canvas>
-                            </div>
-
-
-                        </div>
-
-                        <div class="card-footer bg-light py-3">
-                            <div class="text-center">
-                                <small class="text-muted">
+                            <div class="col-md-2">
+                                <div class="text-muted small">
                                     <i class="bi bi-info-circle me-1"></i>
-                                    {{ hoy }}
-                                </small>
+                                    {{ pedidos_count }} pedidos
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Métricas Compactas -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-white shadow-sm">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-primary mb-2">
+                                    <i class="bi bi-currency-dollar fs-4"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">${{ "{:,.0f}".format(total_ventas) }}</h5>
+                                <small class="text-muted">Ventas Totales</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-white shadow-sm">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-success mb-2">
+                                    <i class="bi bi-graph-up fs-4"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">${{ "{:,.0f}".format(utilidad) }}</h5>
+                                <small class="text-muted">Utilidades</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-white shadow-sm">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-warning mb-2">
+                                    <i class="bi bi-tag fs-4"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">${{ "{:,.0f}".format(total_costos) }}</h5>
+                                <small class="text-muted">Costos</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 bg-white shadow-sm">
+                            <div class="card-body p-3 text-center">
+                                <div class="text-info mb-2">
+                                    <i class="bi bi-bank fs-4"></i>
+                                </div>
+                                <h5 class="fw-bold mb-1">${{ "{:,.0f}".format(total_impuestos) }}</h5>
+                                <small class="text-muted">Impuestos</small>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                
+                <!-- Gráficas -->
+                <div class="row g-4">
+                    <!-- Gráfica de Ventas Diarias -->
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <i class="bi bi-bar-chart me-2"></i>Ventas Diarias
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div style="height: 250px;">
+                                    <canvas id="ventasChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica de Distribución -->
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <i class="bi bi-pie-chart me-2"></i>Distribución de Ingresos
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div style="height: 250px;">
+                                    <canvas id="distribucionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica de Utilidades vs Costos -->
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <i class="bi bi-arrow-left-right me-2"></i>Utilidades vs Costos
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div style="height: 250px;">
+                                    <canvas id="utilidadesChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráfica de Progreso de Metas -->
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <i class="bi bi-speedometer me-2"></i>Eficiencia Comercial
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <div style="height: 250px;">
+                                    <canvas id="eficienciaChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <style>
-        .card {
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
+<style>
+    .card {
+        transition: transform 0.2s ease;
+        border: 1px solid rgba(0,0,0,0.05);
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-        }
-    </style>
+    .card:hover {
+        transform: translateY(-2px);
+    }
 
-    <script>
-        // Esperar a que el DOM esté completamente cargado
-        document.addEventListener('DOMContentLoaded', function () {
-            const canvas = document.getElementById('ventasChart');
+    .fondo {
+        background-color: #f8f9fa;
+    }
+</style>
 
-            const dias = JSON.parse('{{ dias | tojson | safe }}');
-            const ventas = JSON.parse('{{ ventas_diarias  }}');
-            console.log("Datos para el gráfico :", dias, ventas);
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Datos desde Flask
+        const dias = JSON.parse('{{ dias | tojson | safe }}');
+        const ventas = JSON.parse('{{ ventas_diarias | tojson }}');
+        const totalVentas = {{ total_ventas }};
+        const utilidad = {{ utilidad }};
+        const totalCostos = {{ total_costos }};
+        const totalImpuestos = {{ total_impuestos }};
 
-            const chart = new Chart(canvas, {
-                type: 'bar',
-                data: {
-                    labels: dias,
-                    datasets: [{
-                        label: 'Ventas Diarias',
-                        data: ventas,
-                        backgroundColor: 'rgba(75, 192, 192, 0.8)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2
-                    }]
+        // 1. Gráfica de Ventas Diarias
+        const ventasCtx = document.getElementById('ventasChart').getContext('2d');
+        new Chart(ventasCtx, {
+            type: 'line',
+            data: {
+                labels: dias,
+                datasets: [{
+                    label: 'Ventas Diarias',
+                    data: ventas,
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                callback: function (value) {
-                                    return '$' + value.toLocaleString();
-                                }
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
                             }
                         }
                     }
                 }
-            });
+            }
         });
-    </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        // 2. Gráfica de Distribución de Ingresos
+        const distribucionCtx = document.getElementById('distribucionChart').getContext('2d');
+        new Chart(distribucionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Utilidades', 'Costos', 'Impuestos'],
+                datasets: [{
+                    data: [utilidad, totalCostos, totalImpuestos],
+                    backgroundColor: [
+                        '#28a745',
+                        '#fd7e14',
+                        '#17a2b8'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
 
-    {% endblock %}
+        // 3. Gráfica de Utilidades vs Costos
+        const utilidadesCtx = document.getElementById('utilidadesChart').getContext('2d');
+        new Chart(utilidadesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Utilidades', 'Costos'],
+                datasets: [{
+                    label: 'Montos',
+                    data: [utilidad, totalCostos],
+                    backgroundColor: ['#28a745', '#fd7e14'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 4. Gráfica de Eficiencia Comercial
+        const eficienciaCtx = document.getElementById('eficienciaChart').getContext('2d');
+        const margen = totalVentas > 0 ? (utilidad / totalVentas) * 100 : 0;
+        
+        new Chart(eficienciaCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Margen de Ganancia'],
+                datasets: [{
+                    label: 'Porcentaje',
+                    data: [margen],
+                    backgroundColor: margen > 20 ? '#28a745' : margen > 10 ? '#ffc107' : '#dc3545',
+                    borderRadius: 8,
+                    maxBarThickness: 40
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Margen: ${context.parsed.y.toFixed(1)}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,371 @@
+{% extends 'index.html' %}
+{% block title %} PQRD
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid mb-5 fondo" style="min-height: 100vh; padding-top: 20px;">
+    <div class="row m-5 bg-light p-4 d-flex rounded-3">
+        <!-- Preguntas Frecuentes con Imagen a toda altura -->
+        <section class="faq-section">
+            <div class="row">
+                <!-- Columna del contenido -->
+                <div class="col-md-7">
+                    <h2 class="mb-4"><i class="bi bi-question-circle faq-icon"></i>Preguntas Frecuentes</h2>
+                    <p class="text-muted mb-4">Encuentra respuestas a las dudas más comunes sobre nuestros peluches</p>
+
+                    <div class="accordion" id="faqAccordion">
+                        <!-- Las preguntas frecuentes se mantienen igual -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                                    ¿Cuáles son los materiales de los peluches?
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Nuestros peluches están fabricados con materiales de alta calidad, principalmente
+                                    poliéster
+                                    suave e hipoalergénico. El relleno es de fibra siliconada que mantiene la forma y
+                                    suavidad
+                                    incluso después de múltiples lavados.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 2 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    ¿Realizan envíos a todo el país?
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sí, realizamos envíos a todas las ciudades principales del país. El tiempo de
+                                    entrega varía
+                                    entre 2 a 7 días hábiles dependiendo de la ubicación. Para zonas rurales o menos
+                                    accesibles,
+                                    el tiempo puede extenderse hasta 10 días hábiles.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 3 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    ¿Cómo puedo lavar mis peluches?
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Recomendamos lavado a mano con agua tibia y jabón suave. Si prefieres usar lavadora,
+                                    selecciona ciclo delicado con agua fría. No uses blanqueadores y seca al aire libre,
+                                    evitando la exposición directa al sol por periodos prolongados.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 4 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                    ¿Ofrecen garantía en sus productos?
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Sí, todos nuestros peluches tienen una garantía de 6 meses contra defectos de
+                                    fabricación.
+                                    Si encuentras algún problema, contáctanos dentro de este periodo y te ofreceremos
+                                    una solución,
+                                    que puede incluir reparación, reemplazo o reembolso según el caso.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pregunta 5 -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFive">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                    ¿Puedo personalizar un peluche?
+                                </button>
+                            </h2>
+                            <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive"
+                                data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    ¡Por supuesto! Ofrecemos servicio de personalización donde puedes agregar nombres,
+                                    mensajes
+                                    especiales o incluso modificar algunos colores. Este servicio tiene un costo
+                                    adicional y
+                                    requiere un tiempo de producción de 5 a 10 días hábiles adicionales.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ... resto de preguntas frecuentes ... -->
+                    </div>
+                </div>
+
+
+                <div class="col-md-4 p-5 m-2">
+                    <div class="image-container w-100 d-flex align-items-center justify-content-center">
+                        <img src="{{ url_for('static', filename='img/muñeco_nieve_faro_grande.png') }}"
+                            alt="Peluche tierno" class="img-fluid rounded-3"
+                            style="max-height: 400px; object-fit: contain;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Formulario PQRDS con Imagen - SIN ESTIRAMIENTO -->
+        <section class="pqrds-section mt-5">
+            <h2 class="mb-4"><i class="bi bi-chat-dots faq-icon"></i>Formulario PQRD</h2>
+            <p class="mb-4">¿Tienes una petición, queja, reclamo, denuncia o sugerencia? Completa el siguiente
+                formulario y nos pondremos en contacto contigo.</p>
+
+            {% if current_user.is_authenticated %}
+            <div class="row">
+                <!-- Columna del formulario - SIN ALTURA FORZADA -->
+                <div class="col-md-8">
+                    <form id="pqrdsForm" method="POST" 
+                        enctype="multipart/form-data">
+                        <div class="row mb-3">
+
+    
+                            <div class="col-md-6">
+                                <label for="nombre" class="form-label">Nombre completo </label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required disabled
+                                    value="{{ current_user.username }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Correo electrónico *</label>
+                                <input type="email" class="form-control" id="email" name="email" required disabled
+                                    value="{{ current_user.email }}">
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="telefono" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" disabled required
+                                    value="{{ current_user.telefono }}">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tipo" class="form-label">Tipo de solicitud *</label>
+                                <select class="form-select" id="tipo" name="tipo_solicitud" required>
+                                    <option value="" selected disabled>Selecciona una opción</option>
+                                    <option value="peticion">Petición</option>
+                                    <option value="queja">Queja</option>
+                                    <option value="reclamo">Reclamo</option>
+                                    <option value="denuncia">Denuncia</option>
+                                    <option value="sugerencia">Sugerencia</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="asunto" class="form-label">Asunto *</label>
+                            <input type="text" class="form-control" id="asunto" name="asunto" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción detallada *</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="5"
+                                required></textarea>
+                        </div>
+
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="terminos" name="terminos" required>
+                            <label class="form-check-label" for="terminos">Acepto los términos y condiciones *</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary px-4 py-2">Enviar solicitud</button>
+                    </form>
+                </div>
+
+                <!-- Columna de la imagen - SIN ESTIRAMIENTO FORZADO -->
+                <div class="col-md-4">
+                    <div class="image-container w-100 d-flex align-items-center justify-content-center">
+                        <img src="https://cdn.pixabay.com/photo/2016/11/30/12/16/question-mark-1872665_1280.jpg"
+                            alt="Atención al cliente" class="img-fluid rounded-3"
+                            style="max-height: 400px; object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+
+            {% else %}
+            <div class="d-flex justify-content-center m-5">
+                <br><br>
+                <h3>Inicia sesión o registrate para ponerte en contacto <a href="{{ url_for('auth.sing_up') }}">aquí</a>
+                </h3>
+                <br><br>
+
+            </div>
+
+
+
+            {% endif %}
+
+
+
+            <!-- Otras formas de contacto - SEPARADA CORRECTAMENTE -->
+            <div class="contact-info mt-4">
+                <h4 class="mb-3">Otras formas de contacto</h4>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <i class="bi bi-telephone-fill me-2"></i> <strong>Teléfono:</strong> +57 1 234 5678
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <i class="bi bi-whatsapp me-2"></i> <strong>WhatsApp:</strong> +57 300 123 4567
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <i class="bi bi-envelope-fill me-2"></i> <strong>Email:</strong> peluchesyakky@gmail.com
+                    </div>
+                </div>
+                <p class="mb-0"><i class="bi bi-clock me-2"></i> <strong>Horario de atención:</strong> Lunes a Viernes
+                    8:00 am - 6:00 pm, Sábados 9:00 am - 2:00 pm</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+
+
+<script>
+    // Manejo del envío del formulario
+    document.getElementById('pqrdsForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Validación básica
+        const terminos = document.getElementById('terminos');
+        if (!terminos.checked) {
+            alert('Debes aceptar los términos y condiciones');
+            return;
+        }
+
+        // Envío del formulario
+        this.submit();
+        alert('¡Gracias por tu mensaje! Hemos recibido tu solicitud y nos pondremos en contacto contigo pronto.');
+    });
+</script>
+
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .faq-section,
+    .pqrds-section {
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background-color: #ffc8dd;
+        color: #333;
+        box-shadow: none;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(0, 0, 0, .125);
+    }
+
+    .btn-primary {
+        background-color: #a2d2ff;
+        border-color: #a2d2ff;
+        color: #333;
+        font-weight: 600;
+    }
+
+    .btn-primary:hover {
+        background-color: #8ac2ff;
+        border-color: #8ac2ff;
+        color: #333;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+
+    .faq-icon {
+        color: #ffafcc;
+        margin-right: 10px;
+    }
+
+    .form-label {
+        font-weight: 600;
+    }
+
+    .contact-info {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        padding: 1.5rem;
+        border-left: 4px solid #a2d2ff;
+        margin-top: 2rem;
+    }
+
+    /* CONTENEDORES DE IMAGEN CORREGIDOS - SIN ALTURA FORZADA */
+    .image-container {
+        padding-left: 1.5rem;
+        height: auto;
+        /* Elimina altura fija */
+    }
+
+    .faq-section .image-container,
+    .pqrds-section .image-container {
+        border-left: 3px solid #ffc8dd;
+    }
+
+    /* Mejoras visuales para las imágenes */
+    .faq-section img,
+    .pqrds-section img {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+        width: 100%;
+        /* Ocupa el ancho pero no fuerza altura */
+    }
+
+    .faq-section img:hover,
+    .pqrds-section img:hover {
+        transform: scale(1.02);
+    }
+
+    /* ELIMINAMOS las alturas mínimas forzadas */
+    @media (min-width: 768px) {
+
+        .faq-section .row,
+        .pqrds-section .row {
+            /* Eliminamos min-height forzado */
+            align-items: flex-start;
+            /* Alinea al inicio en lugar de estirar */
+        }
+    }
+
+    /* Mejor espaciado para el formulario */
+    .pqrds-section form {
+        padding-right: 1rem;
+    }
+
+    /* Aseguramos que las columnas no se estiren */
+    .col-md-4,
+    .col-md-8 {
+        align-self: flex-start;
+    }
+</style>
+
+{% endblock %}

@@ -48,81 +48,84 @@
 
             <div class="row mb-3">
 
+
+
                 <div class="col-md-6">
-    <label class="form-label">Etapa (Recuerda que no puedes deshacer los cambios)*</label>
+                    <label class="form-label">Etapa (Recuerda que no puedes deshacer los cambios)*</label>
 
-    <div class="form-check form-switch mb-3">
-        <input class="form-check-input" type="checkbox" id="cambiar_etapa" onchange="cambiarEtapa()" role="switch">
-        <label class="form-check-label" for="cambiar_etapa">
-            <strong>Modificar etapa actual</strong>
-        </label>
-    </div>
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="cambiar_etapa" onchange="cambiarEtapa()"
+                            role="switch">
+                        <label class="form-check-label" for="cambiar_etapa">
+                            <strong>Modificar etapa actual</strong>
+                        </label>
+                    </div>
 
-    <select name="etapa" class="form-select" id="etapa_select">
-        <!-- Opciones generadas dinámicamente -->
-    </select>
+                    <select name="etapa" class="form-select" id="etapa_select">
+                        <!-- Opciones generadas dinámicamente -->
+                    </select>
 
-    <small class="text-muted" id="etapa_mensaje"></small>
-</div>
+                    <small class="text-muted" id="etapa_mensaje"></small>
+                </div>
 
-<script>
-    function cambiarEtapa() {
-        const checkbox = document.getElementById('cambiar_etapa');
-        const select = document.getElementById('etapa_select');
-        const mensaje = document.getElementById('etapa_mensaje');
-        const etapaActual = "{{ oportunidad.etapa }}";
+                <script>
+                    function cambiarEtapa() {
+                        const checkbox = document.getElementById('cambiar_etapa');
+                        const select = document.getElementById('etapa_select');
+                        const mensaje = document.getElementById('etapa_mensaje');
+                        const etapaActual = "{{ oportunidad.etapa }}";
 
-        if (checkbox.checked) {
-            // MODO EDICIÓN: Permitir selección
-            select.disabled = false;
-            select.classList.remove('bg-light', 'text-muted');
-            mensaje.textContent = 'Selecciona la nueva etapa';
-            mensaje.className = 'text-primary';
+                        if (checkbox.checked) {
+                            // MODO EDICIÓN: Permitir selección
+                            select.disabled = false;
+                            select.classList.remove('bg-light', 'text-muted');
+                            mensaje.textContent = 'Selecciona la nueva etapa';
+                            mensaje.className = 'text-primary';
 
-            let opciones = '';
-            if (etapaActual === 'Prospecto') {
-                opciones = `
+                            let opciones = '';
+                            if (etapaActual === 'Prospecto') {
+                                opciones = `
                     <option value="Propuesta">Propuesta</option>
                     <option value="Cierre">Cierre</option>
                 `;
-            } else if (etapaActual === 'Propuesta') {
-                opciones = `
+                            } else if (etapaActual === 'Propuesta') {
+                                opciones = `
                     <option value="Cierre">Cierre</option>
                 `;
-            }
-            select.innerHTML = opciones;
+                            }
+                            select.innerHTML = opciones;
 
-        } else {
-            // MODO VISUALIZACIÓN: Solo mostrar etapa actual
-            select.disabled = false; // Mantener habilitado para envío
-            select.classList.add('bg-light', 'text-muted');
-            select.innerHTML = `<option value="${etapaActual}" selected>${etapaActual} (actual)</option>`;
-            mensaje.textContent = 'La etapa actual se mantendrá';
-            mensaje.className = 'text-muted';
-            
-            // IMPORTANTE: Asegurar que tenga el valor correcto
-            select.value = etapaActual;
-        }
-    }
+                        } else {
+                            // MODO VISUALIZACIÓN: Solo mostrar etapa actual
+                            select.disabled = false; // Mantener habilitado para envío
+                            select.classList.add('bg-light', 'text-muted');
+                            select.innerHTML = `<option value="${etapaActual}" selected>${etapaActual} (actual)</option>`;
+                            mensaje.textContent = 'La etapa actual se mantendrá';
+                            mensaje.className = 'text-muted';
 
-    // Inicializar
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('cambiar_etapa').checked = false;
-        cambiarEtapa();
-        
-        // Asegurar que el select tenga valor antes de enviar
-        document.querySelector('form').addEventListener('submit', function() {
-            const select = document.getElementById('etapa_select');
-            const etapaActual = "{{ oportunidad.etapa }}";
-            const checkbox = document.getElementById('cambiar_etapa');
-            
-            // Si no está marcado el checkbox, forzar el valor actual
-            if (!checkbox.checked) {
-                select.value = etapaActual;
-            }
-        });
-    });
-</script>
+                            // IMPORTANTE: Asegurar que tenga el valor correcto
+                            select.value = etapaActual;
+                        }
+                    }
+
+                    // Inicializar
+                    document.addEventListener('DOMContentLoaded', function () {
+                        document.getElementById('cambiar_etapa').checked = false;
+                        cambiarEtapa();
+
+                        // Asegurar que el select tenga valor antes de enviar
+                        document.querySelector('form').addEventListener('submit', function () {
+                            const select = document.getElementById('etapa_select');
+                            const etapaActual = "{{ oportunidad.etapa }}";
+                            const checkbox = document.getElementById('cambiar_etapa');
+
+                            // Si no está marcado el checkbox, forzar el valor actual
+                            if (!checkbox.checked) {
+                                select.value = etapaActual;
+                            }
+                        });
+                    });
+                </script>
 
 
 
