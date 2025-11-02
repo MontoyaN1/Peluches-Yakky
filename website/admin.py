@@ -7,12 +7,12 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from flask_login import login_required, current_user
+from flask_login import current_user
 from sqlalchemy import func
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 import os
-
+from website.decorators import login_required, rol_required
 from .models.producto_model import Product
 
 from .models.customer_model import Customer
@@ -36,6 +36,7 @@ def allowed_file(filename):
 
 @admin.route("/agregar-productos", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def agregar_productos():
     if current_user.id == 1:
         if request.method == "POST":
@@ -93,6 +94,7 @@ def agregar_productos():
 
 @admin.route("/ver-productos", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def ver_productos():
     if current_user.id == 1:
         productos = Product.query.order_by(Product.date_added).all()
@@ -102,6 +104,7 @@ def ver_productos():
 
 @admin.route("/actua-producto/<int:item_id>", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def actua_productos(item_id):
     if current_user.id == 1:
         producto = Product.query.get(item_id)
@@ -172,6 +175,7 @@ def actua_productos(item_id):
 
 @admin.route("/elimi-producto/<int:item_id>", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def elimi_productos(item_id):
     if current_user.id == 1:
         try:
@@ -196,6 +200,7 @@ def elimi_productos(item_id):
 
 @admin.route("/ver-pedidos", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def ver_pedidos():
     if current_user.id == 1:
         pedidos = Order.query.all()
@@ -205,6 +210,7 @@ def ver_pedidos():
 
 @admin.route("/actua-pedido/<int:order_id>", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def actua_pedidos(order_id):
     if current_user.id == 1:
         order = Order.query.get(order_id)
@@ -233,6 +239,7 @@ def actua_pedidos(order_id):
 
 @admin.route("/usuarios")
 @login_required
+@rol_required(1)
 def usuarios():
     if current_user.id == 1:
         usuarios = Customer.query.filter(
@@ -244,10 +251,13 @@ def usuarios():
 
 @admin.route("/adminvista")
 @login_required
+@rol_required(1)
 def adminvista():
     if current_user.id == 1:
         pedidos: Order = Order.query.all()
-        productos:Product = Product.query.filter(Product.in_stock < 11).order_by(Product.in_stock).all()
+        productos: Product = (
+            Product.query.filter(Product.in_stock < 11).order_by(Product.in_stock).all()
+        )
         return render_template("admin.html", pedidos=pedidos, productos=productos)
     return render_template("error_404.html")
 
@@ -259,6 +269,7 @@ GASTOS = 300000
 
 @admin.route("/ventas", methods=["GET", "POST"])
 @login_required
+@rol_required(1)
 def ventas():
     if current_user.id != 1:
         return render_template("error_404.html")
@@ -354,6 +365,3 @@ def ventas():
         fecha_inicio=fecha_inicio_formatted,
         fecha_fin=fecha_fin_formatted,
     )
-
-
-

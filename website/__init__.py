@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
@@ -55,6 +55,25 @@ def create_app():
     app.register_blueprint(mvc_admin, url_prefix="/admin")
     app.register_blueprint(todos, url_prefix="/")
 
+    @app.route("/manifest.json")
+    def manifest():
+        return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+
+    @app.route("/sw.js")
+    def sw():
+        response = send_from_directory('static', 'service-worker.js')
+        response.headers['Content-Type'] = 'application/javascript'
+        response.headers['Service-Worker-Allowed'] = '/'  # ¡Importante!
+        return response
+    
+    @app.after_request
+    def add_header(response):
+        # Para rutas de autenticación, evitar cache
+        if request.path in ['/login', '/logout', '/profile', '/adminvista', '/empleado']:
+            response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+            response.headers['Pragma'] = 'no-cache'
+            response.headers['Expires'] = '0'
+        return response
 
 
     with app.app_context():

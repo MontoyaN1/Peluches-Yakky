@@ -15,6 +15,26 @@
 
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='icon.png') }}">
 
+    <!-- Meta tags PWA -->
+    <meta name="theme-color" content="#3b82f6">
+    <meta name="description" content="Tu ecommerce móvil">
+
+    <!-- Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+
+    <!-- Iconos iOS -->
+    <link rel="apple-touch-icon" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="apple-touch-icon" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512x512.png') }}">
+
+    <!-- Splash screen para iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Peluches Yakky">
+
+
+    <!-- Para Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
     <title>Peluches Yakky | {% block title %} {% endblock %} </title>
 
 
@@ -30,6 +50,7 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
 
                 <form class="d-flex ms-5" role="search" action="/buscar" method="post">
@@ -44,7 +65,12 @@
                     <li class="nav-item"><a class="nav-link" href="/sobre-nosotros">Sobre Nosotros</a></li>
 
 
+
                 </ul>
+
+                <button id="installBtn" class="btn btn-outline-light ms-2" style="display: none;">
+                    <i class="fas fa-download"></i> Instalar App
+                </button>
 
 
                 {% if cart | length < 1 %} <a href="/carrito" class="btn btn-outline-light ms-3">
@@ -171,6 +197,36 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ url_for('static', filename='js/funciones.js') }}"></script>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register("/sw.js", {
+                scope: '/'  // Scope en raíz
+            }).then(registration => {
+                console.log('✅ SW con scope completo:', registration.scope);
+            });
+        }
+
+        // Mostrar botón de instalación
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', () => {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('Usuario instaló la PWA');
+                }
+                deferredPrompt = null;
+            });
+        });
+    </script>
 
 
 </body>
