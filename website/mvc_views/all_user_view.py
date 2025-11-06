@@ -71,3 +71,5 @@ def pqrd():
             return redirect("/")
 
     return render_template("contacto.html")
+
+

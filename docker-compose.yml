@@ -1,9 +1,41 @@
 services:
   web:
-    build: .          
+    build: .
     ports:
       - "8000:8000"
     volumes:
-      - .:/app        
+      - .:/app
     environment:
       - DEBUG=True
+      - FLASK_APP=main.py
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - N8N_WEBHOOK_URL_FLASK=${N8N_WEBHOOK_URL_FLASK}
+    command: flask run --host=0.0.0.0 --port=8000 --reload --debugger --with-threads
+    depends_on:
+      - n8n
+    networks:
+      - app-network
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=false
+      - N8N_HOST=${N8N_HOST}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - N8N_WEBHOOK_URL=${N8N_WEBHOOK_URL}
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - FLASK_CALLBACK_URL=${FLASK_CALLBACK_URL}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - app-network
+volumes:
+  n8n_data:
+
+
+networks:
+  app-network:
+    driver: bridge

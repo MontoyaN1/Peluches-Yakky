@@ -1,0 +1,51 @@
+/* static/css/chat.css */
+
+/* Solo CSS esencial que Bootstrap no puede manejar */
+.chat-messages {
+    scroll-behavior: smooth;
+    padding: 1rem;
+}
+
+.message {
+    word-wrap: break-word;
+}
+
+/* Animación suave para nuevos mensajes */
+.message {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Mejora el scroll */
+.chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Para Firefox */
+.chat-messages {
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}

@@ -1,5 +1,5 @@
 from website import db
-from website.models.pqrd_model import Pqrd
+from website.models.Pqrd.pqrd_model import Pqrd
 from sqlalchemy import desc
 
 

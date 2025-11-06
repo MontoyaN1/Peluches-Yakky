@@ -1,0 +1,131 @@
+{% extends 'index.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block head %}
+{{ super() }}
+<!-- Incluir el CSS del chat -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid fondo py-5" style="min-height: 100vh;">
+    <div class="container py-4 bg-light">
+        <!-- Header del Chat -->
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="d-flex gap-3">
+                        <button onclick="window.history.back()" class="btn btn-primary">
+                            <i class="bi bi-arrow-return-left me-2"></i> Volver
+                        </button>
+                    </div>
+                    <div>
+                        <h4 class="mb-1">Chat de Soporte</h4>
+                        <p class="mb-0">
+                            PQRD #{{ pqrd.id_pqrd }} - {{ pqrd.asunto }}
+                            <span
+                                class="badge bg-{{ 'success' if pqrd.estado.lower() == 'abierto' else 'warning' if pqrd.estado.lower() == 'en proceso' else 'info' if pqrd.estado.lower() == 'resuelto' else 'secondary' }} ms-2">
+                                {{ pqrd.estado }}
+                            </span>
+                        </p>
+                    </div>
+                    <div class="text-end">
+                        <strong>Prioridad:</strong>
+                        <span
+                            class="badge bg-{{ 'danger' if pqrd.prioridad.lower() == 'alta' else 'warning' if pqrd.prioridad.lower() == 'media' else 'secondary' }}">
+                            {{ pqrd.prioridad }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sugerencias rápidas -->
+        <div class="card mb-3">
+            <div class="card-body py-2">
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm"
+                        onclick="insertSuggestion('¿Cuál es el estado de mi solicitud?')">
+                        <i class="fas fa-chart-bar"></i> Estado actual
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="insertSuggestion('¿Cuánto tiempo tomará?')">
+                        <i class="fas fa-clock"></i> Tiempo estimado
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm"
+                        onclick="insertSuggestion('¿Qué documentos necesitan?')">
+                        <i class="fas fa-file"></i> Documentos requeridos
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="insertSuggestion('Hola, necesito ayuda')">
+                        <i class="fas fa-hand-wave"></i> Saludar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de mensajes -->
+        <div class="card mb-3">
+            <div class="card-body p-0">
+                <div class="chat-messages bg-light" id="chatMessages" style="height: 400px; overflow-y: auto;">
+                    <div class="text-center text-muted py-4" id="loadingIndicator">
+                        <div class="spinner-border spinner-border-sm" role="status">
+                            <span class="visually-hidden">Cargando mensajes...</span>
+                        </div>
+                        Cargando mensajes...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body py-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="badge bg-{{ 'success' if pqrd.es_chatbot_activo|default(True) else 'warning' }}">
+                            {{ 'Asistente IA Activo' if pqrd.es_chatbot_activo|default(True) else 'En espera de técnico'
+                            }}
+                        </span>
+                        {% if not pqrd.es_chatbot_activo|default(True) %}
+                        <small class="text-muted ms-2">Un técnico te contactará pronto</small>
+                        {% endif %}
+                    </div>
+                    <div class="text-muted">
+                        <small>Mensajes con IA: {{ pqrd.mensajes_chatbot|default(0) }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de entrada -->
+        <div class="card">
+            <div class="card-body">
+                <div class="input-group">
+                    <textarea class="form-control" id="messageInput" placeholder="Escribe tu mensaje aquí..." rows="1"
+                        onkeypress="handleKeyPress(event)"></textarea>
+                    <button class="btn btn-primary" id="sendButton" onclick="sendMessage()" type="button">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Inicializar el chat cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function () {
+        initChat({{ pqrd.id_pqrd }});
+    });
+</script>
+
+<!-- Incluir el JavaScript del chat -->
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+
+
+
+
+
+{% endblock %}

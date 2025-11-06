@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_cors import CORS
+import os
+from dotenv import load_dotenv
 
-
-
-
+load_dotenv()
 db = SQLAlchemy()
 DB_NAME = "database.sqlite3"
 ADMIN_NAME = "Admin"
@@ -17,6 +18,13 @@ def create_app():
     app.config["SECRET_KEY"] = "8=F&9w4Z{F"
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
 
+    CORS(
+        app,
+        origins=["http://localhost:3000"],
+        supports_credentials=True,
+        methods=["GET", "POST", "PUT", "DELETE"],
+        allow_headers=["Content-Type", "Authorization"],
+    )
     db.init_app(app)
 
     @app.errorhandler(404)
@@ -33,12 +41,13 @@ def create_app():
     from website.mvc_views.employee_view import employee
     from website.mvc_views.admin_view import mvc_admin
     from website.mvc_views.all_user_view import todos
+    from website.mvc_views.cliente_view import cliente_bp
 
     from .models.order_model import Order  # noqa: F401
 
     from website.models.contacto_model import Contacto
     from website.models.oportunidad_model import Oportunidad
-    from website.models.actividad_model import Actividad  
+    from website.models.actividad_model import Actividad
     from website.models.interaccion_model import Interaccion
     from sqlalchemy_utils import database_exists
     from .decorators import login_required, rol_required, roles_required
@@ -46,6 +55,7 @@ def create_app():
     @login_manager.user_loader
     def load_user(id):
         from website.models.customer_model import Customer
+
         return Customer.query.get(int(id))
 
     app.register_blueprint(views, url_prefix="/")
@@ -54,27 +64,37 @@ def create_app():
     app.register_blueprint(employee, url_prefix="/empleado")
     app.register_blueprint(mvc_admin, url_prefix="/admin")
     app.register_blueprint(todos, url_prefix="/")
+    app.register_blueprint(cliente_bp, url_prefix="/cliente")
 
     @app.route("/manifest.json")
     def manifest():
-        return send_from_directory('static', 'manifest.json', mimetype='application/manifest+json')
+        return send_from_directory(
+            "static", "manifest.json", mimetype="application/manifest+json"
+        )
 
     @app.route("/sw.js")
     def sw():
-        response = send_from_directory('static', 'service-worker.js')
-        response.headers['Content-Type'] = 'application/javascript'
-        response.headers['Service-Worker-Allowed'] = '/'  # ¡Importante!
+        response = send_from_directory("static", "service-worker.js")
+        response.headers["Content-Type"] = "application/javascript"
+        response.headers["Service-Worker-Allowed"] = "/"  # ¡Importante!
         return response
-    
+
     @app.after_request
     def add_header(response):
         # Para rutas de autenticación, evitar cache
-        if request.path in ['/login', '/logout', '/profile', '/adminvista', '/empleado']:
-            response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-            response.headers['Pragma'] = 'no-cache'
-            response.headers['Expires'] = '0'
+        if request.path in [
+            "/login",
+            "/logout",
+            "/profile",
+            "/adminvista",
+            "/empleado",
+        ]:
+            response.headers["Cache-Control"] = (
+                "no-store, no-cache, must-revalidate, max-age=0"
+            )
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
         return response
-
 
     with app.app_context():
         if not database_exists(app.config["SQLALCHEMY_DATABASE_URI"]):
@@ -86,56 +106,57 @@ def create_app():
             print("La base de datos ya existe, omitiendo creación")
 
     return app
-__all__ = ['login_required', 'rol_required', 'roles_required', 'db', 'login_manager']
+
+
+__all__ = ["login_required", "rol_required", "roles_required", "db", "login_manager"]
 
 
 def create_database():
     db.create_all()
     print("Base de Datos creada")
 
+
 def create_initial_roles():
     """Crear roles con autoflush deshabilitado"""
     try:
         from website.models.rol_model import Rol
-        
+
         roles = ["administrador", "empleado", "cliente"]
-        
+
         # Deshabilitar autoflush temporalmente
         with db.session.no_autoflush:
             for rol_nombre in roles:
                 if not Rol.query.filter_by(nombre_rol=rol_nombre).first():
                     rol = Rol(nombre_rol=rol_nombre)
                     db.session.add(rol)
-            
+
             # Commit manual una vez
             db.session.commit()
             print("✓ Roles iniciales creados")
-            
+
     except Exception as e:
         db.session.rollback()
         print(f"✗ Error creando roles: {e}")
+
 
 def create_admin():
     """Crear admin después de los roles"""
     try:
         from website.models.customer_model import Customer
-        
+
         # Verificar si ya existe
         if Customer.query.filter_by(email=ADMIN_EMAIL).first():
             print("✓ Admin ya existe")
             return
-            
+
         admin = Customer(
-            username=ADMIN_NAME,
-            email=ADMIN_EMAIL, 
-            password=ADMIN_PASS,
-            rol_id=1  
+            username=ADMIN_NAME, email=ADMIN_EMAIL, password=ADMIN_PASS, rol_id=1
         )
-        
+
         db.session.add(admin)
         db.session.commit()
         print("✓ Admin creado exitosamente")
-        
+
     except Exception as e:
         db.session.rollback()
         print(f"✗ Error creando admin: {e}")
