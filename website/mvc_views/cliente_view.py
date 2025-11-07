@@ -63,7 +63,7 @@ def enviar_mensaje(pqrd_id):
             print("📍 🤖 CLIENTE + CHATBOT ACTIVO - Procesando IA")
 
             try:
-                from ..Services.chatbot_services import DeepSeekChatBot
+                from ..services.chatbot_services import DeepSeekChatBot
 
                 chatbot = DeepSeekChatBot()
 
@@ -111,7 +111,7 @@ def enviar_mensaje(pqrd_id):
 
         # 3. Guardar respuesta IA
         if respuesta_ia:
-            print(f"📍 💾 Guardando respuesta IA en BD")
+            print("📍 💾 Guardando respuesta IA en BD")
             mensaje_ia = PqrdMessage(
                 id_pqrd=pqrd.id_pqrd,
                 id_remitente=1,
@@ -175,7 +175,7 @@ def registrar_cambio_estado(pqrd, usuario, nuevo_estado):
         id_usuario=usuario.id,
         estado_anterior=pqrd.estado,
         estado_nuevo=nuevo_estado,
-        comentario=f"Cambio automático por IA basado en conversación",
+        comentario="Cambio automático por IA basado en conversación",
     )
     db.session.add(historial)
 
