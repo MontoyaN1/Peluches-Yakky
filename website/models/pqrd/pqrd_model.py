@@ -24,8 +24,9 @@ class Pqrd(db.Model):
     fecha_completada = db.Column(db.DateTime, nullable=True)
 
     es_chatbot_activo = db.Column(db.Boolean, default=True)
-    mensajes_chatbot = db.Column(db.Integer, default=0)  # Contador de mensajes con IA
+    mensajes_chatbot = db.Column(db.Integer, default=0)  
     fecha_escalado = db.Column(db.DateTime, nullable=True)
+    fecha_reactivacion_auto = db.Column(db.DateTime)
 
     agente = db.relationship(
         "Customer",

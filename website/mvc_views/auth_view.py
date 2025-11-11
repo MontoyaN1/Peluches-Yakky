@@ -11,7 +11,7 @@ from ..controllers.customer_cotller import (
     crear_customer,
     buscar_customer,
 )
-from ..controllers.order_contller import buscar_order
+from ..controllers.order_controller import buscar_order
 from ..controllers.pqrd_corller import mostrar_pqrd_cliente
 
 

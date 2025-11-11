@@ -1,14 +1,15 @@
 from datetime import datetime
 from flask import Blueprint, jsonify, render_template, request
 
-from website.models.Pqrd.pqrd_message_model import PqrdMessage
-from website.models.Pqrd.pqrd_model import Pqrd
+from ..models.pqrd.pqrd_message_model import PqrdMessage
+from ..models.pqrd.pqrd_model import Pqrd
 from flask_login import current_user
 
 from website import db
-from website.models.Pqrd.pqrd_status_model import PqrdStatusHistory
-from website.models.customer_model import Customer
-from website.decorators import login_required
+from ..models.pqrd.pqrd_status_model import PqrdStatusHistory
+from ..models.customer_model import Customer
+from ..decorators import login_required
+import requests
 
 
 cliente_bp = Blueprint("cliente", __name__)
@@ -40,14 +41,14 @@ def enviar_mensaje(pqrd_id):
         if not mensaje or not mensaje.strip():
             return jsonify({"error": "Mensaje vacío"}), 400
 
-        # VERIFICAR CAMPOS
+        # VERIFICAR CAMPOS (mantener igual)
         es_chatbot_activo = getattr(pqrd, "es_chatbot_activo", 1)
         mensajes_chatbot = getattr(pqrd, "mensajes_chatbot", 0)
         print(f"📍 es_chatbot_activo: {es_chatbot_activo}")
         print(f"📍 mensajes_chatbot: {mensajes_chatbot}")
         print(f"📍 Rol usuario: {current_user.rol_id}")
 
-        # 1. Guardar mensaje usuario
+        # 1. Guardar mensaje usuario (mantener igual)
         nuevo_mensaje = PqrdMessage(
             id_pqrd=pqrd.id_pqrd,
             id_remitente=current_user.id,
@@ -57,48 +58,70 @@ def enviar_mensaje(pqrd_id):
         )
         db.session.add(nuevo_mensaje)
 
-        # 2. Procesar IA solo para clientes
+        # 2. ✅ CAMBIO PRINCIPAL: Reemplazar DeepSeek por N8N
         respuesta_ia = None
-        if current_user.rol_id == 3 and es_chatbot_activo:
-            print("📍 🤖 CLIENTE + CHATBOT ACTIVO - Procesando IA")
+        if current_user.rol_id == 3 and (
+            es_chatbot_activo or deberia_reactivar_chatbot(mensaje)
+        ):
+            print("📍 🤖 CLIENTE + CHATBOT ACTIVO - Enviando a N8N")
 
             try:
-                from ..services.chatbot_services import DeepSeekChatBot
+                # Preparar payload para N8N
+                n8n_payload = {
+                    "pqrd_id": pqrd.id_pqrd,
+                    "user_message": mensaje.strip(),
+                    "user_id": current_user.id,
+                    "historial": obtener_historial_para_ia(
+                        pqrd_id
+                    ),  # Esta función SÍ se mantiene
+                    "pqrd_context": {
+                        "id_pqrd": pqrd.id_pqrd,
+                        "asunto": pqrd.asunto,
+                        "descripcion": pqrd.descripcion,
+                        "tipo_solicitud": pqrd.tipo_solicitud,
+                        "estado": pqrd.estado,
+                        "prioridad": pqrd.prioridad,
+                    },
+                }
 
-                chatbot = DeepSeekChatBot()
+                print(f"📍 📦 Enviando a N8N: {n8n_payload}")
 
-                historial = obtener_historial_para_ia(pqrd_id)
+                # Llamar a N8N
+                n8n_response = enviar_a_n8n(n8n_payload)
 
-                # El historial YA está filtrado (solo cliente + sistema)
-                print(f"📍 📈 Historial para IA: {len(historial)} mensajes")
+                if n8n_response and "respuesta" in n8n_response:
+                    respuesta_ia = n8n_response["respuesta"]
 
-                # DEBUG: Mostrar conteo real de mensajes de cliente
-                mensajes_cliente = [
-                    msg for msg in historial if msg["tipo"] == "cliente"
-                ]
-                print(
-                    f"📍 👤 Mensajes de cliente en historial: {len(mensajes_cliente)}"
-                )
+                    respuesta_ia = respuesta_ia.replace("||NL||", "\n").replace(
+                        "||TAB||", "\t"
+                    )
 
-                if chatbot.deberia_escalar_a_humano(historial):
-                    print("📍 🚨 ESCALANDO A HUMANO")
-                    pqrd.es_chatbot_activo = 0
-                    pqrd.fecha_escalado = datetime.utcnow()
-                    respuesta_ia = "🔔 **He transferido tu conversación a un técnico humano.** 🧑‍💼\n\nUn especialista se contactará contigo pronto. Gracias por tu paciencia."
-                else:
-                    print("📍 🧠 GENERANDO RESPUESTA CON IA")
-                    respuesta_ia = chatbot.generar_respuesta(historial, pqrd)
-                    print(f"📍 💬 Respuesta IA: {respuesta_ia}")
+                    print(f"📍 💬 Respuesta decodificada: {respuesta_ia}")
 
-                    # Solo incrementar si fue respuesta exitosa
-                    if respuesta_ia and "transferido" not in respuesta_ia.lower():
+                    # Manejar escalación desde N8N
+                    if n8n_response.get("escalar_a_humano"):
+                        print("📍 🚨 N8N indica ESCALAR A HUMANO")
+                        pqrd.es_chatbot_activo = 0
+                        pqrd.fecha_escalado = datetime.utcnow()
+                    elif n8n_response.get("reactivar_chatbot"):
+                        print("📍 🔄 N8N indica REACTIVAR CHATBOT")
+                        pqrd.es_chatbot_activo = 1
+                        pqrd.fecha_reactivacion_auto = datetime.utcnow()
+                    else:
+                        # Incrementar contador si fue respuesta exitosa
                         pqrd.mensajes_chatbot = mensajes_chatbot + 1
                         print(
                             f"📍 ✅ mensajes_chatbot incrementado a: {pqrd.mensajes_chatbot}"
                         )
 
+                else:
+                    print("📍 ❌ N8N no respondió correctamente")
+                    respuesta_ia = (
+                        "⚠️ Lo siento, hay un problema temporal con el asistente."
+                    )
+
             except Exception as e:
-                print(f"📍 ❌ ERROR en IA: {e}")
+                print(f"📍 ❌ ERROR llamando a N8N: {e}")
                 import traceback
 
                 traceback.print_exc()
@@ -109,9 +132,9 @@ def enviar_mensaje(pqrd_id):
         else:
             print("📍 🚫 No es cliente o no procesar IA")
 
-        # 3. Guardar respuesta IA
+        # 3. Guardar respuesta IA (mantener igual)
         if respuesta_ia:
-            print("📍 💾 Guardando respuesta IA en BD")
+            print(f"📍 💾 Guardando respuesta IA en BD: {respuesta_ia}")
             mensaje_ia = PqrdMessage(
                 id_pqrd=pqrd.id_pqrd,
                 id_remitente=1,
@@ -121,7 +144,7 @@ def enviar_mensaje(pqrd_id):
             )
             db.session.add(mensaje_ia)
 
-        # Actualizar timestamps
+        # Actualizar timestamps (mantener igual)
         pqrd.ultima_respuesta = datetime.utcnow()
         pqrd.esperando_respuesta_de = (
             "agente" if current_user.rol_id == 3 else "cliente"
@@ -140,6 +163,53 @@ def enviar_mensaje(pqrd_id):
         return jsonify({"error": "Error interno"}), 500
 
 
+def deberia_reactivar_chatbot(mensaje):
+    """Determina si el mensaje solicita reactivar el chatbot"""
+    palabras_reactivacion = [
+        "bot",
+        "chatbot",
+        "asistente virtual",
+        "volver al bot",
+        "quiero el chatbot",
+        "activa el bot",
+        "robot",
+        "asistente automático",
+    ]
+
+    mensaje_lower = mensaje.lower()
+    return any(palabra in mensaje_lower for palabra in palabras_reactivacion)
+
+
+def enviar_a_n8n(payload):
+    """Envía el mensaje a N8N y retorna la respuesta"""
+    try:
+        n8n_url = "http://n8n:5678/webhook/webhook/chatbot"
+
+        print(f"📍 🔄 Enviando a N8N: {n8n_url}")
+
+        response = requests.post(n8n_url, json=payload, timeout=30)
+
+        print(f"📍 📊 Status Code: {response.status_code}")
+        print(f"📍 📄 Response Text: {response.text}")  # ← Ver qué devuelve realmente
+
+        if response.status_code == 200:
+            # Intentar parsear JSON
+            try:
+                json_response = response.json()
+                print("📍 ✅ JSON parseado correctamente")
+                return json_response
+            except ValueError as e:
+                print(f"📍 ❌ Error parseando JSON: {e}")
+                return None
+        else:
+            print(f"📍 ❌ N8N respondió con error: {response.status_code}")
+            return None
+
+    except Exception as e:
+        print(f"📍 ❌ Error enviando a N8N: {e}")
+        return None
+
+
 def obtener_historial_para_ia(pqrd_id):
     """Obtiene historial de mensajes para la IA - SOLO mensajes de cliente y sistema"""
     mensajes = (
@@ -153,7 +223,7 @@ def obtener_historial_para_ia(pqrd_id):
         {
             "tipo": msg.tipo_remitente,
             "mensaje": msg.mensaje,
-            "fecha": msg.fecha_creacion,
+            "fecha": msg.fecha_creacion.isoformat(),
         }
         for msg in mensajes
         if msg.tipo_remitente in ["cliente", "sistema"]  # Solo estos tipos
@@ -162,8 +232,6 @@ def obtener_historial_para_ia(pqrd_id):
     print(
         f"📊 Historial filtrado: {len(historial_filtrado)} mensajes (cliente + sistema)"
     )
-    for i, msg in enumerate(historial_filtrado):
-        print(f"   {i + 1}. [{msg['tipo']}] {msg['mensaje']}")
 
     return historial_filtrado
 

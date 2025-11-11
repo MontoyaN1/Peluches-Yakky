@@ -2,8 +2,9 @@ from flask import Flask, render_template, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_cors import CORS
-import os
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
+
 
 load_dotenv()
 db = SQLAlchemy()
@@ -17,6 +18,7 @@ def create_app():
     app = Flask(__name__)
     app.config["SECRET_KEY"] = "8=F&9w4Z{F"
     app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    app.config['JSON_AS_ASCII'] = False
 
     CORS(
         app,
@@ -38,25 +40,28 @@ def create_app():
     from .views import views
     from .admin import admin
     from .mvc_views.auth_view import auth
-    from website.mvc_views.employee_view import employee
-    from website.mvc_views.admin_view import mvc_admin
-    from website.mvc_views.all_user_view import todos
-    from website.mvc_views.cliente_view import cliente_bp
 
     from .models.order_model import Order  # noqa: F401
 
-    from website.models.contacto_model import Contacto
-    from website.models.oportunidad_model import Oportunidad
-    from website.models.actividad_model import Actividad
-    from website.models.interaccion_model import Interaccion
+    from website.models.contacto_model import Contacto  # noqa: F401
+    from website.models.oportunidad_model import Oportunidad  # noqa: F401
+    from website.models.actividad_model import Actividad  # noqa: F401
+    from website.models.interaccion_model import Interaccion  # noqa: F401
     from sqlalchemy_utils import database_exists
-    from .decorators import login_required, rol_required, roles_required
+    from .decorators import login_required, rol_required, roles_required  # noqa: F401
+    from website.controllers.pqrd_corller import verificar_reactivacion_chatbot  # noqa: F401
 
     @login_manager.user_loader
     def load_user(id):
         from website.models.customer_model import Customer
 
         return Customer.query.get(int(id))
+
+    from website.mvc_views.employee_view import employee
+    from website.mvc_views.admin_view import mvc_admin
+    from website.mvc_views.all_user_view import todos
+    from website.routes.cliente_route import cliente_bp
+    from website.routes.prediction_route import prediction_bp
 
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
@@ -65,6 +70,10 @@ def create_app():
     app.register_blueprint(mvc_admin, url_prefix="/admin")
     app.register_blueprint(todos, url_prefix="/")
     app.register_blueprint(cliente_bp, url_prefix="/cliente")
+    app.register_blueprint(prediction_bp, url_prefix="/prediccion")
+
+    if not app.config.get("TESTING"):
+        init_scheduler(app)
 
     @app.route("/manifest.json")
     def manifest():
@@ -109,6 +118,20 @@ def create_app():
 
 
 __all__ = ["login_required", "rol_required", "roles_required", "db", "login_manager"]
+
+
+def init_scheduler(app):
+    scheduler = BackgroundScheduler()
+    from .controllers.pqrd_corller import verificar_reactivacion_chatbot
+
+    def reactivar_chatbots():
+        with app.app_context():
+            verificar_reactivacion_chatbot()
+
+    # Programar tarea cada 1 hora
+    scheduler.add_job(reactivar_chatbots, "interval", hours=1)
+    scheduler.start()
+    print("✅ Scheduler iniciado - Reactivación automática cada 1 hora")
 
 
 def create_database():

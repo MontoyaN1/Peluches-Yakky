@@ -151,7 +151,8 @@ function escapeHtml(unsafe) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
         .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+        .replace(/'/g, "&#039;")
+        .replace(/\n/g, '<br>');  // ← PRESERVAR saltos de línea
 }
 
 // Inicializar eventos cuando el DOM esté listo

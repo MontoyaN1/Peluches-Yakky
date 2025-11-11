@@ -164,7 +164,219 @@
                             </div>
                         </div>
                     </div>
+
+
                 </div>
+
+
+                <!-- Formulario de Configuración de Predicciones -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <h6 class="mb-0 fw-bold">
+                                    <i class="bi bi-sliders me-2"></i>Configuración de Predicciones
+                                </h6>
+                            </div>
+                            <div class="card-body p-3">
+                                <form id="formConfigPredicciones" class="row g-3 align-items-end">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-bold">Meses de Predicción</label>
+                                        <select class="form-select" id="mesesPrediccion" name="meses_prediccion">
+                                            <option value="1">1 mes</option>
+                                            <option value="2">2 meses</option>
+                                            <option value="3" selected>3 meses</option>
+                                            <option value="4">4 meses</option>
+                                            <option value="6">6 meses</option>
+                                            <option value="12">12 meses</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="bi bi-calculator me-1"></i>Calcular Predicciones
+                                        </button>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-muted small">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Ajusta el horizonte temporal para las proyecciones
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Sección de Predicciones de Datos -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">
+                                            <i class="bi bi-graph-up-arrow me-2"></i>Predicciones de Rotación de
+                                            Productos
+                                        </h6>
+
+                                    </div>
+                                    <button id="refreshPredicciones" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-3">
+                                <!-- Loading State -->
+                                <div id="loadingPredicciones" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Cargando predicciones...</p>
+                                </div>
+
+                                <!-- Predicciones Container -->
+                                <div id="prediccionesContainer" class="d-none">
+                                    <div class="row g-3" id="prediccionesGrid">
+                                        <!-- Las predicciones se cargarán aquí dinámicamente -->
+                                    </div>
+
+                                    <!-- Resumen de Predicciones -->
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div id="resumenPredicciones" class="alert alert-info border-0">
+                                                <!-- El resumen se cargará aquí dinámicamente -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Error State -->
+                                <div id="errorPredicciones" class="text-center py-4 d-none">
+                                    <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+                                    <p class="text-muted mt-2" id="errorMessage">Error al cargar las predicciones</p>
+                                    <button class="btn btn-primary btn-sm" onclick="cargarPredicciones()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reintentar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Sección de Predicción de Recompra de Clientes -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-white border-0 py-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">
+                                            <i class="bi bi-people me-2"></i>Predicción de Recompra de Clientes
+                                        </h6>
+                                        <small class="text-muted">Análisis de comportamiento de clientes</small>
+                                    </div>
+                                    <button id="refreshRecompra" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body p-3">
+                                <!-- Loading State -->
+                                <div id="loadingRecompra" class="text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                    <p class="text-muted mt-2">Cargando análisis de clientes...</p>
+                                </div>
+
+                                <!-- Recompra Container -->
+                                <div id="recompraContainer" class="d-none">
+                                    <div class="row g-3">
+                                        <!-- Métricas Principales -->
+                                        <div class="col-md-3">
+                                            <div class="card border-0 bg-success bg-opacity-10">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-arrow-repeat fs-2 text-success mb-2"></i>
+                                                    <h4 class="fw-bold text-success" id="recompraPromedio">0</h4>
+                                                    <p class="small text-muted mb-0">Días de Recompra Promedio</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="card border-0 bg-info bg-opacity-10">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-graph-up fs-2 text-info mb-2"></i>
+                                                    <h4 class="fw-bold text-info" id="desviacionEstandar">0</h4>
+                                                    <p class="small text-muted mb-0">Desviación Estándar</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="card border-0 bg-primary bg-opacity-10">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-people fs-2 text-primary mb-2"></i>
+                                                    <h4 class="fw-bold text-primary" id="totalClientes">0</h4>
+                                                    <p class="small text-muted mb-0">Clientes Analizados</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <div class="card border-0 bg-warning bg-opacity-10">
+                                                <div class="card-body text-center p-3">
+                                                    <i class="bi bi-calendar fs-2 text-warning mb-2"></i>
+                                                    <h4 class="fw-bold text-warning" id="horizontePrediccion">0</h4>
+                                                    <p class="small text-muted mb-0">Horizonte de Predicción</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Análisis Detallado -->
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <div class="alert alert-light border">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-8">
+                                                        <h6 class="fw-bold mb-1">Interpretación del Análisis</h6>
+                                                        <p class="mb-0 small text-muted" id="interpretacionTexto">
+                                                            Los clientes tienden a realizar recompras cada <strong
+                                                                id="diasRecompra">0</strong> días en promedio,
+                                                            con una variación de aproximadamente <strong
+                                                                id="variacionDias">0</strong> días.
+                                                        </p>
+                                                    </div>
+                                                    <div class="col-md-4 text-end">
+                                                        <span class="badge bg-success fs-6"
+                                                            id="estadoRecompra">ESTABLE</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Error State -->
+                                <div id="errorRecompra" class="text-center py-4 d-none">
+                                    <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+                                    <p class="text-muted mt-2" id="errorRecompraMessage">Error al cargar el análisis de
+                                        clientes</p>
+                                    <button class="btn btn-primary btn-sm" onclick="cargarRecompraClientes()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reintentar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
@@ -173,28 +385,40 @@
 <style>
     .card {
         transition: transform 0.2s ease;
-        border: 1px solid rgba(0,0,0,0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .card:hover {
         transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
     }
 
     .fondo {
         background-color: #f8f9fa;
     }
+
+    .producto-card {
+        transition: all 0.3s ease;
+    }
+
+    .producto-destacado {
+        border: 2px solid #007bff !important;
+        box-shadow: 0 0.5rem 1rem rgba(0, 123, 255, 0.15) !important;
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Datos desde Flask
         const dias = JSON.parse('{{ dias | tojson | safe }}');
         const ventas = JSON.parse('{{ ventas_diarias | tojson }}');
-        const totalVentas = {{ total_ventas }};
-        const utilidad = {{ utilidad }};
-        const totalCostos = {{ total_costos }};
-        const totalImpuestos = {{ total_impuestos }};
+        const totalVentas = JSON.parse('{{ total_ventas | tojson }}');
+        const utilidad = JSON.parse('{{ utilidad | tojson }}');
+        const totalCostos = JSON.parse('{{ total_costos | tojson }}');
+        const totalImpuestos = JSON.parse('{{ total_impuestos | tojson }}');
 
         // 1. Gráfica de Ventas Diarias
         const ventasCtx = document.getElementById('ventasChart').getContext('2d');
@@ -223,7 +447,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return '$' + value.toLocaleString();
                             }
                         }
@@ -284,7 +508,7 @@
                     y: {
                         beginAtZero: true,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return '$' + value.toLocaleString();
                             }
                         }
@@ -296,7 +520,7 @@
         // 4. Gráfica de Eficiencia Comercial
         const eficienciaCtx = document.getElementById('eficienciaChart').getContext('2d');
         const margen = totalVentas > 0 ? (utilidad / totalVentas) * 100 : 0;
-        
+
         new Chart(eficienciaCtx, {
             type: 'bar',
             data: {
@@ -318,7 +542,7 @@
                     },
                     tooltip: {
                         callbacks: {
-                            label: function(context) {
+                            label: function (context) {
                                 return `Margen: ${context.parsed.y.toFixed(1)}%`;
                             }
                         }
@@ -329,7 +553,7 @@
                         beginAtZero: true,
                         max: 100,
                         ticks: {
-                            callback: function(value) {
+                            callback: function (value) {
                                 return value + '%';
                             }
                         }
@@ -338,6 +562,247 @@
             }
         });
     });
+
+    // ========== CÓDIGO MODIFICADO PARA PREDICCIONES DINÁMICAS ==========
+
+    // Variable global para almacenar los meses de predicción
+    let mesesPrediccion = 3; // Valor por defecto
+
+    // Función para cargar las predicciones desde la API con meses dinámicos
+    async function cargarPredicciones() {
+        console.log('🔍 Iniciando carga de predicciones...', `Meses: ${mesesPrediccion}`);
+
+        const container = document.getElementById('prediccionesContainer');
+        const loading = document.getElementById('loadingPredicciones');
+        const errorDiv = document.getElementById('errorPredicciones');
+        const grid = document.getElementById('prediccionesGrid');
+        const resumen = document.getElementById('resumenPredicciones');
+        const subtitulo = document.querySelector('#prediccionesContainer .card-header small');
+
+        // Actualizar subtítulo con meses dinámicos
+        if (subtitulo) {
+            subtitulo.textContent = `Proyección para los próximos ${mesesPrediccion} meses`;
+        }
+
+        // Mostrar loading, ocultar otros estados
+        loading.classList.remove('d-none');
+        container.classList.add('d-none');
+        errorDiv.classList.add('d-none');
+
+        try {
+            console.log('📡 Haciendo fetch a /prediccion/productos/rotacion con meses:', mesesPrediccion);
+
+            // Enviar los meses como parámetro en la URL
+            const response = await fetch(`/prediccion/productos/rotacion?meses=${mesesPrediccion}`);
+            console.log('✅ Fetch completado, status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('📊 Datos recibidos:', data);
+
+            // Limpiar grid anterior
+            grid.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                throw new Error('No hay datos de predicción disponibles');
+            }
+
+            // Renderizar cada producto
+            data.forEach((producto, index) => {
+                const esDestacado = index === 0;
+
+                const card = document.createElement('div');
+                card.className = `col-md-6 col-lg-4`;
+                card.innerHTML = `
+                <div class="card h-100 border-0 shadow-sm producto-card ${esDestacado ? 'producto-destacado' : ''}">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title fw-bold mb-0">${producto.nombre_producto}</h6>
+                            ${esDestacado ? '<span class="badge bg-primary">Más Rotación</span>' : ''}
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="text-muted small">Rotación Proyectada:</span>
+                                <h5 class="mb-0 mt-1 text-dark">${producto.rotacion_proyectada} unidades</h5>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge ${obtenerClaseTendencia(producto.tendencia)}">
+                                    ${producto.tendencia}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <small class="text-muted">ID: ${producto.producto_id}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+                grid.appendChild(card);
+            });
+
+            // Actualizar resumen con meses dinámicos
+            const productoDestacado = data[0];
+            resumen.innerHTML = `
+            <div class="d-flex align-items-center">
+                <i class="bi bi-lightbulb me-3 fs-4"></i>
+                <div>
+                    <h6 class="alert-heading mb-1">Producto Destacado</h6>
+                    <p class="mb-0">
+                        <strong>${productoDestacado.nombre_producto}</strong> 
+                        tiene la mayor rotación proyectada con 
+                        <strong>${productoDestacado.rotacion_proyectada} unidades</strong> 
+                        en los próximos ${mesesPrediccion} meses.
+                        <span class="badge ${obtenerClaseTendencia(productoDestacado.tendencia)} ms-1">
+                            ${productoDestacado.tendencia}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        `;
+
+            // Mostrar resultados, ocultar loading
+            loading.classList.add('d-none');
+            container.classList.remove('d-none');
+            console.log('🎉 Predicciones mostradas correctamente');
+
+        } catch (error) {
+            console.error('❌ Error cargando predicciones:', error);
+
+            // Mostrar error
+            loading.classList.add('d-none');
+            container.classList.add('d-none');
+            errorDiv.classList.remove('d-none');
+            document.getElementById('errorMessage').textContent = error.message;
+        }
+    }
+
+    // Función para cargar el análisis de recompra de clientes con meses dinámicos
+    async function cargarRecompraClientes() {
+        console.log('🔍 Iniciando carga de análisis de recompra...', `Meses: ${mesesPrediccion}`);
+
+        const container = document.getElementById('recompraContainer');
+        const loading = document.getElementById('loadingRecompra');
+        const errorDiv = document.getElementById('errorRecompra');
+        const subtitulo = document.querySelector('#recompraContainer .card-header small');
+
+        // Actualizar subtítulo con meses dinámicos
+        if (subtitulo) {
+            subtitulo.textContent = `Análisis de comportamiento - ${mesesPrediccion} meses`;
+        }
+
+        // Mostrar loading, ocultar otros estados
+        loading.classList.remove('d-none');
+        container.classList.add('d-none');
+        errorDiv.classList.add('d-none');
+
+        try {
+            console.log('📡 Haciendo fetch a /prediccion/clientes/recompra con meses:', mesesPrediccion);
+
+            // Enviar los meses como parámetro en la URL
+            const response = await fetch(`/prediccion/clientes/recompra?meses=${mesesPrediccion}`);
+            console.log('✅ Fetch completado, status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('📊 Datos de recompra recibidos:', data);
+
+            // Actualizar las métricas en la UI
+            document.getElementById('recompraPromedio').textContent = data.recompra_promedio.toFixed(1);
+            document.getElementById('desviacionEstandar').textContent = data.desviacion_estandar.toFixed(1);
+            document.getElementById('totalClientes').textContent = data.total_clientes_analizados;
+            document.getElementById('horizontePrediccion').textContent = `${mesesPrediccion} meses`;
+
+            // Actualizar texto de interpretación
+            document.getElementById('diasRecompra').textContent = data.recompra_promedio.toFixed(1);
+            document.getElementById('variacionDias').textContent = data.desviacion_estandar.toFixed(1);
+
+            // Determinar estado de la recompra
+            const estadoElement = document.getElementById('estadoRecompra');
+            if (data.recompra_promedio < 15) {
+                estadoElement.textContent = 'ALTA FRECUENCIA';
+                estadoElement.className = 'badge bg-success fs-6';
+            } else if (data.recompra_promedio < 30) {
+                estadoElement.textContent = 'FRECUENCIA MEDIA';
+                estadoElement.className = 'badge bg-warning fs-6';
+            } else {
+                estadoElement.textContent = 'BAJA FRECUENCIA';
+                estadoElement.className = 'badge bg-danger fs-6';
+            }
+
+            // Mostrar resultados, ocultar loading
+            loading.classList.add('d-none');
+            container.classList.remove('d-none');
+            console.log('🎉 Análisis de recompra mostrado correctamente');
+
+        } catch (error) {
+            console.error('❌ Error cargando análisis de recompra:', error);
+
+            // Mostrar error
+            loading.classList.add('d-none');
+            container.classList.add('d-none');
+            errorDiv.classList.remove('d-none');
+            document.getElementById('errorRecompraMessage').textContent = error.message;
+        }
+    }
+
+    // Función para recargar todas las predicciones
+    function recargarTodasPredicciones() {
+        console.log('🔄 Recargando todas las predicciones con', mesesPrediccion, 'meses');
+        cargarPredicciones();
+        cargarRecompraClientes();
+    }
+
+    // Función helper para determinar clase CSS según tendencia
+    function obtenerClaseTendencia(tendencia) {
+        const tendenciaUpper = tendencia ? tendencia.toUpperCase() : 'ESTABLE';
+        switch (tendenciaUpper) {
+            case 'ALTA':
+                return 'bg-success';
+            case 'BAJA':
+                return 'bg-danger';
+            case 'ESTABLE':
+                return 'bg-secondary';
+            default:
+                return 'bg-warning';
+        }
+    }
+
+    // Configuración inicial después de que el DOM esté cargado
+    document.addEventListener('DOMContentLoaded', function () {
+        // Configurar formulario de predicciones
+        const formConfig = document.getElementById('formConfigPredicciones');
+        if (formConfig) {
+            formConfig.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const selectMeses = document.getElementById('mesesPrediccion');
+                mesesPrediccion = parseInt(selectMeses.value);
+                console.log('⚙️ Configuración actualizada:', mesesPrediccion, 'meses');
+                recargarTodasPredicciones();
+            });
+        }
+
+        // Configurar botones de actualización
+        const refreshBtn = document.getElementById('refreshPredicciones');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', cargarPredicciones);
+        }
+
+        const refreshRecompraBtn = document.getElementById('refreshRecompra');
+        if (refreshRecompraBtn) {
+            refreshRecompraBtn.addEventListener('click', cargarRecompraClientes);
+        }
+
+        // Cargar predicciones inicialmente
+        console.log('🚀 Iniciando carga inicial de predicciones...');
+        recargarTodasPredicciones();
+    });
+
 </script>
 
 {% endblock %}

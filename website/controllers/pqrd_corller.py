@@ -1,5 +1,6 @@
 from website import db
-from website.models.Pqrd.pqrd_model import Pqrd
+from ..models.pqrd.pqrd_message_model import PqrdMessage
+from ..models.pqrd.pqrd_model import Pqrd
 from sqlalchemy import desc
 
 
@@ -172,3 +173,31 @@ def pqrd_total_estados_empleado(id_agente):
     except Exception as e:
         db.session.rollback()
         raise Exception(f"Error al mostrar estados de pqrd-empleado: {e}")
+
+
+def verificar_reactivacion_chatbot():
+    from datetime import datetime, timedelta
+
+    # PQRDs escaladas hace más de 24 horas sin respuesta de técnico
+    pqrd_para_reactivar = Pqrd.query.filter(
+        Pqrd.es_chatbot_activo == 0,
+        Pqrd.fecha_escalado <= datetime.utcnow() - timedelta(hours=24),
+        Pqrd.ultima_respuesta <= datetime.utcnow() - timedelta(hours=24),
+    ).all()
+
+    for pqrd in pqrd_para_reactivar:
+        pqrd.es_chatbot_activo = 1
+        pqrd.fecha_reactivacion_auto = datetime.utcnow()
+
+        # Mensaje automático
+        mensaje_reactivacion = PqrdMessage(
+            id_pqrd=pqrd.id_pqrd,
+            id_remitente=1,
+            tipo_remitente="sistema",
+            mensaje="🤖 **He vuelto para ayudarte!** Como no hemos tenido respuesta del técnico, estoy aquí para continuar asisténdote. ¿En qué más puedo ayudarte?",
+            es_automatico=True,
+        )
+        db.session.add(mensaje_reactivacion)
+        print(f"✅ Reactivado chatbot para PQRD #{pqrd.id_pqrd}")
+
+    db.session.commit()
